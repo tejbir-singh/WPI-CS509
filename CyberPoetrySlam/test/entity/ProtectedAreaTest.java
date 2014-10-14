@@ -6,8 +6,13 @@ import junit.framework.TestCase;
 
 public class ProtectedAreaTest extends TestCase {
 	ProtectedArea pa = ProtectedArea.getInstance();
+	Word word = new Word();
+	
 	public void setUp() {
 		pa.words = new ArrayList<Word>();
+		word.value = "test";
+		word.x = 1;
+		word.y = 1;
 	}
 	
 	public void testSingletonPattern() {
@@ -16,28 +21,20 @@ public class ProtectedAreaTest extends TestCase {
 	}
 
 	public void testAddWordToProtected() {
-		Word word = new Word();
-		word.value = "test";
 		pa.add(word);
-		assertNotNull(pa.getWord("test"));
+		assertNotNull(pa.getWord(1, 1));
 	}
 	
 	public void testRemoveWordFromProtected() {
-		Word word = new Word();
-		word.value = "test";
 		pa.add(word);
 		pa.remove(word);
-		assertNull(pa.getWord("test")); 
+		assertNull(pa.getWord(1, 1)); 
 	}
 	
 	public void testMoveEntity() {
-		Word word = new Word();
-		word.value = "test";
-		word.x = 1;
-		word.y = 1;
 		pa.add(word);
 		pa.moveEntity(word, 2, 3);
-		assertTrue(pa.getWord("test").x == 2 && pa.getWord("test").y == 3);
+		assertEquals(pa.getWord(2, 3), word);
 	}
 	
 	public void testIntersect() {

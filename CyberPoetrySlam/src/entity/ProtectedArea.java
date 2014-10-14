@@ -7,11 +7,18 @@ public class ProtectedArea {
 	ArrayList<Poem> poems;
 	public static ProtectedArea instance;
 	
+	/**
+	 * Constructor.
+	 */
 	private ProtectedArea() {
 		words = new ArrayList<Word>();
 		poems = new ArrayList<Poem>();
 	}
 	
+	/**
+	 * Singleton implementation.
+	 * @return the instance of the class
+	 */
 	public static ProtectedArea getInstance() {
 		if (instance == null) {
 			instance = new ProtectedArea();
@@ -34,7 +41,13 @@ public class ProtectedArea {
 		}
 	}
 	
-	// false if unsuccessful; true otherwise 
+	/**
+	 * Move an Entity to the specified x and y coordinates if it is valid.
+	 * @param e	Entity to move
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return true if successful
+	 */
 	public boolean moveEntity(Entity e, int x, int y) {
 		Entity tmp;
 		// create temporary copy for manipulation
@@ -59,15 +72,26 @@ public class ProtectedArea {
 		return true;
 	}
 	
-	public Word getWord(String value) {
+	/**
+	 * Get a Word based on its x and y position.
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return Word at given location (null if not found)
+	 */
+	public Word getWord(int x, int y) {
 		for (Word w : words) {
-			if (w.value.equals(value)) {
+			if (w.x == x && w.y == y) {
 				return w;
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * Check if an Entity is intersecting any others in the ProtectedArea.
+	 * @param e Entity to check
+	 * @return true if it intersects
+	 */
 	protected boolean doesIntersect(Entity e) {
 		// compare e to each existing Entity location
 		for (Word word : words) {
