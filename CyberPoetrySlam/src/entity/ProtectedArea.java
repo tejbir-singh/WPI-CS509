@@ -26,10 +26,20 @@ public class ProtectedArea {
 		return instance;
 	}
 	
+	/**
+	 * Add a Word to the ProtectedArea.
+	 * @param word Word to add
+	 * @return true if successful
+	 */
 	public boolean add(Word word) {
 		return words.add(word);
 	}
 	
+	/**
+	 * Remove a word from the ProtectedArea.
+	 * @param word Word to remove
+	 * @return true if successful
+	 */
 	public boolean remove(Word word) {
 		int index = words.indexOf(word);
 		if (index == -1) {							// word not found
