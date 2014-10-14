@@ -1,4 +1,5 @@
-package model;
+package entity;
+
 import java.util.ArrayList;
 
 public class ProtectedArea {

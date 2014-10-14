@@ -1,4 +1,4 @@
-package model;
+package entity;
 
 public enum Types {
 	NOUN, ADJECTIVE, VERB, ADVERB, PRONOUN, 

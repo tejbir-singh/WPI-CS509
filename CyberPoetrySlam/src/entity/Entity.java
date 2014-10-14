@@ -1,4 +1,4 @@
-package model;
+package entity;
 
 public abstract class Entity {
 	int x;
