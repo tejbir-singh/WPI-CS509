@@ -1,13 +1,8 @@
 package entity;
 
-class Word {
+class Word extends Entity {
 
 	public String value;
 	public Types type;
-
-	public boolean intersect(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

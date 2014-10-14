@@ -36,7 +36,22 @@ public class ProtectedArea {
 	
 	// false if unsuccessful; true otherwise 
 	public boolean moveEntity(Entity e, int x, int y) {
-		if (doesIntersect(e)) {				// invalid
+		Entity tmp;
+		// create temporary copy for manipulation
+		if (e instanceof Word) {
+			tmp = new Word();
+			tmp.x = x;
+			tmp.y = y;
+		}
+		else {									// must be a poem
+			tmp = new Poem();
+			tmp.x = x;
+			tmp.y = y;
+		}
+		
+		tmp.x = x;
+		tmp.y = y;
+		if (doesIntersect(tmp)) {				// invalid move if so
 			return false;
 		}
 		e.x = x;
@@ -53,26 +68,20 @@ public class ProtectedArea {
 		return null;
 	}
 	
-	private boolean doesIntersect(Entity e) {
-		// compare it based on location and area of e
-		for (Word word : words) {		// lazy; maybe do cleaner
-			if (word.intersect(e.x, e.y) == true) {
+	protected boolean doesIntersect(Entity e) {
+		// compare e to each existing Entity location
+		for (Word word : words) {
+			if (e != word && word.intersect(e) == true) {
 				return true;
 			}
 		}
 		
-		for (Poem poem : poems) {		// lazy; maybe do cleaner
-			if (poem.intersect(e.x, e.y) == true) {
+		for (Poem poem : poems) {
+			if (e != poem && poem.intersect(e) == true) {
 				return true;
 			}
 		}
-		/* For use in Word and Poem; preliminary version which does not return direction
-		 intersect(Entity e) {
-		 	if ((((e.x >= this.x) && (e.x < (this.x + this.width))) || ((this.x >= e.x) && (this.x < (e.x + e.width)))) &&
-				  	(((e.y >= this.y) && (e.y < (this.y + this.height))) || ((this.y >= e.y) && (this.y < (e.y + e.height))))) {
-				return true;
-			}
-		 */
+		
 		return false;
 	}
 	

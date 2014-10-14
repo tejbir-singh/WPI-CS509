@@ -1,6 +1,6 @@
 package entity;
 
-class Poem {
+class Poem extends Entity {
 
 	public boolean intersect(int x, int y) {
 		// TODO Auto-generated method stub
