@@ -8,7 +8,8 @@ public class ProtectedArea {
 	public static ProtectedArea instance;
 	
 	private ProtectedArea() {
-		
+		words = new ArrayList<Word>();
+		poems = new ArrayList<Poem>();
 	}
 	
 	public static ProtectedArea getInstance() {
@@ -41,6 +42,15 @@ public class ProtectedArea {
 		e.x = x;
 		e.y = y;
 		return true;
+	}
+	
+	public Word getWord(String value) {
+		for (Word w : words) {
+			if (w.value.equals(value)) {
+				return w;
+			}
+		}
+		return null;
 	}
 	
 	private boolean doesIntersect(Entity e) {
