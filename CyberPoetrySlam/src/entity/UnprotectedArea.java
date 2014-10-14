@@ -11,7 +11,7 @@ public class UnprotectedArea {
 		
 	}
 	
-	public UnprotectedArea getInstance() {
+	public static UnprotectedArea getInstance() {
 		if (instance == null) {
 			instance = new UnprotectedArea();
 		}
