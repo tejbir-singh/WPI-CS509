@@ -97,4 +97,17 @@ public class UnprotectedArea {
 		}
 		return null;
 	}
+	
+	/**
+	 * Move a Word to the specified x and y coordinates if it is valid.
+	 * @param e	Entity to move
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return true if successful
+	 */
+	public boolean moveEntity(Entity e, int x, int y) {
+		e.x = x;
+		e.y = y;
+		return true;
+	}
 }
