@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class UnprotectedArea {
-	public static UnprotectedArea instance;
+	private static UnprotectedArea instance;
 	ArrayList<Word> words;
 	
 	/**
@@ -109,5 +109,14 @@ public class UnprotectedArea {
 		e.x = x;
 		e.y = y;
 		return true;
+	}
+	
+	// Getters and setters
+	public ArrayList<Word> getWords() {
+		return words;
+	}
+
+	public void setWords(ArrayList<Word> words) {
+		this.words = words;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ProtectedArea {
 	ArrayList<Word> words;
 	ArrayList<Poem> poems;
-	public static ProtectedArea instance;
+	private static ProtectedArea instance;
 	
 	/**
 	 * Constructor.
@@ -117,6 +117,23 @@ public class ProtectedArea {
 		}
 		
 		return false;
+	}
+	
+	// Getters and setters
+	public ArrayList<Word> getWords() {
+		return words;
+	}
+
+	public void setWords(ArrayList<Word> words) {
+		this.words = words;
+	}
+
+	public ArrayList<Poem> getPoems() {
+		return poems;
+	}
+
+	public void setPoems(ArrayList<Poem> poems) {
+		this.poems = poems;
 	}
 	
 }
