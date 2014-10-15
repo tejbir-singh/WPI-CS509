@@ -8,8 +8,9 @@ public class ProtectedAreaTest extends TestCase {
 	ProtectedArea pa = ProtectedArea.getInstance();
 	Word word = new Word();
 	
-	public void setUp() {
+	protected void setUp() {
 		pa.words = new ArrayList<Word>();
+		pa.poems = new ArrayList<Poem>();
 		word.value = "test";
 		word.x = 1;
 		word.y = 1;
@@ -31,7 +32,7 @@ public class ProtectedAreaTest extends TestCase {
 		assertNull(pa.getWord(1, 1)); 
 	}
 	
-	public void testMoveEntity() {
+	public void testMoveWord() {
 		pa.add(word);
 		pa.moveEntity(word, 2, 3);
 		assertEquals(pa.getWord(2, 3), word);

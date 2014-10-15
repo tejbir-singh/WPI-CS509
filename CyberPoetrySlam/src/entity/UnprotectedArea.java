@@ -71,9 +71,9 @@ public class UnprotectedArea {
 	 * @param type Types 
 	 * @return ArrayList of Words that match the criteria
 	 */
-	public ArrayList<Word> filter(ArrayList<Types> types) {
+	public ArrayList<Word> filter(ArrayList<Type> types) {
 		ArrayList<Word> validWords = new ArrayList<Word>();
-		for (Types t : types) {
+		for (Type t : types) {
 			for (Word word : words) {
 				if (word.type == t) {
 					validWords.add(word);
@@ -81,5 +81,20 @@ public class UnprotectedArea {
 			}
 		}
 		return validWords;
+	}
+	
+	/**
+	 * Get a Word based on its x and y position.
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return Word at given location (null if not found)
+	 */
+	public Word getWord(int x, int y) {
+		for (Word w : words) {
+			if (w.x == x && w.y == y) {
+				return w;
+			}
+		}
+		return null;
 	}
 }
