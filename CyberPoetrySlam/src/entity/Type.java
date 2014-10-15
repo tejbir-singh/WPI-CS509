@@ -1,6 +1,6 @@
 package entity;
 
-public enum Types {
+public enum Type {
 	NOUN, ADJECTIVE, VERB, ADVERB, PRONOUN, 
 	PREPOSITION, PREFIX, SUFFIX, CONJUNCTION, INTERJECTION
 }
