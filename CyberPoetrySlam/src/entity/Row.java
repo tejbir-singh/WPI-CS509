@@ -15,8 +15,8 @@ public class Row {
 	 */
 	int width; /* track the width of the row */
 	int height; /* track the height of the row */
-	int xcoord; /* row's associated x-coordinate on the board */
-	int ycoord; /* row's associated y-coordinate on the board */
+	int x; /* row's associated x-coordinate on the board */
+	int y; /* row's associated y-coordinate on the board */
 	ArrayList<Word> words = new ArrayList<Word>();
 
 
@@ -28,8 +28,8 @@ public class Row {
 	 */
 	public Row(int xarg, int yarg,  ArrayList<Word> words_arg) 
 	{
-		xcoord = xarg;
-		ycoord = yarg;
+		x = xarg;
+		y = yarg;
 		/* method passes reference to the words vector  */
 		for (Word w: words_arg) {
 			words.add(w);

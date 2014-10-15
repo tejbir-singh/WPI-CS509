@@ -67,7 +67,7 @@ public class ProtectedArea {
 			tmp.y = y;
 		}
 		else {									// must be a poem
-			tmp = new Poem();
+			tmp = new Poem(null);
 			tmp.x = x;
 			tmp.y = y;
 		}
