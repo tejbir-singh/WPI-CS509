@@ -103,7 +103,7 @@ public class ProtectedArea {
 	 * @return true if it intersects
 	 */
 	protected boolean doesIntersect(Entity e) {
-		// compare e to each existing Entity location
+		// compare e to each existing Entity
 		for (Word word : words) {
 			if (!e.equals(word) && word.intersect(e) == true) {
 				return true;
