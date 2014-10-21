@@ -3,31 +3,30 @@ package entity;
 import java.util.ArrayList;
 
 public class Poem extends Entity {
-	int x;
-	int y;
+	//int x;
+	//int y;
 	ArrayList<Row> rows;
-	int width=0;
-	int height=0;
+	//int width=0;
+	//int height=0;
 	
 	public Poem(ArrayList<Row> r){
 		this.rows = r;
-		//this.x = r.get(0).x;
-		//this.y = r.get(0).y;
+		this.x = r.get(0).x;
+		this.y = r.get(0).y;
 	}
 	
-	public int getX() {
-		return x;
-	}
 	
-	public int getY() {
-		return y;
+	//get the height of the poem
+	public int getHeight() {
+		int h = this.rows.size() * this.rows.get(0).words.get(0).height;
+		return h;
 	}
+
 	
 	public boolean setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
-		return true;
-		
+		return true;	
 	}  
 	
 	/*
@@ -41,7 +40,7 @@ public class Poem extends Entity {
 		this.rows.add(r);
 		return true;
 	}*/
-	
+	/*
 	public boolean connectPoemTop(Poem p){
 		setPosition(p.x, p.y);
 		for(int i = p.rows.size() - 1; i >= 0; i--)
@@ -108,13 +107,13 @@ public class Poem extends Entity {
 		return true;
 		
 	}
-	
-	public boolean disconnectEdgeWord(Poem poem, int dexr, Word word){
-		if(poem.rows.get(dexr).words.size() == 1)
+	*/
+	public boolean disconnectEdgeWord(Poem poem, int dexr, int dexw){
+		if(poem.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
 			return false;
 		else
-			poem.rows.get(dexr).disconnectWord(word); //it's up to Rej's implement of method disconnectWord()
-		return true;
+			return poem.rows.get(dexr).disconnectWord(dexw);//it's up to Rej's implement of method disconnectWord()
+	
 		
 	}
 	

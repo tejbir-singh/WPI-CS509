@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 public class UnprotectedAreaTest extends TestCase {
 	UnprotectedArea ua = UnprotectedArea.getInstance();
-	Word word = new Word();
+	Word word = new Word(0, 0, 0, 0, null, null);
 	
 	protected void setUp() {
 		ua.words = new ArrayList<Word>();
@@ -35,8 +35,8 @@ public class UnprotectedAreaTest extends TestCase {
 	}
 	
 	public void testSearchUnprotectedArea() {
-		Word word2 = new Word();
-		Word word3 = new Word();
+		Word word2 = new Word(0, 0, 0, 0, null, null);
+		Word word3 = new Word(0, 0, 0, 0, null, null);
 		word2.value = "test2";
 		word3.value = "not included";
 		ua.add(word);
@@ -54,8 +54,8 @@ public class UnprotectedAreaTest extends TestCase {
 	}
 	
 	public void testFilterUnprotectedArea() {
-		Word word2 = new Word();
-		Word word3 = new Word();
+		Word word2 = new Word(0, 0, 0, 0, null, null);
+		Word word3 = new Word(0, 0, 0, 0, null, null);
 		word2.type = Type.NOUN;
 		word3.type = Type.ADJECTIVE;
 		ua.add(word);

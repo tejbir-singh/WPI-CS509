@@ -32,7 +32,12 @@ public class ProtectedArea {
 	 * @return true if successful
 	 */
 	public boolean add(Word word) {
-		return words.add(word);
+		// should judge if the word can be added without intersecting with other words, added by Xinjie
+		if (doesIntersect(word)) {				// invalid move if so
+			return false;
+		}
+		else
+			return words.add(word);
 	}
 	
 	/**
@@ -58,27 +63,41 @@ public class ProtectedArea {
 	 * @param y y-coordinate
 	 * @return true if successful
 	 */
+	// modified by Xinjie, the original one didn't give e's width and height to tmp 
 	public boolean moveEntity(Entity e, int x, int y) {
 		Entity tmp;
+		int tempx = e.x; //save the previous value e.x, added by Xinjie
+		int tempy = e.y; //save the previous value e.y, added by Xinjie
 		// create temporary copy for manipulation
 		if (e instanceof Word) {
-			tmp = new Word();
+			tmp = new Word(0, 0, 0, 0, null, null); //added by Xinjie 
+			tmp = e;  //copy, added by Xinjie
 			tmp.x = x;
 			tmp.y = y;
+
 		}
 		else {									// must be a poem
 			tmp = new Poem(null);
+			tmp = e;  //copy, added by Xinjie
 			tmp.x = x;
 			tmp.y = y;
 		}
 		
+		tmp = e;  //copy, added by Xinjie
 		tmp.x = x;
 		tmp.y = y;
 		if (doesIntersect(tmp)) {				// invalid move if so
+			tmp.x = tempx; // go back to its previous location, added by Xinjie
+			tmp.y = tempy; // go back to its previous location, added by Xinjie
 			return false;
 		}
-		e.x = x;
-		e.y = y;
+		
+		if (e instanceof Word) {
+			((Word) e).setPosition(x, y); // change the location of Entity e globally,added by Xinjie
+		}
+		else {									// must be a poem
+			((Poem) e).setPosition(x, y);
+		}
 		return true;
 	}
 	
@@ -111,12 +130,84 @@ public class ProtectedArea {
 		}
 		
 		for (Poem poem : poems) {
-			if (!e.equals(poem) && poem.intersect(e) == true) {
-				return true;
+			for (Row row : poem.rows){
+				for (Word word : row.words){
+					if (!e.equals(row) && word.intersect(e) == true) {
+					return true;
+				    }
+				
+                }
 			}
 		}
 		
 		return false;
+	}
+	
+	public boolean connectPoemTop(Poem p, Poem top){
+		p.setPosition(top.x, top.y);
+		for(int i = p.rows.size() - 1; i >= 0; i--)
+			p.rows.add(0, top.rows.get(i));
+		return true;
+	}
+	
+	public boolean connectPoemBottom(Poem p, Poem bottom){
+		for(int i = 0; i < p.rows.size(); i++)
+			p.rows.add(p.rows.size(), bottom.rows.get(i));
+		return true;
+	}
+	
+	public boolean disconnectRow(ArrayList<Poem> p, int dexp, int dexr, int newx, int newy){
+		// dexp is the index of the selected poem, dexr is the index of the selected row, (newx, newy) is the position of being dragged to
+		if(p.get(dexp).rows.size() == 1)
+			return false;
+		else{
+			if(dexr == 0){ // disconnect first row
+				// the disconnected row constructs a new poem
+				ArrayList<Row> newrowlist = new ArrayList<Row>(); //it's up to Rej's constructor of class Row
+				newrowlist.add(p.get(dexp).rows.get(dexr));
+				Poem newpoem = new Poem(newrowlist);
+				newpoem.setPosition(newx, newy);
+				p.add(newpoem);
+				
+				// modify original poem
+				p.get(dexp).setPosition(p.get(dexp).rows.get(1).x, p.get(dexp).rows.get(1).y);
+				p.get(dexp).rows.remove(dexr);
+			}
+			else if(dexr == p.get(dexp).rows.size() - 1){ //disconnect last row
+				// the disconnected row constructs a new poem
+				ArrayList<Row> newrowlist1 = new ArrayList<Row>(); //it's up to Rej's constructor of class Row
+				newrowlist1.add(p.get(dexp).rows.get(dexr));
+				Poem newpoem1 = new Poem(newrowlist1);
+				newpoem1.setPosition(newx, newy);
+				p.add(newpoem1);
+				
+				// modify original poem
+				p.get(dexp).rows.remove(p.get(dexp).rows.get(dexr));
+			}
+			else{ //disconnect middle row
+				// the lower rows construct a new poem
+				ArrayList<Row> newrowlist2 = new ArrayList<Row>(); //it's up to Rej's constructor of class Row
+				for(int i = dexr + 1; i < p.get(dexp).rows.size(); i++)
+					newrowlist2.add(p.get(dexp).rows.get(i));
+				Poem newpoem2 = new Poem(newrowlist2);
+				newpoem2.setPosition(p.get(dexp).rows.get(dexr + 1).x, p.get(dexp).rows.get(dexr + 1).y);
+				p.add(newpoem2);
+				
+				// the disconnected row constructs a new poem
+				ArrayList<Row> newrowlist3 = new ArrayList<Row>(); //it's up to Rej's constructor of class Row
+				newrowlist3.add(p.get(dexp).rows.get(dexr));
+				Poem newpoem3 = new Poem(newrowlist3);
+				newpoem3.setPosition(newx, newy);
+				p.add(newpoem3);
+				
+				// modify the original poem
+				for (int i = dexr; i < p.get(dexp).rows.size(); i++ )
+					p.get(dexp).rows.remove(p.get(dexp).rows.get(i));	
+			}
+		}	
+				
+		return true;
+		
 	}
 	
 	// Getters and setters

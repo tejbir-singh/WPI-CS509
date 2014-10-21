@@ -6,17 +6,17 @@ import java.util.ArrayList;
  * @author tejbir singh
  *
  */
-public class Row {
+public class Row extends Entity{
 	/**
 	 * width:
 	 * height:
 	 * x	: 
 	 * y	:
 	 */
-	int width; /* track the width of the row */
-	int height; /* track the height of the row */
-	int x; /* row's associated x-coordinate on the board */
-	int y; /* row's associated y-coordinate on the board */
+	/*int width;  track the width of the row 
+	int height;  track the height of the row 
+	int x;  row's associated x-coordinate on the board 
+	int y;  row's associated y-coordinate on the board */
 	ArrayList<Word> words = new ArrayList<Word>();
 
 
@@ -26,6 +26,8 @@ public class Row {
 	 * @param words
 	 * @param poem
 	 */
+	
+	
 	public Row(int xarg, int yarg,  ArrayList<Word> words_arg) 
 	{
 		x = xarg;
@@ -40,7 +42,34 @@ public class Row {
 	* Poem is a collection of rows. What's the collection type of a poem. That affects the methods available. 	
     */		
 	}
-
+	
+	// another constructor of Row, added by Xinjie
+	public Row(ArrayList<Word> words_arg){
+		this.x = words_arg.get(0).x;
+		this.y = words_arg.get(0).y;
+		this.words = words_arg;
+	}
+	
+	/*// get the width of the row, added by Xinjie
+	public int getWidth() {
+		int w = 0;
+		for(int i = 0; i < this.words.size(); i++)
+			w += this.words.get(i).width;
+		return w;
+	}
+		
+	//get the height of the row(equals to the height of one word), added by Xinjie
+	public int getHeight() {
+		return this.words.get(0).height;
+	}*/
+	
+	// set the position(x,y) of the row, added by Xinjie
+	public boolean setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+		return true;	
+	}
+		
 	/*
 	 * 
 	 */
@@ -74,11 +103,14 @@ public class Row {
 	 * @param w
 	 * @return
 	 */	
-	public boolean disconnectWord(Word w) 
+	//modified by Xinjie on 10/19/2014
+	public boolean disconnectWord(int dexw) 
 	{
 		/*[TODO]: Think the effect of this operation on row, structurally.
 		 * Group question:
 		 * */	
-		return words.remove(w);		
+		this.words.remove(dexw);	
+		return true;
+		
 	}
 }
