@@ -65,30 +65,16 @@ public class ProtectedArea {
 	 */
 	// modified by Xinjie, the original one didn't give e's width and height to tmp 
 	public boolean moveEntity(Entity e, int x, int y) {
-		Entity tmp;
 		int tempx = e.x; //save the previous value e.x, added by Xinjie
 		int tempy = e.y; //save the previous value e.y, added by Xinjie
 		// create temporary copy for manipulation
-		if (e instanceof Word) {
-			tmp = new Word(0, 0, 0, 0, null, null); //added by Xinjie 
-			tmp = e;  //copy, added by Xinjie
-			tmp.x = x;
-			tmp.y = y;
 
-		}
-		else {									// must be a poem
-			tmp = new Poem(null);
-			tmp = e;  //copy, added by Xinjie
-			tmp.x = x;
-			tmp.y = y;
-		}
 		
-		tmp = e;  //copy, added by Xinjie
-		tmp.x = x;
-		tmp.y = y;
-		if (doesIntersect(tmp)) {				// invalid move if so
-			tmp.x = tempx; // go back to its previous location, added by Xinjie
-			tmp.y = tempy; // go back to its previous location, added by Xinjie
+		e.x = x;
+		e.y = y;
+		if (doesIntersect(e)) {				// invalid move if so
+			e.x = tempx; // go back to its previous location, added by Xinjie
+			e.y = tempy; // go back to its previous location, added by Xinjie
 			return false;
 		}
 		
