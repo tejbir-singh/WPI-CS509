@@ -27,18 +27,30 @@ public class ProtectedArea {
 	}
 	
 	/**
-	 * Add a Word to the ProtectedArea.
+	 * Add a Word to the ProtectedArea.  %%% or add a poem to the ProtectedArea, added by Xinjie
 	 * @param word Word to add
 	 * @return true if successful
 	 */
-	public boolean add(Word word) {
-		// should judge if the word can be added without intersecting with other words, added by Xinjie
-		if (doesIntersect(word)) {				// invalid move if so
-			return false;
+	public boolean add(Entity e) {
+		if (e instanceof Word){
+			// should judge if the word can be added without intersecting with other words, added by Xinjie
+			if (doesIntersect(e)) {				// invalid move if so
+				return false;
+			}
+			else
+				return this.words.add((Word) e);
 		}
-		else
-			return words.add(word);
+		else{   // add poem
+			if (doesIntersect(e)){
+				return false;
+			}
+			else
+				return this.poems.add((Poem) e);
+		}
+		
 	}
+	
+	
 	
 	/**
 	 * Remove a word from the ProtectedArea.
@@ -69,21 +81,20 @@ public class ProtectedArea {
 		int tempy = e.y; //save the previous value e.y, added by Xinjie
 		// create temporary copy for manipulation
 
-		
-		e.x = x;
-		e.y = y;
-		if (doesIntersect(e)) {				// invalid move if so
-			e.x = tempx; // go back to its previous location, added by Xinjie
-			e.y = tempy; // go back to its previous location, added by Xinjie
-			return false;
-		}
-		
-		if (e instanceof Word) {
+		if (e instanceof Word){
 			((Word) e).setPosition(x, y); // change the location of Entity e globally,added by Xinjie
-		}
-		else {									// must be a poem
+			if (doesIntersect(e)) {				// invalid move if so
+				((Word) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
+				return false;
+			}	
+		}else{
 			((Poem) e).setPosition(x, y);
+			if (doesIntersect(e)) {				// invalid move if so
+				((Poem) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
+				return false;
+			}
 		}
+
 		return true;
 	}
 	
@@ -109,27 +120,130 @@ public class ProtectedArea {
 	 */
 	protected boolean doesIntersect(Entity e) {
 		// compare e to each existing Entity
-		for (Word word : words) {
-			if (!e.equals(word) && word.intersect(e) == true) {
+		if(e instanceof Word){
+			for (Word word : words) {
+				if (!e.equals(word) && word.intersect(e) == true) {
 				return true;
+				}
 			}
-		}
 		
-		for (Poem poem : poems) {
-			for (Row row : poem.rows){
-				for (Word word : row.words){
-					if (!e.equals(row) && word.intersect(e) == true) {
-					return true;
-				    }
+			for (Poem poem : poems) {
+				for (Row row : poem.rows){
+					if (row.intersect(e) == true){
+						return true;
+					}
+				}	
+			}
+		
+			return false;
+		} else{   //e instanceof Poem
+			for (Word word : words) {
+				for (Row rowe : ((Poem) e).rows){
+					for(Word worde : rowe.words){
+						if (word.intersect(worde) == true) {
+							return true;
+						}
+					}
+					
+				}
 				
-                }
 			}
+			for (Poem poem : poems) {
+				for (Row row : poem.rows){
+					for (Row rowe : ((Poem) e).rows){
+						if (!poem.equals((Poem) e) && row.intersect(rowe) == true) {
+							return true;
+						}
+					}
+				}	
+			}
+			
+			return false;
 		}
 		
+	}
+	
+	// connect Word wleft to the left of Word w, 
+	//it will create a new poem(added to ArrayList poems) with one row, tow words,
+	//and the ArrayList words will delete w and wleft, added by Xinjie
+	public boolean connectWordLeftWord(Word w, Word wleft){
+		if(this.moveEntity(wleft, w.x - wleft.width, w.y)){ // check intersection while connecting
+			// create a new poem and add it to the ArrayList poems and delete w and wleft
+			ArrayList<Word> aw1 = new ArrayList<Word>();
+			aw1.add(wleft);
+			aw1.add(w);
+			Row row1 = new Row(aw1);
+			ArrayList<Row> ar1 = new ArrayList<Row>();
+			ar1.add(row1);
+			Poem poem1 = new Poem(ar1);
+			this.remove(w);
+			this.remove(wleft);
+			this.add(poem1);
+			
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	// Similar to connectWordLeftWord, connect Word wright to the right of Word w, 
+	//it will create a new poem(added to ArrayList poems) with one row, tow words,
+	//and the ArrayList words will delete w and wright, added by Xinjie
+	public boolean connectWordRightWord(Word w, Word wright){
+		if(this.moveEntity(wright, w.x + w.width, w.y)){
+			ArrayList<Word> aw1 = new ArrayList<Word>();
+			aw1.add(w);
+			aw1.add(wright);
+			Row row1 = new Row(aw1);
+			ArrayList<Row> ar1 = new ArrayList<Row>();
+			ar1.add(row1);
+			Poem poem1 = new Poem(ar1);
+			this.remove(w);
+			this.remove(wright);
+			this.add(poem1);
+			
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	// Connect Word w to the Poem p's No.dexr's row's left edge
+	// added by Xinjie
+	public boolean connectWordLeftPoem(Poem p, Word w, int dexr){
+		if(this.moveEntity(w, p.rows.get(dexr).x - w.width, p.rows.get(dexr).y)){
+			p.rows.get(dexr).connectWordLeft(w);
+			p.setX(p.rows.get(0).x);
+			p.setY(p.rows.get(0).y);
+			this.remove(w);
+			return true;
+		}
 		return false;
 	}
 	
-	public boolean connectPoemTop(Poem p, Poem top){
+	// Connect Word w to the Poem p's No.dexr's row's right edge
+	// added by Xinjie
+	public boolean connectWordRightPoem(Poem p,Word w, int dexr){
+		if(this.moveEntity(w, p.rows.get(dexr).x + p.rows.get(dexr).width, p.rows.get(dexr).y)){
+			p.rows.get(dexr).connectWordRight(w);
+			this.remove(w);
+			return true;
+		}
+		return false;
+	}
+	
+	//disconnect ProtectedArea's No.dexp's poem's No.dexr row's No.dexw's word, and move the word to (x, y) without intersecting
+	public boolean disconnectWord(int dexp, int dexr, int dexw, int x, int y){
+		if(this.moveEntity(this.poems.get(dexp).rows.get(dexr).words.get(dexw), x, y)){
+			this.words.add(this.poems.get(dexp).rows.get(dexr).words.get(dexw));
+			this.poems.get(dexp).disconnectEdgeWord(dexr, dexw);
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	/*public boolean connectPoemTop(Poem p, Poem top){
 		p.setPosition(top.x, top.y);
 		for(int i = p.rows.size() - 1; i >= 0; i--)
 			p.rows.add(0, top.rows.get(i));
@@ -194,7 +308,7 @@ public class ProtectedArea {
 				
 		return true;
 		
-	}
+	}*/
 	
 	// Getters and setters
 	public ArrayList<Word> getWords() {

@@ -2,7 +2,7 @@ package entity;
 
 import java.util.ArrayList;
 
-public class Poem extends Entity {
+public class Poem extends Entity{
 	//int x;
 	//int y;
 	ArrayList<Row> rows;
@@ -13,17 +13,32 @@ public class Poem extends Entity {
 		this.rows = r;
 		this.x = r.get(0).x;
 		this.y = r.get(0).y;
+		this.width = 0;
+		this.height = 0;
 	}
 	
 	
-	//get the height of the poem
+	/*//get the height of the poem
 	public int getHeight() {
 		int h = this.rows.size() * this.rows.get(0).words.get(0).height;
 		return h;
+	}*/
+	
+	public boolean setX(int x){
+		this.x = x;
+		return true;
+	}
+	
+	public boolean setY(int y){
+		this.y = y;
+		return true;
 	}
 
 	
 	public boolean setPosition(int x, int y) {
+		for (Row r : this.rows){
+			r.setPosition(r.x - (this.x - x), r.y - (this.y - y));
+		}
 		this.x = x;
 		this.y = y;
 		return true;	
@@ -108,11 +123,16 @@ public class Poem extends Entity {
 		
 	}
 	*/
-	public boolean disconnectEdgeWord(Poem poem, int dexr, int dexw){
-		if(poem.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
+	public boolean disconnectEdgeWord(int dexr, int dexw){
+		if(this.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
 			return false;
-		else
-			return poem.rows.get(dexr).disconnectWord(dexw);//it's up to Rej's implement of method disconnectWord()
+		else{
+			this.rows.get(dexr).disconnectWord(dexw);//it's up to Rej's implement of method disconnectWord()
+			this.setX(this.rows.get(0).x);
+			this.setY(this.rows.get(0).y);
+			return true;
+		}
+			
 	
 		
 	}

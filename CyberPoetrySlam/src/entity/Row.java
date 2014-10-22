@@ -48,23 +48,46 @@ public class Row extends Entity{
 		this.x = words_arg.get(0).x;
 		this.y = words_arg.get(0).y;
 		this.words = words_arg;
+		this.setWidth();
+		this.setHeight();
 	}
 	
-	/*// get the width of the row, added by Xinjie
-	public int getWidth() {
-		int w = 0;
-		for(int i = 0; i < this.words.size(); i++)
-			w += this.words.get(i).width;
-		return w;
+	public boolean setX(int x){
+		this.x = x;
+		return true;
+	}
+	
+	public boolean setY(int y){
+		this.y = y;
+		return true;
+	}
+	
+	// set the width of the row, added by Xinjie
+	public boolean setWidth() {
+		this.width = 0;
+		if (this.words.size() > 0){
+			for(Word word : words)
+			this.width += word.width;
+		}
+		
+		return true;
 	}
 		
-	//get the height of the row(equals to the height of one word), added by Xinjie
-	public int getHeight() {
-		return this.words.get(0).height;
-	}*/
+	//set the height of the row(equals to the height of one word), added by Xinjie
+	public boolean setHeight() {
+		this.height = 0;
+		if (this.words.size() > 0){
+			this.height = this.words.get(0).height;
+		}
+		
+		return true;
+	}
 	
 	// set the position(x,y) of the row, added by Xinjie
 	public boolean setPosition(int x, int y) {
+		for (Word w : this.words){
+			w.setPosition(w.x - (this.x - x), w.y - (this.y - y));
+		}
 		this.x = x;
 		this.y = y;
 		return true;	
@@ -73,6 +96,16 @@ public class Row extends Entity{
 	/*
 	 * 
 	 */
+	protected boolean doesIntersectRow(Word w) {
+		for (Word word : words) {
+			if (!w.equals(word) && word.intersect(w) == true) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	void prepend(ArrayList<Word> rowOfWords, final Word first) {
 		rowOfWords.add(0, first);
 	}
@@ -85,8 +118,17 @@ public class Row extends Entity{
 	{
 		/* Prepend the word to the beginning of this row. Only makes sense
 		 * if the row has been previously initialised with some words.  */
-		this.prepend(words, w );	
-		return true;
+		if (doesIntersectRow(w)){
+			return false;	
+		}
+		else{
+			this.prepend(words, w );
+			this.setX(this.words.get(0).x);
+			this.setY(this.words.get(0).y);
+			this.setWidth();
+			this.setHeight();
+			return true;
+		}	
 	}
 
 	/**
@@ -95,8 +137,18 @@ public class Row extends Entity{
 	 */
 	public boolean connectWordRight(Word w) 
 	{
-		/* Append new word the end of this row */		
-		return words.add(w);
+		/* Append new word the end of this row */	
+		if (doesIntersectRow(w)){
+			return false;	
+		}
+		else{
+			this.words.add(w);
+			this.setX(this.words.get(0).x);
+			this.setY(this.words.get(0).y);
+			this.setWidth();
+			this.setHeight();
+			return true;
+		}	
 	}
 
 	/**
@@ -109,7 +161,11 @@ public class Row extends Entity{
 		/*[TODO]: Think the effect of this operation on row, structurally.
 		 * Group question:
 		 * */	
-		this.words.remove(dexw);	
+		this.words.remove(dexw);
+		this.setX(this.words.get(0).x);
+		this.setY(this.words.get(0).y);
+		this.setWidth();
+		this.setHeight();
 		return true;
 		
 	}
