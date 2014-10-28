@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Application extends JFrame {
 
@@ -37,6 +39,12 @@ public class Application extends JFrame {
 		getContentPane().setLayout(null);
 		
 		JButton btnNewButton = new JButton("Move");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//move controller
+			}
+		});
 		btnNewButton.setBounds(56, 31, 89, 23);
 		getContentPane().add(btnNewButton);
 		
