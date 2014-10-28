@@ -8,7 +8,7 @@ import entity.GameManager;
 import entity.GameManagerMemento;
 
 public class Main {
-static final String defaultStorage = "Wordmap.storage";
+static final String defaultStorage = "CBS.storage";
 	
 	static void storeState(GameManager gm, String location) {
 		ObjectOutputStream oos = null;
