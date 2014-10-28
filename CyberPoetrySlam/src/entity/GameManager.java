@@ -14,6 +14,15 @@ public class GameManager {
 	}
 	
 	/**
+	 * Reset Board to the state encoded by the Memento.
+	 * @param m Memento to restore to
+	 */
+	public void restore(GameManagerMemento m) {
+		pa = m.storedPa;
+		ua = m.storedUa;
+	}
+	
+	/**
 	 * Singleton pattern implementation.
 	 * @return the instance of GameManager
 	 */
@@ -22,6 +31,10 @@ public class GameManager {
 			instance = new GameManager();
 		}
 		return instance;
+	}
+	
+	public GameManagerMemento getState() {
+		return new GameManagerMemento(pa, ua);
 	}
 	
 	/**

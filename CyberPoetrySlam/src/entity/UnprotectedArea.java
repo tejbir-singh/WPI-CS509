@@ -1,9 +1,11 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class UnprotectedArea {
+public class UnprotectedArea implements Serializable {
+	private static final long serialVersionUID = -9203701553091519628L;
 	private static UnprotectedArea instance;
 	ArrayList<Word> words;
 	

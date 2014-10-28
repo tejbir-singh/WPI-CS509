@@ -6,7 +6,8 @@ import java.util.ArrayList;
  * @author tejbir singh
  *
  */
-public class Row extends Entity{
+public class Row extends Entity {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * width:
 	 * height:
@@ -20,18 +21,10 @@ public class Row extends Entity{
 	ArrayList<Word> words = new ArrayList<Word>();
 
 
-	/**
-	 * @param xarg
-	 * @param yarg
-	 * @param words
-	 * @param poem
-	 */
-	
-	
 	public Row(int xarg, int yarg,  ArrayList<Word> words_arg) 
 	{
-		x = xarg;
-		y = yarg;
+		this.x = xarg;
+		this.y = yarg;
 		/* method passes reference to the words vector  */
 		for (Word w: words_arg) {
 			words.add(w);
@@ -67,7 +60,7 @@ public class Row extends Entity{
 		this.width = 0;
 		if (this.words.size() > 0){
 			for(Word word : words)
-			this.width += word.width;
+				this.width += word.width;
 		}
 		
 		return true;

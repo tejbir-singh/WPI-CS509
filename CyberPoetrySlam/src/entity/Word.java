@@ -1,11 +1,9 @@
 package entity;
 
-class Word extends Entity {
-	
-	/*public int x;
-	public int y;
-	public int width;
-	public int height;*/
+import java.io.Serializable;
+
+class Word extends Entity implements Serializable {
+	private static final long serialVersionUID = -5436132699662013706L;
 	public String value;
 	public Type type;
 	
