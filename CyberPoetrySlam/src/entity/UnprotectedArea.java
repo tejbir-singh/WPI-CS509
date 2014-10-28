@@ -40,13 +40,13 @@ public class UnprotectedArea implements Serializable {
 	
 	/**
 	 * Remove a Word from the UnprotectedArea.
-	 * @param word Word to add
+	 * @param word Word to remove
 	 * @return true if successful
 	 */
 	public boolean remove(Word word) {
 		int index = words.indexOf(word);
 		if (index == -1) {							// word not found
-			// do something
+			return false;
 		}
 		else {
 			words.remove(index);

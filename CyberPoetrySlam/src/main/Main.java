@@ -1,3 +1,4 @@
+package main;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import entity.GameManagerMemento;
 public class Main {
 static final String defaultStorage = "CBS.storage";
 	
-	static void storeState(GameManager gm, String location) {
+	public static void storeState(GameManager gm, String location) {
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(location));
@@ -25,7 +26,7 @@ static final String defaultStorage = "CBS.storage";
 		
 	}
 	
-	static GameManager loadState(String location) {
+	public static GameManager loadState(String location) {
 		 ObjectInputStream ois = null;
 		 GameManager gm = GameManager.getInstance();
 		 try {

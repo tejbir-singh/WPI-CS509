@@ -1,8 +1,10 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ProtectedArea {
+public class ProtectedArea implements Serializable {
+	private static final long serialVersionUID = 906074510836395079L;
 	ArrayList<Word> words;
 	ArrayList<Poem> poems;
 	private static ProtectedArea instance;

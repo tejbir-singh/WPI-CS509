@@ -21,7 +21,11 @@ public class GameManager {
 		pa = m.storedPa;
 		ua = m.storedUa;
 	}
-	
+
+	public GameManagerMemento getState() {
+		return new GameManagerMemento(pa, ua);
+	}
+
 	/**
 	 * Singleton pattern implementation.
 	 * @return the instance of GameManager
@@ -32,11 +36,7 @@ public class GameManager {
 		}
 		return instance;
 	}
-	
-	public GameManagerMemento getState() {
-		return new GameManagerMemento(pa, ua);
-	}
-	
+		
 	/**
 	 * Add a Word to the ProtectedArea and remove it from the UnprotectedArea.
 	 * @param word Word to protect
