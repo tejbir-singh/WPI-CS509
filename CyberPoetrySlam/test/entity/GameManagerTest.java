@@ -1,7 +1,9 @@
 package entity;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import main.Main;
 import junit.framework.TestCase;
 
 public class GameManagerTest extends TestCase {
@@ -33,5 +35,19 @@ public class GameManagerTest extends TestCase {
 		gm.release(word);
 		assertNull(gm.getPa().getWord(word.x, word.y));
 		assertNotNull(gm.getUa().getWord(word.x, word.y));
+	}
+	
+	public void testRestoreState() {
+		File tmpStorage = null;
+		try {
+			tmpStorage = File.createTempFile("memento", ".bin");
+		} catch (Exception e) {
+			fail ("unable to create temporary file");
+		}
+	
+		Main.storeState(gm, tmpStorage.getAbsolutePath());
+		gm.getUa().add(word);
+		Main.loadState(tmpStorage.getAbsolutePath());
+		assertFalse(gm.getUa().remove(word));
 	}
 }

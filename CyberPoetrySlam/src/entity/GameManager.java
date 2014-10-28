@@ -14,6 +14,19 @@ public class GameManager {
 	}
 	
 	/**
+	 * Reset Board to the state encoded by the Memento.
+	 * @param m Memento to restore to
+	 */
+	public void restore(GameManagerMemento m) {
+		pa = m.storedPa;
+		ua = m.storedUa;
+	}
+
+	public GameManagerMemento getState() {
+		return new GameManagerMemento(pa, ua);
+	}
+
+	/**
 	 * Singleton pattern implementation.
 	 * @return the instance of GameManager
 	 */
@@ -23,7 +36,7 @@ public class GameManager {
 		}
 		return instance;
 	}
-	
+		
 	/**
 	 * Add a Word to the ProtectedArea and remove it from the UnprotectedArea.
 	 * @param word Word to protect

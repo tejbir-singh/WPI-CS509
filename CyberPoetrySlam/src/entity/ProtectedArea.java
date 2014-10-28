@@ -1,8 +1,10 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ProtectedArea {
+public class ProtectedArea implements Serializable {
+	private static final long serialVersionUID = 906074510836395079L;
 	ArrayList<Word> words;
 	ArrayList<Poem> poems;
 	private static ProtectedArea instance;
@@ -163,9 +165,14 @@ public class ProtectedArea {
 		
 	}
 	
-	// connect Word wleft to the left of Word w, 
-	//it will create a new poem(added to ArrayList poems) with one row, tow words,
-	//and the ArrayList words will delete w and wleft, added by Xinjie
+	/**
+	 * Connect Word wleft to the left of Word w, 
+	 * it will create a new poem(added to ArrayList poems) with one row, two words,
+	 * and the ArrayList words will delete w and wleft
+	 * @param w Word to add to
+	 * @param wleft Word to add to w
+	 * @return true if successful
+	 */
 	public boolean connectWordLeftWord(Word w, Word wleft){
 		if(this.moveEntity(wleft, w.x - wleft.width, w.y)){ // check intersection while connecting
 			// create a new poem and add it to the ArrayList poems and delete w and wleft
@@ -186,9 +193,9 @@ public class ProtectedArea {
 			return false;
 	}
 	
-	// Similar to connectWordLeftWord, connect Word wright to the right of Word w, 
+	// Similar to connectWordLeftWord, connect Word right to the right of Word w, 
 	//it will create a new poem(added to ArrayList poems) with one row, tow words,
-	//and the ArrayList words will delete w and wright, added by Xinjie
+	//and the ArrayList words will delete w and right, added by Xinjie
 	public boolean connectWordRightWord(Word w, Word wright){
 		if(this.moveEntity(wright, w.x + w.width, w.y)){
 			ArrayList<Word> aw1 = new ArrayList<Word>();

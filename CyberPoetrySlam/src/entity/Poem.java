@@ -3,6 +3,7 @@ package entity;
 import java.util.ArrayList;
 
 public class Poem extends Entity{
+	private static final long serialVersionUID = 1L;
 	//int x;
 	//int y;
 	ArrayList<Row> rows;
