@@ -1,0 +1,6 @@
+package shapes.model;
+
+public enum Type {
+	NOUN, ADJECTIVE, VERB, ADVERB, PRONOUN, 
+	PREPOSITION, PREFIX, SUFFIX, CONJUNCTION, INTERJECTION
+}
