@@ -5,7 +5,7 @@ import java.awt.GridLayout;
 
 import javax.swing.*;
 
-//import controller.MoveController;
+import shapes.model.GameManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,25 +18,10 @@ public class Application extends JFrame {
 	private JTextField txtUnprotectedArea;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Application frame = new Application();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
+	 * @param gm 
 	 */
-	public Application() {
+	public Application(GameManager gm) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		getContentPane().setLayout(null);
