@@ -13,7 +13,7 @@ public class UnprotectedArea implements Serializable {
 	 * Constructor.
 	 */
 	private UnprotectedArea() {
-		
+		words = new ArrayList<Word>();
 	}
 	
 	/**

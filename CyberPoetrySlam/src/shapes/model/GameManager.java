@@ -1,9 +1,13 @@
 package shapes.model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class GameManager {
 	private ProtectedArea pa;
 	private UnprotectedArea ua;
 	private static GameManager instance;
+	private final String wordBank = "words.txt";
 	
 	/**
 	 * Constructor.
@@ -11,6 +15,20 @@ public class GameManager {
 	private GameManager() {
 		pa = ProtectedArea.getInstance();
 		ua = UnprotectedArea.getInstance();
+		// populate the UnprotectedArea with the Words specified in words.txt
+		// for now we assume that Words will be stored with a type and value
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(wordBank));
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] words = line.split(",");
+				// generate Words (Will need to be fixed when we determine the proper size Words should be
+				ua.add(new Word(0, 0, words[0].length() * 5, 1, Type.valueOf(words[1]), words[0]));	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
