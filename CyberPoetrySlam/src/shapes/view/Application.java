@@ -1,14 +1,8 @@
 package shapes.view;
 
-import java.awt.EventQueue;
-import java.awt.GridLayout;
-
 import javax.swing.*;
 
 import shapes.model.GameManager;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Application extends JFrame {
 
@@ -19,12 +13,15 @@ public class Application extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @param gm 
+	 * @param gm GameManager
 	 */
 	public Application(GameManager gm) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		getContentPane().setLayout(null);
+		
+		JPanel p = new JPanel();
+		p.setBounds(this.getBounds());
 		
 		JButton btnNewButton = new JButton("Move");
 		btnNewButton.setBounds(56, 31, 89, 23);
@@ -45,6 +42,7 @@ public class Application extends JFrame {
 		JButton btnNewButton_4 = new JButton("Publish");
 		btnNewButton_4.setBounds(536, 31, 89, 23);
 		getContentPane().add(btnNewButton_4);
+		btnNewButton_4.setEnabled(false);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(12, 66, 678, 595);
@@ -60,9 +58,18 @@ public class Application extends JFrame {
 		
 		txtUnprotectedArea = new JTextField();
 		txtUnprotectedArea.setText("Unprotected Area");
-		txtUnprotectedArea.setBounds(256, 344, 114, 19);
+		txtUnprotectedArea.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUnprotectedArea.setBounds(252, 344, 114, 19);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
+		
+		// add the application panel
+		ApplicationPanel appPanel = new ApplicationPanel(gm);
+		appPanel.setBounds(200, 200, 600, 600);
+		appPanel.setAlignmentX(CENTER_ALIGNMENT);
+		appPanel.setAlignmentY(CENTER_ALIGNMENT);
+		panel.add(appPanel);
+		
 		/*
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Swap Initiated");
 		chckbxNewCheckBox.setBounds(566, 566, 97, 23);

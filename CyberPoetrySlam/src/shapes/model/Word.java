@@ -2,7 +2,7 @@ package shapes.model;
 
 import java.io.Serializable;
 
-class Word extends Entity implements Serializable {
+public class Word extends Entity implements Serializable {
 	private static final long serialVersionUID = -5436132699662013706L;
 	public String value;
 	public Type type;
@@ -42,4 +42,13 @@ class Word extends Entity implements Serializable {
 	 	System.out.println("wuyu");
 	 	return false;
 	}*/
+	
+	// getters and setters
+	public Type getType() {
+		return type;
+	}
+	
+	public String getValue() {
+		return value;
+	}
 }

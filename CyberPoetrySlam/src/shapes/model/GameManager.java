@@ -8,6 +8,7 @@ public class GameManager {
 	private UnprotectedArea ua;
 	private static GameManager instance;
 	private final String wordBank = "words.txt";
+	private Word selected = null;
 	
 	/**
 	 * Constructor.
@@ -23,8 +24,10 @@ public class GameManager {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(",");
-				// generate Words (Will need to be fixed when we determine the proper size Words should be
-				ua.add(new Word(0, 0, words[0].length() * 5, 1, Type.valueOf(words[1]), words[0]));	
+				// generate Words (Will need to be fixed when we determine the proper size Words should be)
+				
+				ua.add(new Word((int) Math.round(Math.random() * 100), (int) Math.round(Math.random() * 100) + 260,
+						words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));	
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,5 +91,13 @@ public class GameManager {
 
 	public void setUa(UnprotectedArea ua) {
 		this.ua = ua;
+	}
+
+	public Word getSelected() {
+		return selected;
+	}
+	
+	public void setSelected(Word selected) {
+		this.selected = selected;
 	}
 }
