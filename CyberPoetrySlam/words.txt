@@ -1,0 +1,3 @@
+word1,ADJECTIVE
+word2,NOUN
+word3,VERB
