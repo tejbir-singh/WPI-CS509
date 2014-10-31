@@ -14,6 +14,7 @@ import shapes.model.Word;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
+	public static final int AREA_DIVIDER = 365;
 	GameManager gm;
 	Image offscreenImage;
 	Graphics offscreenGraphics;
@@ -60,8 +61,7 @@ public class ApplicationPanel extends JPanel {
 	
 	public void redraw() {
 		// nothing to draw into? Must stop here.
-		if (offscreenImage == null) return;
-		
+		if (offscreenImage == null) { return; }
 		
 		// clear the image.
 		offscreenGraphics.clearRect(0, 0, this.getWidth(), this.getHeight());

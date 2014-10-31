@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import shapes.controller.MoveController;
 import shapes.model.GameManager;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -59,26 +58,26 @@ public class Application extends JFrame {
 		txtProtectedArea = new JTextField();
 		txtProtectedArea.setHorizontalAlignment(SwingConstants.CENTER);
 		txtProtectedArea.setText("Protected Area");
-		txtProtectedArea.setBounds(252, 11, 123, 20);
+		txtProtectedArea.setBounds(0, 11, 650, 20);
 		panel.add(txtProtectedArea);
 		txtProtectedArea.setColumns(10);
 		
 		txtUnprotectedArea = new JTextField();
 		txtUnprotectedArea.setText("Unprotected Area");
 		txtUnprotectedArea.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUnprotectedArea.setBounds(252, 344, 114, 19);
+		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
 		
 		// add the application panel
 		appPanel = new ApplicationPanel(gm);
-		appPanel.setBounds(0, 0, 600, 600);
+		panel.add(appPanel);
+		appPanel.setBounds(0, 31, 650, 550);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
-		panel.add(appPanel);
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
-
+		
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
