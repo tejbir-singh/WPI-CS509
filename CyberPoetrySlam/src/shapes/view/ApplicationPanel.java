@@ -109,4 +109,13 @@ public class ApplicationPanel extends JPanel {
 		g.setColor(Color.black);
 		g.drawString(w.getValue(), w.getX(), w.getY() + w.getHeight());
 	}
+	
+	/** Repaint to the screen just the given part of the image. */
+	public void paintBackground(Word w) {
+		// Only updates to the screen the given region
+		if (canvasGraphics != null) {
+			canvasGraphics.drawImage(offscreenImage, w.getX(), w.getY(), w.getWidth(), w.getHeight(), this);
+			repaint(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		}
+	}
 }

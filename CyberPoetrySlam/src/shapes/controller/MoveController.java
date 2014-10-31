@@ -9,7 +9,7 @@ import shapes.view.*;
 public class MoveController extends MouseAdapter {
 
 	/** Needed for controller behavior. */
-	Model model;
+	GameManager gm;
 	ApplicationPanel panel;
 	
 	/** Original x,y where shape was before move. */
@@ -25,8 +25,8 @@ public class MoveController extends MouseAdapter {
 	int buttonType;
 	
 	/** Constructor holds onto key manager objects. */
-	public MoveShapeController(Model model, ApplicationPanel panel) {
-		this.model = model;
+	public MoveController(GameManager gm, ApplicationPanel panel) {
+		this.gm = gm;
 		this.panel = panel;
 	}
 
@@ -38,7 +38,6 @@ public class MoveController extends MouseAdapter {
 
 	/**
 	 * Whenever mouse is pressed (left button), attempt to select object.
-	 * This is a GUI controller.
 	 */
 	@Override
 	public void mousePressed(MouseEvent me) {
@@ -47,8 +46,7 @@ public class MoveController extends MouseAdapter {
 	}
 	
 	/**
-	 * Whenever mouse is dragged, attempt to start object.
-	 * This is a GUI controller.
+	 * Whenever mouse is dragged, attempt to drag the object.
 	 */
 	@Override
 	public void mouseDragged(MouseEvent me) {
@@ -69,14 +67,15 @@ public class MoveController extends MouseAdapter {
 		anchor = new Point (x, y);
 			
 		// pieces are returned in order of Z coordinate
-		Shape s = model.getBoard().findShape(anchor.x, anchor.y);
-		if (s == null) { return false; }
+		Word w = gm.findWord(anchor.x, anchor.y);
+		if (w == null) { return false; }
 		
 		// no longer in the board since we are moving it around...
-		model.getBoard().remove(s);
-		model.setSelected(s);
-		originalx = s.getX();
-		originaly = s.getY();
+		gm.getUa().remove(w);
+		gm.getPa().remove(w);
+		gm.setSelected(w);
+		originalx = w.getX();
+		originaly = w.getY();
 			
 		// set anchor for smooth moving
 		deltaX = anchor.x - originalx;
@@ -89,9 +88,8 @@ public class MoveController extends MouseAdapter {
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
-		// no board? no behavior! No dragging of right-mouse buttons...
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
-		Shape selected = model.getSelected();
+		Word selected = gm.getSelected();
 		
 		if (selected == null) { return false; }
 		
@@ -99,20 +97,12 @@ public class MoveController extends MouseAdapter {
 		int oldx = selected.getX();
 		int oldy = selected.getY();
 		
-		selected.setLocation(x - deltaX, y - deltaY);
+		selected.setPosition(x - deltaX, y - deltaY);
 		
-		boolean ok = true;
-		for (Shape s : model.getBoard()) {
-			if (s.intersects(selected)) {
-				ok = false;
-				break;
-			}
-		}
-		
-		if (!ok) {
-			selected.setLocation(oldx, oldy);
+		if (gm.getPa().doesIntersect(selected)) {
+			selected.setPosition(oldx, oldy);
 		} else {
-			panel.paintShape(selected);
+			panel.paintWord(selected);
 			panel.repaint();
 		}
 	
@@ -121,18 +111,17 @@ public class MoveController extends MouseAdapter {
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
-		Shape selected = model.getSelected();
+		Word selected = gm.getSelected();
 		if (selected == null) { return false; }
 
 		// now released we can create Move
-		model.getBoard().add(selected);
-		MoveShape move = new MoveShape(selected, originalx, originaly, selected.getX(), selected.getY());
-		if (move.execute()) {
-			model.recordMove(move);
+		if (true) {			// check if it's in the unprotected area
+			gm.getUa().add(selected);
 		}
 		
+		
 		// no longer selected
-		model.setSelected(null);
+		gm.setSelected(null);
 		
 		panel.redraw();
 		panel.repaint();

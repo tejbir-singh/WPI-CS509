@@ -120,7 +120,7 @@ public class ProtectedArea implements Serializable {
 	 * @param e Entity to check
 	 * @return true if it intersects
 	 */
-	protected boolean doesIntersect(Entity e) {
+	public boolean doesIntersect(Entity e) {
 		// compare e to each existing Entity
 		if(e instanceof Word){
 			for (Word word : words) {

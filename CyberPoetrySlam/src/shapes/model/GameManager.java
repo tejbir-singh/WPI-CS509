@@ -75,6 +75,20 @@ public class GameManager {
 	public boolean release(Word word) {
 		return (pa.remove(word) && ua.add(word));
 	}
+	
+	/**
+	 * Find a Word at a given x- and y-coordinate.
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return Word at the location (null if not found)
+	 */
+	public Word findWord(int x, int y) {
+		Word w = ua.getWord(x, y);
+		if (w == null) {
+			w = pa.getWord(x, y);
+		}
+		return w;
+	}
 
 	// Getters and setters 
 	public ProtectedArea getPa() {

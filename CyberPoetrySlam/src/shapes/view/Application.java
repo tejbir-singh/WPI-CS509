@@ -2,7 +2,11 @@ package shapes.view;
 
 import javax.swing.*;
 
+import shapes.controller.MoveController;
 import shapes.model.GameManager;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Application extends JFrame {
 
@@ -10,12 +14,15 @@ public class Application extends JFrame {
 	private JTextField txtSwapActions;
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
+	ApplicationPanel appPanel;
+	GameManager gm;
 
 	/**
 	 * Create the frame.
 	 * @param gm GameManager
 	 */
-	public Application(GameManager gm) {
+	public Application(GameManager g) {
+		this.gm = g;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		getContentPane().setLayout(null);
@@ -64,11 +71,18 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setColumns(10);
 		
 		// add the application panel
-		ApplicationPanel appPanel = new ApplicationPanel(gm);
-		appPanel.setBounds(200, 200, 600, 600);
+		appPanel = new ApplicationPanel(gm);
+		appPanel.setBounds(100, 200, 600, 600);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		panel.add(appPanel);
+
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new MoveController(gm, appPanel).register();
+			}
+		});
 		
 		/*
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Swap Initiated");
