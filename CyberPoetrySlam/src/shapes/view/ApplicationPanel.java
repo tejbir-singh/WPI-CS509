@@ -60,8 +60,7 @@ public class ApplicationPanel extends JPanel {
 	
 	public void redraw() {
 		// nothing to draw into? Must stop here.
-		if (offscreenImage == null) return;
-		
+		if (offscreenImage == null) { return; }
 		
 		// clear the image.
 		offscreenGraphics.clearRect(0, 0, this.getWidth(), this.getHeight());

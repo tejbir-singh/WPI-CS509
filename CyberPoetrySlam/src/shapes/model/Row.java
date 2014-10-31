@@ -107,8 +107,7 @@ public class Row extends Entity {
 	 * @param w
 	 * @return
 	 */
-	public boolean connectWordLeft(Word w) 
-	{
+	public boolean connectWordLeft(Word w) {
 		/* Prepend the word to the beginning of this row. Only makes sense
 		 * if the row has been previously initialised with some words.  */
 		if (doesIntersectRow(w)){
@@ -128,8 +127,7 @@ public class Row extends Entity {
 	 * @param w
 	 * @return
 	 */
-	public boolean connectWordRight(Word w) 
-	{
+	public boolean connectWordRight(Word w) {
 		/* Append new word the end of this row */	
 		if (doesIntersectRow(w)){
 			return false;	
