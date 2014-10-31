@@ -114,11 +114,10 @@ public class MoveController extends MouseAdapter {
 		Word selected = gm.getSelected();
 		if (selected == null) { return false; }
 
-		// now released we can create Move
+		// now released we can move
 		if (true) {			// check if it's in the unprotected area
 			gm.getUa().add(selected);
 		}
-		
 		
 		// no longer selected
 		gm.setSelected(null);

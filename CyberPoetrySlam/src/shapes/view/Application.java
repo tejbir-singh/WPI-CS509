@@ -15,7 +15,7 @@ public class Application extends JFrame {
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
 	ApplicationPanel appPanel;
-	GameManager gm;
+	GameManager gm;	
 
 	/**
 	 * Create the frame.
@@ -72,10 +72,12 @@ public class Application extends JFrame {
 		
 		// add the application panel
 		appPanel = new ApplicationPanel(gm);
-		appPanel.setBounds(100, 200, 600, 600);
+		appPanel.setBounds(0, 0, 600, 600);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		panel.add(appPanel);
+		appPanel.setOpaque(false);
+		appPanel.setVisible(true);
 
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
