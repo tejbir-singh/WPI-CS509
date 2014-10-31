@@ -16,10 +16,9 @@ public class Word extends Entity implements Serializable {
 		this.value = value;	
 	}
 	
-	public boolean setPosition(int x, int y) {
+	public void setPosition(int x, int y) {
 		this.x = x;
-		this.y = y;
-		return true;	
+		this.y = y;	
 	}
 	
 	/*public boolean intersect(Word e) {
