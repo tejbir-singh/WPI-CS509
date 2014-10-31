@@ -108,7 +108,9 @@ public class ProtectedArea implements Serializable {
 	 */
 	public Word getWord(int x, int y) {
 		for (Word w : words) {
-			if (w.x == x && w.y == y) {
+			// create a dummy; remove this later
+			Word tmp = new Word(x, y, 0, 0, null, null);
+			if (w.intersect(tmp)) {
 				return w;
 			}
 		}

@@ -14,6 +14,7 @@ import shapes.model.Word;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
+	public static final int AREA_DIVIDER = 365;
 	GameManager gm;
 	Image offscreenImage;
 	Graphics offscreenGraphics;

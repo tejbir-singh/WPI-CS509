@@ -115,8 +115,11 @@ public class MoveController extends MouseAdapter {
 		if (selected == null) { return false; }
 
 		// now released we can move
-		if (true) {			// check if it's in the unprotected area
+		if (y >= panel.AREA_DIVIDER) {			// check if it's in the unprotected area
 			gm.getUa().add(selected);
+		}
+		else {
+			gm.getPa().add(selected);
 		}
 		
 		// no longer selected
