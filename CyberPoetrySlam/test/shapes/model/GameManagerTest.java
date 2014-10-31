@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 public class GameManagerTest extends TestCase {
 	GameManager gm = GameManager.getInstance();
-	Word word = new Word(0, 0, 0, 0, null, null);
+	Word word = new Word(0, 0, 1, 1, null, null);
 	
 	public void setUp() {
 		gm.getPa().setWords(new ArrayList<Word>());
