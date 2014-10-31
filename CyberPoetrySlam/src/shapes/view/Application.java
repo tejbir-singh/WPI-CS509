@@ -58,12 +58,14 @@ public class Application extends JFrame {
 		txtProtectedArea = new JTextField();
 		txtProtectedArea.setHorizontalAlignment(SwingConstants.CENTER);
 		txtProtectedArea.setText("Protected Area");
+		txtProtectedArea.setEditable(false);
 		txtProtectedArea.setBounds(0, 11, 650, 20);
 		panel.add(txtProtectedArea);
 		txtProtectedArea.setColumns(10);
 		
 		txtUnprotectedArea = new JTextField();
 		txtUnprotectedArea.setText("Unprotected Area");
+		txtUnprotectedArea.setEditable(false);
 		txtUnprotectedArea.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);

@@ -14,7 +14,7 @@ import shapes.model.Word;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
-	public static final int AREA_DIVIDER = 365;
+	public static final int AREA_DIVIDER = 320;
 	GameManager gm;
 	Image offscreenImage;
 	Graphics offscreenGraphics;
@@ -103,11 +103,15 @@ public class ApplicationPanel extends JPanel {
 	/** Paint the shape into the given graphics context. */
 	void paintWord(Graphics g, Word w) {
 		if (g == null) { return; }
-		
-		g.setColor(Color.gray);
+		if (w.getY() >= AREA_DIVIDER) {
+			g.setColor(Color.gray);
+		}
+		else {
+			g.setColor(Color.red);
+		}
 		g.fillRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 		g.setColor(Color.black);
-		g.drawString(w.getValue(), w.getX(), w.getY() + w.getHeight());
+		g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 	}
 	
 	/** Repaint to the screen just the given part of the image. */
