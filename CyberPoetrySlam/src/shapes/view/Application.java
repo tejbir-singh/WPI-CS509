@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 public class Application extends JFrame {
 
 	private static final long serialVersionUID = 8238490728667512551L;
-	private JTextField txtSwapActions;
+	// private JTextField txtSwapActions;
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
 	ApplicationPanel appPanel;
@@ -44,6 +44,7 @@ public class Application extends JFrame {
 		JButton btnNewButton_3 = new JButton("Release");
 		btnNewButton_3.setBounds(416, 31, 89, 23);
 		getContentPane().add(btnNewButton_3);
+		btnNewButton_3.setEnabled(false);
 		
 		JButton btnNewButton_4 = new JButton("Publish");
 		btnNewButton_4.setBounds(536, 31, 89, 23);

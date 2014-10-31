@@ -26,7 +26,7 @@ public class GameManager {
 				String[] words = line.split(",");
 				// generate Words (Will need to be fixed when we determine the proper size Words should be)
 				
-				ua.add(new Word((int) Math.round(Math.random() * 100), (int) Math.round(Math.random() * 100) + 260,
+				ua.add(new Word((int) Math.round(Math.random() * 100), (int) Math.round(Math.random() * 100) + 320,
 						words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));	
 			}
 		} catch (Exception e) {
