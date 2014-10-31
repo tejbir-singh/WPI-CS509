@@ -14,27 +14,37 @@ public class Row extends Entity {
 	 * x	: 
 	 * y	:
 	 */
-	/*int width;  track the width of the row 
+	
+	/*
+	 * [TODO]: Cleanup the following commented code before final submission
+	int width;  track the width of the row 
 	int height;  track the height of the row 
 	int x;  row's associated x-coordinate on the board 
-	int y;  row's associated y-coordinate on the board */
+	int y;  row's associated y-coordinate on the board 
+	*/
+	
 	ArrayList<Word> words = new ArrayList<Word>();
 
 
-	public Row(int xarg, int yarg,  ArrayList<Word> words_arg) 
+	/* 
+	 * [TODO]: Code cleanup: remove the following constructor before final submission
+	 */
+/*	public Row(int xarg, int yarg,  ArrayList<Word> words_arg) 
 	{
 		this.x = xarg;
 		this.y = yarg;
-		/* method passes reference to the words vector  */
+		// method passes reference to the words vector  
 		for (Word w: words_arg) {
 			words.add(w);
 		}
+	}*/
+		
+	
 		
 	/* Each row belongs to a poem and will need to be added to the poem.
 	* [TODO]: Add logic to add this row to the referenced poem. 
 	* Poem is a collection of rows. What's the collection type of a poem. That affects the methods available. 	
     */		
-	}
 	
 	// another constructor of Row, added by Xinjie
 	public Row(ArrayList<Word> words_arg){
@@ -45,49 +55,42 @@ public class Row extends Entity {
 		this.setHeight();
 	}
 	
-	public boolean setX(int x){
+	public void setX(int x){
 		this.x = x;
-		return true;
 	}
 	
-	public boolean setY(int y){
+	public void setY(int y){
 		this.y = y;
-		return true;
 	}
 	
 	// set the width of the row, added by Xinjie
-	public boolean setWidth() {
+	public void setWidth() {
 		this.width = 0;
 		if (this.words.size() > 0){
 			for(Word word : words)
 				this.width += word.width;
 		}
-		
-		return true;
 	}
 		
 	//set the height of the row(equals to the height of one word), added by Xinjie
-	public boolean setHeight() {
+	public void setHeight() {
 		this.height = 0;
 		if (this.words.size() > 0){
 			this.height = this.words.get(0).height;
 		}
-		
-		return true;
 	}
 	
 	// set the position(x,y) of the row, added by Xinjie
-	public boolean setPosition(int x, int y) {
+	public void setPosition(int x, int y) {
 		for (Word w : this.words){
 			w.setPosition(w.x - (this.x - x), w.y - (this.y - y));
 		}
 		this.x = x;
-		this.y = y;
-		return true;	
+		this.y = y;	
 	}
 		
 	/*
-	 * 
+	 * Checks if the word intersects the current Row
 	 */
 	protected boolean doesIntersectRow(Word w) {
 		for (Word word : words) {
@@ -99,6 +102,7 @@ public class Row extends Entity {
 		return false;
 	}
 	
+	/* Helper method to prepend value to beginning of list */
 	void prepend(ArrayList<Word> rowOfWords, final Word first) {
 		rowOfWords.add(0, first);
 	}
@@ -152,7 +156,7 @@ public class Row extends Entity {
 	public boolean disconnectWord(int dexw) 
 	{
 		/*[TODO]: Think the effect of this operation on row, structurally.
-		 * Group question:
+		 *
 		 * */	
 		this.words.remove(dexw);
 		this.setX(this.words.get(0).x);
