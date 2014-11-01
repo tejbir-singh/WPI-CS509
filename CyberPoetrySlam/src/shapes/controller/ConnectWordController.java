@@ -6,11 +6,13 @@ import java.awt.event.*;
 import shapes.model.*;
 import shapes.view.*;
 
-public class MoveController extends MouseAdapter {
+public class ConnectWordController extends MouseAdapter {
 
 	/** Needed for controller behavior. */
 	GameManager gm;
 	ApplicationPanel panel;
+	ReturnIndex ri;
+	ReturnIndex temp;
 	
 	/** Original x,y where shape was before move. */
 	int originalx;
@@ -25,7 +27,7 @@ public class MoveController extends MouseAdapter {
 	int buttonType;
 	
 	/** Constructor holds onto key manager objects. */
-	public MoveController(GameManager gm, ApplicationPanel panel) {
+	public ConnectWordController(GameManager gm, ApplicationPanel panel) {
 		this.gm = gm;
 		this.panel = panel;
 	}
@@ -71,7 +73,7 @@ public class MoveController extends MouseAdapter {
 		if (w == null) { return false; }
 		
 		// no longer in the board since we are moving it around...
-		gm.getUa().remove(w);
+		//gm.getUa().remove(w);
 		gm.getPa().remove(w);
 		gm.setSelected(w);
 		originalx = w.getX();
@@ -94,19 +96,10 @@ public class MoveController extends MouseAdapter {
 		if (selected == null) { return false; }
 		
 		panel.paintBackground(selected);
-		int oldx = selected.getX();
-		int oldy = selected.getY();
-		
 		selected.setPosition(x - deltaX, y - deltaY);
-		
-		if (gm.getPa().doesIntersect(selected)) {
-			selected.setPosition(oldx, oldy);
-		} 
-		else {
-			panel.paintWord(selected);
-			panel.repaint();
-		}
-	
+		panel.paintWord(selected);
+		panel.repaint();
+
 		return true;
 	}
 	
@@ -114,13 +107,26 @@ public class MoveController extends MouseAdapter {
 	protected boolean release (int x, int y) {
 		Word selected = gm.getSelected();
 		if (selected == null) { return false; }
-
-		// now released we can move
-		if (y >= GameManager.AREA_DIVIDER) {			// check if it's in the unprotected area
-			gm.getUa().add(selected);
-		}
-		else {
+		
+		if (gm.getPa().entityIntersect(selected) == null || gm.getPa().boundaryIntersect(selected)) { // didn't select any word to connect
+			selected.setPosition(originalx, originaly);
 			gm.getPa().add(selected);
+		} else {
+			ri = gm.getPa().entityIntersect(selected);
+			if(ri.w instanceof Word){
+				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
+					if(!gm.getPa().connectWordLeftWord(ri.w, selected) || gm.getPa().boundaryIntersect(selected)){
+						selected.setPosition(originalx, originaly);
+						gm.getPa().add(selected);
+					}
+					
+				}else{
+					if(!gm.getPa().connectWordRightWord(ri.w, selected)){
+						selected.setPosition(originalx, originaly);
+						gm.getPa().add(selected);
+					}
+				}
+			}
 		}
 		
 		// no longer selected

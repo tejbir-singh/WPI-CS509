@@ -262,14 +262,16 @@ public class ProtectedArea implements Serializable {
 	 */
 	public boolean boundaryIntersect(Entity e){
 		if (e instanceof Word){
-			if(e.x < GameManager.PROTECTED_AREA_X || e.y < GameManager.PROTECTED_AREA_Y || e.x + e.width > GameManager.PROTECTED_AREA_WIDTH || e.y + e.height > GameManager.AREA_DIVIDER - 10){
+			if(e.x < GameManager.PROTECTED_AREA_X || e.y < GameManager.PROTECTED_AREA_Y 
+					|| e.x + e.width > GameManager.PROTECTED_AREA_WIDTH || e.y + e.height > GameManager.AREA_DIVIDER - 10){
 			return true;
 			}else{
 				return false;
 			}
 		}else if (e instanceof Poem){
 			for (Row row : ((Poem) e).rows){
-				if(e.x < GameManager.PROTECTED_AREA_X || e.y < GameManager.PROTECTED_AREA_Y || e.x + e.width > GameManager.PROTECTED_AREA_WIDTH || e.y + e.height > GameManager.AREA_DIVIDER -10){
+				if(row.x < GameManager.PROTECTED_AREA_X || row.y < GameManager.PROTECTED_AREA_Y 
+						|| row.x + e.width > GameManager.PROTECTED_AREA_WIDTH || row.y + row.height > GameManager.AREA_DIVIDER -10){
 					return true;
 					}else{
 						return false;
