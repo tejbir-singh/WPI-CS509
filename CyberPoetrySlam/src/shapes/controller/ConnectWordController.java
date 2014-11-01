@@ -68,12 +68,9 @@ public class ConnectWordController extends MouseAdapter {
 	protected boolean select(int x, int y) {
 		anchor = new Point (x, y);
 			
-		// pieces are returned in order of Z coordinate
 		Word w = gm.findWord(anchor.x, anchor.y);
 		if (w == null) { return false; }
 		
-		// no longer in the board since we are moving it around...
-		//gm.getUa().remove(w);
 		gm.getPa().remove(w);
 		gm.setSelected(w);
 		originalx = w.getX();
@@ -83,10 +80,9 @@ public class ConnectWordController extends MouseAdapter {
 		deltaX = anchor.x - originalx;
 		deltaY = anchor.y - originaly;
 		
-		// paint will happen once moves. This redraws state to prepare for paint
 		panel.redraw();
 		return true;
-	}	
+	}
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
@@ -107,12 +103,12 @@ public class ConnectWordController extends MouseAdapter {
 	protected boolean release (int x, int y) {
 		Word selected = gm.getSelected();
 		if (selected == null) { return false; }
+		ri = gm.getPa().entityIntersect(selected);
 		
-		if (gm.getPa().entityIntersect(selected) == null || gm.getPa().boundaryIntersect(selected)) { // didn't select any word to connect
+		if (ri == null || gm.getPa().boundaryIntersect(selected)) { // didn't select any word to connect
 			selected.setPosition(originalx, originaly);
 			gm.getPa().add(selected);
-		} else {
-			ri = gm.getPa().entityIntersect(selected);
+		} else {													
 			if(ri.w instanceof Word){
 				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
 					if(!gm.getPa().connectWordLeftWord(ri.w, selected) || gm.getPa().boundaryIntersect(selected)){

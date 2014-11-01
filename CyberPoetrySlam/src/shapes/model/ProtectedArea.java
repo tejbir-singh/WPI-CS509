@@ -129,7 +129,7 @@ public class ProtectedArea implements Serializable {
 		if(e instanceof Word){
 			for (Word word : words) {
 				if (!e.equals(word) && word.intersect(e) == true) {
-				return true;
+					return true;
 				}
 			}
 		
@@ -142,18 +142,18 @@ public class ProtectedArea implements Serializable {
 			}
 		
 			return false;
-		} else{   //e instanceof Poem
+		}
+		else {   								//e instanceof Poem
 			for (Word word : words) {
-				for (Row rowe : ((Poem) e).rows){
-					for(Word worde : rowe.words){
+				for (Row rowe : ((Poem) e).rows) {
+					for(Word worde : rowe.words) {
 						if (word.intersect(worde) == true) {
 							return true;
 						}
 					}
-					
 				}
-				
 			}
+			
 			for (Poem poem : poems) {
 				for (Row row : poem.rows){
 					for (Row rowe : ((Poem) e).rows){
@@ -192,7 +192,7 @@ public class ProtectedArea implements Serializable {
 					ri.dexrow = -1;
 					ri.dexword = -1;
 					ri.w = word;
-				return ri;
+					return ri;
 				}
 			}
 		
@@ -206,14 +206,14 @@ public class ProtectedArea implements Serializable {
 							ri.w = word;
 						return ri;
 						}
-						dw += 1;
+						dw++;
 					}
-					dr += 1;
+					dr++;
 				}
-				dp += 1;
+				dp++;
 			}
 			return null;
-		} else{   //e instanceof Poem
+		} else{   					//e instanceof Poem
 			for (Word word : words) {
 				for (Row rowe : ((Poem) e).rows){
 					for(Word worde : rowe.words){
@@ -222,7 +222,7 @@ public class ProtectedArea implements Serializable {
 							ri.dexrow = -1;
 							ri.dexword = -1;
 							ri.w = word;
-						return ri;
+							return ri;
 						}
 					}	
 				}	
@@ -237,17 +237,16 @@ public class ProtectedArea implements Serializable {
 									ri.dexrow = dr;
 									ri.dexword = dw;
 									ri.w = word;
-								return ri;
+									return ri;
 								}
 							}	
 						}
-						dw += 1;
+						dw++;
 					}
-					dr += 1;
+					dr++;
 				}
-				dp += 1;
+				dp++;
 			}
-			
 			return null;
 		}
 		
@@ -361,7 +360,6 @@ public class ProtectedArea implements Serializable {
 			this.words.add(this.poems.get(dexp).rows.get(dexr).words.get(dexw));
 			this.poems.get(dexp).disconnectEdgeWord(dexr, dexw);
 			if(this.poems.get(dexp).rows.size() == 1 && this.poems.get(dexp).rows.get(0).words.size() == 1){
-				System.out.println("poem to word");
 				this.words.add(this.poems.get(dexp).rows.get(0).words.get(0));
 				this.poems.remove(dexp);
 			}

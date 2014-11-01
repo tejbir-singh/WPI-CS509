@@ -55,7 +55,6 @@ public class ApplicationPanel extends JPanel {
 			offscreenImage = this.createImage(this.getWidth(), this.getHeight());
 			offscreenGraphics = offscreenImage.getGraphics();
 			canvasGraphics = g;
-			
 			redraw();
 		}
 	}
@@ -128,7 +127,6 @@ public class ApplicationPanel extends JPanel {
 			for(Word w : r.words){
 				paintWord(g, w);
 			}
-			
 		}
 	}
 	
