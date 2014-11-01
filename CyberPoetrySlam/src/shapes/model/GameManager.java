@@ -10,6 +10,10 @@ public class GameManager {
 	private final String wordBank = "words.txt";
 	private Word selected = null;
 	public static final int AREA_DIVIDER = 320;
+	public static final int PROTECTED_AREA_X = 0;
+	public static final int PROTECTED_AREA_Y = 0;
+	public static final int PROTECTED_AREA_WIDTH = 650;
+	public static final int PROTECTED_AREA_HEIGHT = 550;
 	
 	
 	/**
@@ -28,7 +32,7 @@ public class GameManager {
 				String[] words = line.split(",");
 				// generate Words (Will need to be fixed when we determine the proper size Words should be)
 				
-				ua.add(new Word((int) Math.round(Math.random() * 100), (int) Math.round(Math.random() * 100) + AREA_DIVIDER,
+				ua.add(new Word((int) Math.round(Math.random() * 600), (int) Math.round(Math.random() * (PROTECTED_AREA_HEIGHT - AREA_DIVIDER)) + AREA_DIVIDER,
 						words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));	
 			}
 		} catch (Exception e) {

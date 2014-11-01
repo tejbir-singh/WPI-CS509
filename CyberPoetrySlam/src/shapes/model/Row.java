@@ -15,7 +15,7 @@ public class Row extends Entity {
 	 * y	:
 	 */
 	
-	/*
+	 /*
 	 * [TODO]: Cleanup the following commented code before final submission
 	int width;  track the width of the row 
 	int height;  track the height of the row 
@@ -23,7 +23,7 @@ public class Row extends Entity {
 	int y;  row's associated y-coordinate on the board 
 	*/
 	
-	ArrayList<Word> words = new ArrayList<Word>();
+	public ArrayList<Word> words = new ArrayList<Word>();
 
 
 	/* 

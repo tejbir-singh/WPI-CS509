@@ -9,6 +9,8 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import shapes.model.GameManager;
+import shapes.model.Poem;
+import shapes.model.Row;
 import shapes.model.Word;
 
 
@@ -72,6 +74,9 @@ public class ApplicationPanel extends JPanel {
 		for (Word w : gm.getPa().getWords()) {
 			paintWord(offscreenGraphics, w);
 		}
+		for (Poem p : gm.getPa().getPoems()) {
+			paintPoem(offscreenGraphics, p);
+		}
 	}
 	
 	/** 
@@ -99,6 +104,11 @@ public class ApplicationPanel extends JPanel {
 		paintWord(canvasGraphics, w);
 	}
 	
+	/** Paint the shape directly to the screen */
+	public void paintPoem(Poem p) {
+		paintPoem(canvasGraphics, p);
+	}
+	
 	/** Paint the shape into the given graphics context. */
 	void paintWord(Graphics g, Word w) {
 		if (g == null) { return; }
@@ -111,6 +121,15 @@ public class ApplicationPanel extends JPanel {
 		g.fillRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 		g.setColor(Color.black);
 		g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
+	}
+	
+	void paintPoem(Graphics g, Poem p) {
+		for (Row r : p.rows){
+			for(Word w : r.words){
+				paintWord(g, w);
+			}
+			
+		}
 	}
 	
 	/** Repaint to the screen just the given part of the image. */

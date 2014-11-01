@@ -2,8 +2,10 @@ package shapes.view;
 
 import javax.swing.*;
 
+import shapes.controller.ConnectWordController;
 import shapes.controller.MoveController;
 import shapes.model.GameManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -85,6 +87,13 @@ public class Application extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new MoveController(gm, appPanel).register();
+			}
+		});
+		
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new ConnectWordController(gm, appPanel).register();
 			}
 		});
 		

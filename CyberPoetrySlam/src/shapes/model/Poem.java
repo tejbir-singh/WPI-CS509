@@ -6,7 +6,7 @@ public class Poem extends Entity{
 	private static final long serialVersionUID = 1L;
 	//int x;
 	//int y;
-	ArrayList<Row> rows;
+	public ArrayList<Row> rows;
 	//int width=0;
 	//int height=0;
 	

@@ -7,6 +7,8 @@ public class ProtectedArea implements Serializable {
 	private static final long serialVersionUID = 906074510836395079L;
 	ArrayList<Word> words;
 	ArrayList<Poem> poems;
+	Word w;
+	//ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
 	private static ProtectedArea instance;
 	
 	/**
@@ -168,6 +170,116 @@ public class ProtectedArea implements Serializable {
 	}
 	
 	/**
+	 * Check if an Entity is intersecting any others in the ProtectedArea.
+	 * @param e Entity to check
+	 * @return the word that intersects with Entity e, and in order to save the word's index information 
+	 *         of which poem's which row's which word, i create a class ReturnIndex to save them.
+	 *         if the index of poem equals to -1, that means it is a word instead of belonging to a poem
+	 * @author xinjie      
+	 *
+	 */
+	public ReturnIndex entityIntersect(Entity e) {
+		// compare e to each existing Entity
+		Word w = null;
+		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
+		int dp = 0;
+		int dr = 0;
+		int dw = 0;
+		if(e instanceof Word){
+			for (Word word : words) {
+				if (!e.equals(word) && word.intersect(e) == true) {
+					ri.dexpoem = -1;
+					ri.dexrow = -1;
+					ri.dexword = -1;
+					ri.w = word;
+				return ri;
+				}
+			}
+		
+			for (Poem poem : poems) {
+				for (Row row : poem.rows){
+					for (Word word : row.words){
+						if (!e.equals(word) && word.intersect(e) == true) {
+							ri.dexpoem = dp;
+							ri.dexrow = dr;
+							ri.dexword = dw;
+							ri.w = word;
+						return ri;
+						}
+						dw += 1;
+					}
+					dr += 1;
+				}
+				dp += 1;
+			}
+			return null;
+		} else{   //e instanceof Poem
+			for (Word word : words) {
+				for (Row rowe : ((Poem) e).rows){
+					for(Word worde : rowe.words){
+						if (word.intersect(worde) == true) {
+							ri.dexpoem = -1;
+							ri.dexrow = -1;
+							ri.dexword = -1;
+							ri.w = word;
+						return ri;
+						}
+					}	
+				}	
+			}
+			for (Poem poem : poems) {
+				for (Row row : poem.rows){
+					for (Word word : row.words){
+						for (Row rowe : ((Poem) e).rows){
+							for (Word worde : rowe.words){
+								if (!word.equals(worde) && word.intersect(worde) == true) {
+									ri.dexpoem = dp;
+									ri.dexrow = dr;
+									ri.dexword = dw;
+									ri.w = word;
+								return ri;
+								}
+							}	
+						}
+						dw += 1;
+					}
+					dr += 1;
+				}
+				dp += 1;
+			}
+			
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Check if an Entity is intersecting any boundary in the ProtectedArea.
+	 * @param e Entity to check
+	 * @return true if it intersecting boundary
+	 * @author xinjie      
+	 *
+	 */
+	public boolean boundaryIntersect(Entity e){
+		if (e instanceof Word){
+			if(e.x < GameManager.PROTECTED_AREA_X || e.y < GameManager.PROTECTED_AREA_Y || e.x + e.width > GameManager.PROTECTED_AREA_WIDTH || e.y + e.height > GameManager.AREA_DIVIDER - 10){
+			return true;
+			}else{
+				return false;
+			}
+		}else if (e instanceof Poem){
+			for (Row row : ((Poem) e).rows){
+				if(e.x < GameManager.PROTECTED_AREA_X || e.y < GameManager.PROTECTED_AREA_Y || e.x + e.width > GameManager.PROTECTED_AREA_WIDTH || e.y + e.height > GameManager.AREA_DIVIDER -10){
+					return true;
+					}else{
+						return false;
+					} 
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Connect Word wleft to the left of Word w, 
 	 * it will create a new poem(added to ArrayList poems) with one row, two words,
 	 * and the ArrayList words will delete w and wleft
@@ -246,6 +358,11 @@ public class ProtectedArea implements Serializable {
 		if(this.moveEntity(this.poems.get(dexp).rows.get(dexr).words.get(dexw), x, y)){
 			this.words.add(this.poems.get(dexp).rows.get(dexr).words.get(dexw));
 			this.poems.get(dexp).disconnectEdgeWord(dexr, dexw);
+			if(this.poems.get(dexp).rows.size() == 1 && this.poems.get(dexp).rows.get(0).words.size() == 1){
+				System.out.println("poem to word");
+				this.words.add(this.poems.get(dexp).rows.get(0).words.get(0));
+				this.poems.remove(dexp);
+			}
 			return true;
 		}
 		else

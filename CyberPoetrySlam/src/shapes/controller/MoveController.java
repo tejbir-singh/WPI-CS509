@@ -99,7 +99,7 @@ public class MoveController extends MouseAdapter {
 		
 		selected.setPosition(x - deltaX, y - deltaY);
 		
-		if (gm.getPa().doesIntersect(selected)) {
+		if (gm.getPa().doesIntersect(selected) || gm.getPa().boundaryIntersect(selected)) {
 			selected.setPosition(oldx, oldy);
 		} else {
 			panel.paintWord(selected);
