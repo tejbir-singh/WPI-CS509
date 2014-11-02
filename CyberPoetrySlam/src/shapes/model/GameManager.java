@@ -30,29 +30,16 @@ public class GameManager {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(",");
-				// generate Words (Will need to be fixed when we determine the proper size Words should be)
-				
-				ua.add(new Word((int) Math.round(Math.random() * 600), (int) Math.round(Math.random() * (PROTECTED_AREA_HEIGHT - AREA_DIVIDER)) + AREA_DIVIDER,
-						words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));	
+				// generate Words
+				ua.add(new Word((int) Math.round(Math.random() * 600),
+						(int) Math.round(Math.random() * 100) + AREA_DIVIDER, 
+								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * Reset Board to the state encoded by the Memento.
-	 * @param m Memento to restore to
-	 */
-	public void restore(GameManagerMemento m) {
-		pa = m.storedPa;
-		ua = m.storedUa;
-	}
-
-	public GameManagerMemento getState() {
-		return new GameManagerMemento(pa, ua);
-	}
-
 	/**
 	 * Singleton pattern implementation.
 	 * @return the instance of GameManager
@@ -62,6 +49,23 @@ public class GameManager {
 			instance = new GameManager();
 		}
 		return instance;
+	}
+
+	/**
+	 * Reset Board to the state encoded by the Memento.
+	 * @param m Memento to restore to
+	 */
+	public void restore(GameManagerMemento m) {
+		pa = m.storedPa;
+		ua = m.storedUa;
+	}
+
+	/**
+	 * Retrieve the state from a GameManagerMemento.
+	 * @return GameManagerMemento with the state
+	 */
+	public GameManagerMemento getState() {
+		return new GameManagerMemento(pa, ua);
 	}
 		
 	/**

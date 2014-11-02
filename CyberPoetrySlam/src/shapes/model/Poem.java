@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Poem extends Entity{
 	private static final long serialVersionUID = 1L;
-	//int x;
-	//int y;
 	public ArrayList<Row> rows;
-	//int width=0;
-	//int height=0;
 	
+	/**
+	 * Constructor.
+	 * @param r Rows which make up the Poem
+	 */
 	public Poem(ArrayList<Row> r){
 		this.rows = r;
 		this.x = r.get(0).x;
@@ -121,6 +121,12 @@ public class Poem extends Entity{
 		
 	}
 	*/
+	/**
+	 * Disconnect a Word which is on the outside of a Row (first or last)
+	 * @param dexr Index of the Row in the Poem
+	 * @param dexw Index of the Word in the Row
+	 * @return
+	 */
 	public boolean disconnectEdgeWord(int dexr, int dexw){
 		if(this.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
 			return false;
@@ -129,7 +135,17 @@ public class Poem extends Entity{
 			this.setX(this.rows.get(0).x);
 			this.setY(this.rows.get(0).y);
 			return true;
+<<<<<<< HEAD
 		}	
 	}
 	
+=======
+		}
+	}
+	
+	// getters
+	public ArrayList<Row> getRows() {
+		return this.rows;
+	}
+>>>>>>> d0ad0718e23be2f888bb47df0cc20b26943e2172
 }

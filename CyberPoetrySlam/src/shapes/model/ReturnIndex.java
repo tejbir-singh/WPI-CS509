@@ -8,6 +8,7 @@ public class ReturnIndex implements Serializable {
 	public int dexrow;
 	public int dexword;
 	public Word w;
+	public Poem p = null;
 	
 	public ReturnIndex(int dexpoem, int dexrow, int dexword, Word w){
 		this.dexpoem = dexpoem;

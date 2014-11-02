@@ -109,8 +109,9 @@ public class Row extends Entity implements Serializable {
 	}
 	
 	/**
-	 * @param w
-	 * @return
+	 * Connect a Word to the left of the Row
+	 * @param w Word to connect
+	 * @return true if successful
 	 */
 	public boolean connectWordLeft(Word w) {
 		/* Prepend the word to the beginning of this row. Only makes sense
@@ -129,8 +130,9 @@ public class Row extends Entity implements Serializable {
 	}
 
 	/**
-	 * @param w
-	 * @return
+	 * Connect a Word to the right of a Row.
+	 * @param w word to connect
+	 * @return true if successful
 	 */
 	public boolean connectWordRight(Word w) {
 		/* Append new word the end of this row */	
@@ -148,21 +150,21 @@ public class Row extends Entity implements Serializable {
 	}
 
 	/**
-	 * @param w
-	 * @return
+	 * Disconnect a word.
+	 * @param dexw Index of the Word to remove
+	 * @return true
 	 */	
-	//modified by Xinjie on 10/19/2014
-	public boolean disconnectWord(int dexw) 
-	{
-		/*[TODO]: Think the effect of this operation on row, structurally.
-		 *
-		 * */	
+	public boolean disconnectWord(int dexw) {
 		this.words.remove(dexw);
 		this.setX(this.words.get(0).x);
 		this.setY(this.words.get(0).y);
 		this.setWidth();
 		this.setHeight();
 		return true;
-		
+	}
+	
+	// getters
+	public ArrayList<Word> getWords() {
+		return this.words;
 	}
 }

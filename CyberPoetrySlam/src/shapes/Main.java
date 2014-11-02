@@ -13,8 +13,13 @@ import shapes.model.GameManagerMemento;
 import shapes.view.Application;
 
 public class Main {
-static final String defaultStorage = "CBS.storage";
+static final String defaultStorage = "CPS.storage";
 	
+	/**
+	 * Store the game's state.
+	 * @param gm GameManager to store
+	 * @param location location to save the data
+	 */
 	public static void storeState(GameManager gm, String location) {
 		ObjectOutputStream oos = null;
 		try {
@@ -27,25 +32,28 @@ static final String defaultStorage = "CBS.storage";
 		if (oos != null) {
 			try { oos.close(); } catch (IOException ioe) { } 
 		}
-		
 	}
 	
+	/**
+	 * Revert the game to a previously saved state.
+	 * @param location file location containing restore data
+	 * @return restored GameManager
+	 */
 	public static GameManager loadState(String location) {
-		 ObjectInputStream ois = null;
-		 GameManager gm = GameManager.getInstance();
-		 try {
-			 ois = new ObjectInputStream (new FileInputStream(location));
-			 GameManagerMemento m = (GameManagerMemento) ois.readObject();
-			 ois.close();
-			 gm.restore(m);
-		 } catch (Exception e) {
-			 // unable to perform restore
-		 }
-		 
-		 // close down safely
-		 if (ois != null) {
-			 try { ois.close(); } catch (IOException ioe) { }
-		 }
+		ObjectInputStream ois = null;
+		GameManager gm = GameManager.getInstance();
+		try {
+			ois = new ObjectInputStream (new FileInputStream(location));
+			GameManagerMemento m = (GameManagerMemento) ois.readObject();
+			ois.close();
+			gm.restore(m);
+		} catch (Exception e) {
+			// unable to perform restore
+		}
+
+		if (ois != null) {
+			try { ois.close(); } catch (IOException ioe) { }
+		}
 		 
 		 return gm;
 	}
@@ -56,7 +64,7 @@ static final String defaultStorage = "CBS.storage";
 	 */
 	public static void main(String[] args) {
 		final GameManager gm = loadState(defaultStorage);
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -72,9 +80,6 @@ static final String defaultStorage = "CBS.storage";
 					e.printStackTrace();
 				}
 			}
-		});
-		
-		
+		});	
 	}
-
 }

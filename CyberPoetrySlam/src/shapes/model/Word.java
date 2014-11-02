@@ -7,6 +7,15 @@ public class Word extends Entity implements Serializable {
 	public String value;
 	public Type type;
 	
+	/**
+	 * 
+	 * @param x x-coordinate position
+	 * @param y y-coordinate position
+	 * @param w width
+	 * @param h height
+	 * @param t type
+	 * @param value String value of the word being created
+	 */
 	public Word(int x, int y, int w, int h, Type t, String value){
 		this.x = x;
 		this.y = y;
@@ -16,6 +25,11 @@ public class Word extends Entity implements Serializable {
 		this.value = value;	
 	}
 	
+	/**
+	 * Change the position of the Word.
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 */
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;	
