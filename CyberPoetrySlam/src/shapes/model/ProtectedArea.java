@@ -87,25 +87,20 @@ public class ProtectedArea implements Serializable {
 	// modified by Xinjie, the original one didn't give e's width and height to
 	// tmp
 	public boolean moveEntity(Entity e, int x, int y) {
-		int tempx = e.x; // save the previous value e.x, added by Xinjie
-		int tempy = e.y; // save the previous value e.y, added by Xinjie
+		int tempx = e.x; //save the previous value e.x, added by Xinjie
+		int tempy = e.y; //save the previous value e.y, added by Xinjie
 		// create temporary copy for manipulation
 
-		if (e instanceof Word) {
-			((Word) e).setPosition(x, y); // change the location of Entity e
-											// globally,added by Xinjie
-			if (doesIntersect(e)) { // invalid move if so
-				((Word) e).setPosition(tempx, tempy); // go back to its previous
-														// location, added by
-														// Xinjie
+		if (e instanceof Word){
+			((Word) e).setPosition(x, y); // change the location of Entity e globally,added by Xinjie
+			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
+				((Word) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
 				return false;
-			}
-		} else {
+			}	
+		}else{
 			((Poem) e).setPosition(x, y);
-			if (doesIntersect(e)) { // invalid move if so
-				((Poem) e).setPosition(tempx, tempy); // go back to its previous
-														// location, added by
-														// Xinjie
+			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
+				((Poem) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
 				return false;
 			}
 		}
@@ -205,72 +200,76 @@ public class ProtectedArea implements Serializable {
 		int dp = 0;
 		int dr = 0;
 		int dw = 0;
-		if (e instanceof Word) {
+		if(e instanceof Word){
 			for (Word word : words) {
 				if (!e.equals(word) && word.intersect(e) == true) {
 					ri.dexpoem = -1;
 					ri.dexrow = -1;
 					ri.dexword = -1;
 					ri.w = word;
-					return ri;
+				return ri;
 				}
 			}
-
+		
 			for (Poem poem : poems) {
-				for (Row row : poem.rows) {
-					for (Word word : row.words) {
+				dr = 0;
+				for (Row row : poem.rows){
+					dw = 0;
+					for (Word word : row.words){
 						if (!e.equals(word) && word.intersect(e) == true) {
 							ri.dexpoem = dp;
 							ri.dexrow = dr;
 							ri.dexword = dw;
 							ri.w = word;
-							ri.p = poem;
-							return ri;
+						return ri;
 						}
-						dw++;
+						dw += 1;
 					}
-					dr++;
+					dr += 1;
 				}
-				dp++;
+				dp += 1;
 			}
 			return null;
-		} else { // e instanceof Poem
+		} else{   //e instanceof Poem
 			for (Word word : words) {
-				for (Row rowe : ((Poem) e).rows) {
-					for (Word worde : rowe.words) {
+				for (Row rowe : ((Poem) e).rows){
+					for(Word worde : rowe.words){
 						if (word.intersect(worde) == true) {
 							ri.dexpoem = -1;
 							ri.dexrow = -1;
 							ri.dexword = -1;
 							ri.w = word;
-							return ri;
+						return ri;
 						}
-					}
-				}
+					}	
+				}	
 			}
 			for (Poem poem : poems) {
-				for (Row row : poem.rows) {
-					for (Word word : row.words) {
-						for (Row rowe : ((Poem) e).rows) {
-							for (Word worde : rowe.words) {
-								if (!word.equals(worde)
-										&& word.intersect(worde) == true) {
+				dr = 0;
+				for (Row row : poem.rows){
+					dw = 0;
+					for (Word word : row.words){
+						for (Row rowe : ((Poem) e).rows){
+							for (Word worde : rowe.words){
+								if (!word.equals(worde) && word.intersect(worde) == true) {
 									ri.dexpoem = dp;
 									ri.dexrow = dr;
 									ri.dexword = dw;
 									ri.w = word;
-									return ri;
+								return ri;
 								}
-							}
+							}	
 						}
-						dw++;
+						dw += 1;
 					}
-					dr++;
+					dr += 1;
 				}
-				dp++;
+				dp += 1;
 			}
+			
 			return null;
 		}
+		
 	}
 
 	/**
@@ -281,7 +280,7 @@ public class ProtectedArea implements Serializable {
 	 * @author xinjie
 	 *
 	 */
-	/* Is this necessary? The program is working fine without it.
+	 //Is this necessary? The program is working fine without it.
 	public boolean boundaryIntersect(Entity e) {
 		if (e instanceof Word) {
 			if (e.x < GameManager.PROTECTED_AREA_X
@@ -306,7 +305,7 @@ public class ProtectedArea implements Serializable {
 		}
 		return false;
 	}
-	*/
+	
 
 
 	/**

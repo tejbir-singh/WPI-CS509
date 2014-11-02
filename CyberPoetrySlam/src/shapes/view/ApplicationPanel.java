@@ -116,25 +116,27 @@ public class ApplicationPanel extends JPanel {
 
 	/** Paint the shape into the given graphics context. */
 	void paintWord(Graphics g, Word w) {
-		if (g == null) {
-			return;
-		}
+		if (g == null) { return; }
 		if (w.getY() >= GameManager.AREA_DIVIDER) {
 			g.setColor(Color.gray);
-		} else {
-			g.setColor(Color.red);
+		}
+		else {
+			g.setColor(Color.cyan);
 		}
 		g.fillRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 		g.setColor(Color.black);
-		g.drawString(w.getValue(), w.getX() + w.getWidth() / 4,
-				w.getY() + w.getHeight());
+		g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 	}
-
+	
 	void paintPoem(Graphics g, Poem p) {
-		for (Row r : p.rows) {
-			for (Word w : r.words) {
-				paintWord(g, w);
+		for (Row r : p.rows){
+			for(Word w : r.words){
+				g.setColor(Color.green);
+				g.fillRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+				g.setColor(Color.black);
+				g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 			}
+			
 		}
 	}
 
