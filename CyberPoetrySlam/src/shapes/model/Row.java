@@ -1,12 +1,13 @@
 package shapes.model;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * @author tejbir singh
  *
  */
-public class Row extends Entity {
+public class Row extends Entity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * width:

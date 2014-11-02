@@ -25,24 +25,21 @@ public class Poem extends Entity{
 		return h;
 	}*/
 	
-	public boolean setX(int x){
+	public void setX(int x){
 		this.x = x;
-		return true;
 	}
 	
-	public boolean setY(int y){
+	public void setY(int y){
 		this.y = y;
-		return true;
 	}
 
 	
-	public boolean setPosition(int x, int y) {
+	public void setPosition(int x, int y) {
 		for (Row r : this.rows){
 			r.setPosition(r.x - (this.x - x), r.y - (this.y - y));
 		}
 		this.x = x;
-		this.y = y;
-		return true;	
+		this.y = y;	
 	}  
 	
 	/*
@@ -138,6 +135,11 @@ public class Poem extends Entity{
 			this.setX(this.rows.get(0).x);
 			this.setY(this.rows.get(0).y);
 			return true;
+<<<<<<< HEAD
+		}	
+	}
+	
+=======
 		}
 	}
 	
@@ -145,4 +147,5 @@ public class Poem extends Entity{
 	public ArrayList<Row> getRows() {
 		return this.rows;
 	}
+>>>>>>> d0ad0718e23be2f888bb47df0cc20b26943e2172
 }

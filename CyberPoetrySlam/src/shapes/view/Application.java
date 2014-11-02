@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import shapes.controller.ConnectWordController;
 import shapes.controller.MoveController;
+import shapes.controller.DisconnectWordController;
 import shapes.model.GameManager;
 
 import java.awt.event.MouseAdapter;
@@ -94,6 +95,13 @@ public class Application extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new ConnectWordController(gm, appPanel).register();
+			}
+		});
+		
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new DisconnectWordController(gm, appPanel).register();
 			}
 		});
 		
