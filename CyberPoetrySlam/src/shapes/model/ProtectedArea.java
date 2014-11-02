@@ -125,6 +125,17 @@ public class ProtectedArea implements Serializable {
 				return w;
 			}
 		}
+		
+		for (Poem p : poems) {						// check through Poems
+			for (Row r : p.getRows()) {
+				for (Word w : r.getWords()) {
+					Word tmp = new Word(x, y, 0, 0, null, null);
+					if (w.intersect(tmp)) {
+						return w;
+					}
+				}
+			}
+		}
 		return null;
 	}
 
