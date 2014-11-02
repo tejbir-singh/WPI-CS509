@@ -135,7 +135,7 @@ public class ProtectedArea implements Serializable {
 		
 			for (Poem poem : poems) {
 				for (Row row : poem.rows){
-					if (row.intersect(e) == true){
+					if (row.intersect(e)){
 						return true;
 					}
 				}	
@@ -204,7 +204,8 @@ public class ProtectedArea implements Serializable {
 							ri.dexrow = dr;
 							ri.dexword = dw;
 							ri.w = word;
-						return ri;
+							ri.p = poem;
+							return ri;
 						}
 						dw++;
 					}
@@ -213,7 +214,8 @@ public class ProtectedArea implements Serializable {
 				dp++;
 			}
 			return null;
-		} else{   					//e instanceof Poem
+		} 
+		else{   						//e instanceof Poem
 			for (Word word : words) {
 				for (Row rowe : ((Poem) e).rows){
 					for(Word worde : rowe.words){

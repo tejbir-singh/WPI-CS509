@@ -151,8 +151,7 @@ public class Row extends Entity {
 	 * @return
 	 */	
 	//modified by Xinjie on 10/19/2014
-	public boolean disconnectWord(int dexw) 
-	{
+	public boolean disconnectWord(int dexw) {
 		/*[TODO]: Think the effect of this operation on row, structurally.
 		 *
 		 * */	
@@ -162,6 +161,9 @@ public class Row extends Entity {
 		this.setWidth();
 		this.setHeight();
 		return true;
-		
+	}
+	
+	public ArrayList<Word> getWords() {
+		return this.words;
 	}
 }

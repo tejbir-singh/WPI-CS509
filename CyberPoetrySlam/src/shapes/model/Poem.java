@@ -133,10 +133,10 @@ public class Poem extends Entity{
 			this.setY(this.rows.get(0).y);
 			return true;
 		}
-			
-	
-		
 	}
 	
-
+	// getters
+	public ArrayList<Row> getRows() {
+		return this.rows;
+	}
 }

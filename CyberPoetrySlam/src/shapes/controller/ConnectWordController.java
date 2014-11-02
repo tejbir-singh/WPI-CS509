@@ -105,23 +105,44 @@ public class ConnectWordController extends MouseAdapter {
 		if (selected == null) { return false; }
 		ri = gm.getPa().entityIntersect(selected);
 		
-		if (ri == null || gm.getPa().boundaryIntersect(selected)) { // didn't select any word to connect
+		if (ri == null || gm.getPa().boundaryIntersect(selected)) { 			// didn't select any word to connect
 			selected.setPosition(originalx, originaly);
 			gm.getPa().add(selected);
-		} else {													
-			if(ri.w instanceof Word){
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
-					if(!gm.getPa().connectWordLeftWord(ri.w, selected) || gm.getPa().boundaryIntersect(selected)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+		} 
+		else {																	// valid selection
+			if (ri.dexpoem == -1 || isEdgeWord(ri.w)) {							// check if edge word
+				if (ri.p == null) {												// connecting a word to another word
+					if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
+						if(!gm.getPa().connectWordLeftWord(ri.w, selected) || gm.getPa().boundaryIntersect(selected)){
+							selected.setPosition(originalx, originaly);
+							gm.getPa().add(selected);
+						}
 					}
-					
-				}else{
-					if(!gm.getPa().connectWordRightWord(ri.w, selected)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+					else{
+						if(!gm.getPa().connectWordRightWord(ri.w, selected)){
+							selected.setPosition(originalx, originaly);
+							gm.getPa().add(selected);
+						}
 					}
 				}
+				else {
+					if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
+						if(!gm.getPa().connectWordLeftPoem(ri.p, selected, ri.dexrow) || gm.getPa().boundaryIntersect(selected)){
+							selected.setPosition(originalx, originaly);
+							gm.getPa().add(selected);
+						}
+					}
+					else{
+						if(!gm.getPa().connectWordRightPoem(ri.p, selected, ri.dexrow)){
+							selected.setPosition(originalx, originaly);
+							gm.getPa().add(selected);
+						}
+					}
+				}
+			}
+			else {
+				selected.setPosition(originalx, originaly);
+				gm.getPa().add(selected);
 			}
 		}
 		
@@ -131,5 +152,11 @@ public class ConnectWordController extends MouseAdapter {
 		panel.redraw();
 		panel.repaint();
 		return true;
+	}
+	
+	private boolean isEdgeWord(Word w) {
+		Row r = ri.p.getRows().get(ri.dexrow);
+		return r.getWords().get(r.getWords().size()-1) == w
+				|| ri.p.getRows().get(ri.dexrow).getWords().get(0) == w;
 	}
 }
