@@ -157,10 +157,8 @@ public class ConnectWordController extends MouseAdapter {
 	}
 
 	/**
-	 * Helper function which determines whether an edge word was selected
-	 * 
-	 * @param w
-	 *            Word to check
+	 * Helper function which determines whether an edge word was selected.
+	 * @param w Word to check
 	 * @return true if an edge word was selected
 	 */
 	private boolean isEdgeWord(Word w) {
@@ -170,7 +168,7 @@ public class ConnectWordController extends MouseAdapter {
 	}
 
 	/**
-	 * Helper function to revert changes to the selected Entity's position
+	 * Helper function to revert changes to the selected Entity's position.
 	 */
 	private void revert() {
 		gm.getSelected().setPosition(originalx, originaly);

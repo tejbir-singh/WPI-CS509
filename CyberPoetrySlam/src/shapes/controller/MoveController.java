@@ -24,7 +24,11 @@ public class MoveController extends MouseAdapter {
 	/** Button that started off. */
 	int buttonType;
 	
-	/** Constructor holds onto key manager objects. */
+	/**
+	 * Constructor.
+	 * @param gm GameManager 
+	 * @param panel ApplicationPanel
+	 */
 	public MoveController(GameManager gm, ApplicationPanel panel) {
 		this.gm = gm;
 		this.panel = panel;
@@ -38,6 +42,7 @@ public class MoveController extends MouseAdapter {
 
 	/**
 	 * Whenever mouse is pressed (left button), attempt to select object.
+	 * @param me MouseEvent trigger
 	 */
 	@Override
 	public void mousePressed(MouseEvent me) {
@@ -47,6 +52,7 @@ public class MoveController extends MouseAdapter {
 	
 	/**
 	 * Whenever mouse is dragged, attempt to drag the object.
+	 * @param me MouseEvent trigger
 	 */
 	@Override
 	public void mouseDragged(MouseEvent me) {
@@ -55,7 +61,7 @@ public class MoveController extends MouseAdapter {
 	
 	/**
 	 * Whenever mouse is released, complete the move. 
-	 * This is a GUI controller.
+	 * @param me MouseEvent trigger
 	 */
 	@Override
 	public void mouseReleased(MouseEvent me) {
@@ -116,7 +122,7 @@ public class MoveController extends MouseAdapter {
 		if (selected == null) { return false; }
 
 		// now released we can move
-		if (y >= GameManager.AREA_DIVIDER) {			// check if it's in the unprotected area
+		if (y >= GameManager.AREA_DIVIDER) {			// check if it is in the unprotected area
 			gm.getUa().add(selected);
 		}
 		else {

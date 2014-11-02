@@ -30,9 +30,7 @@ public class GameManager {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(",");
-				// generate Words (Will need to be fixed when we determine the
-				// proper size Words should be)
-
+				// generate Words
 				ua.add(new Word((int) Math.round(Math.random() * 600),
 						(int) Math.round(Math.random() * 100) + AREA_DIVIDER, 
 								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
@@ -40,6 +38,17 @@ public class GameManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Singleton pattern implementation.
+	 * @return the instance of GameManager
+	 */
+	public static GameManager getInstance() {
+		if (instance == null) {
+			instance = new GameManager();
+		}
+		return instance;
 	}
 
 	/**
@@ -51,19 +60,12 @@ public class GameManager {
 		ua = m.storedUa;
 	}
 
+	/**
+	 * Retrieve the state from a GameManagerMemento.
+	 * @return GameManagerMemento with the state
+	 */
 	public GameManagerMemento getState() {
 		return new GameManagerMemento(pa, ua);
-	}
-
-	/**
-	 * Singleton pattern implementation.
-	 * @return the instance of GameManager
-	 */
-	public static GameManager getInstance() {
-		if (instance == null) {
-			instance = new GameManager();
-		}
-		return instance;
 	}
 		
 	/**
