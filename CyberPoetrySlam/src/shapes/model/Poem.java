@@ -135,17 +135,13 @@ public class Poem extends Entity{
 			this.setX(this.rows.get(0).x);
 			this.setY(this.rows.get(0).y);
 			return true;
-<<<<<<< HEAD
-		}	
-	}
-	
-=======
 		}
 	}
+		
+
 	
 	// getters
 	public ArrayList<Row> getRows() {
 		return this.rows;
 	}
->>>>>>> d0ad0718e23be2f888bb47df0cc20b26943e2172
 }
