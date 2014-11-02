@@ -98,7 +98,7 @@ public class Application extends JFrame {
 			}
 		});
 		
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new DisconnectWordController(gm, appPanel).register();
