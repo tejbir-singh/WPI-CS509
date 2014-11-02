@@ -13,7 +13,7 @@ import shapes.model.GameManagerMemento;
 import shapes.view.Application;
 
 public class Main {
-static final String defaultStorage = "CBS.storage";
+static final String defaultStorage = "CPS.storage";
 	
 	public static void storeState(GameManager gm, String location) {
 		ObjectOutputStream oos = null;

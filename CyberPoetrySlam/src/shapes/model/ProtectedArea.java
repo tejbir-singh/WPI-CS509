@@ -276,12 +276,12 @@ public class ProtectedArea implements Serializable {
 	/**
 	 * Check if an Entity is intersecting any boundary in the ProtectedArea.
 	 * 
-	 * @param e
-	 *            Entity to check
+	 * @param e Entity to check
 	 * @return true if it intersecting boundary
 	 * @author xinjie
 	 *
 	 */
+	/* Is this necessary? The program is working fine without it.
 	public boolean boundaryIntersect(Entity e) {
 		if (e instanceof Word) {
 			if (e.x < GameManager.PROTECTED_AREA_X
@@ -306,6 +306,8 @@ public class ProtectedArea implements Serializable {
 		}
 		return false;
 	}
+	*/
+
 
 	/**
 	 * Connect Word wleft to the left of Word w, it will create a new poem(added

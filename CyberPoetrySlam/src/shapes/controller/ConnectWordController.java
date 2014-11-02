@@ -112,7 +112,7 @@ public class ConnectWordController extends MouseAdapter {
 		}
 		ri = gm.getPa().entityIntersect(selected);
 
-		if (ri == null || gm.getPa().boundaryIntersect(selected)) { // didn't
+		if (ri == null) {// || gm.getPa().boundaryIntersect(selected)) { // didn't
 																	// select
 																	// any word
 																	// to
@@ -123,8 +123,7 @@ public class ConnectWordController extends MouseAdapter {
 			if (ri.dexpoem == -1 || isEdgeWord(ri.w)) { // check if edge word
 				if (ri.p == null) { // connecting a word to another word
 					if (selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())) {
-						if (!gm.getPa().connectWordLeftWord(ri.w, selected)
-								|| gm.getPa().boundaryIntersect(selected)) {
+						if (!gm.getPa().connectWordLeftWord(ri.w, selected)) {
 							revert();
 						}
 					} else {
@@ -134,14 +133,11 @@ public class ConnectWordController extends MouseAdapter {
 					}
 				} else {
 					if (selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())) {
-						if (!gm.getPa().connectWordLeftPoem(ri.p, selected,
-								ri.dexrow)
-								|| gm.getPa().boundaryIntersect(selected)) {
+						if (!gm.getPa().connectWordLeftPoem(ri.p, selected, ri.dexrow)) {
 							revert();
 						}
 					} else {
-						if (!gm.getPa().connectWordRightPoem(ri.p, selected,
-								ri.dexrow)) {
+						if (!gm.getPa().connectWordRightPoem(ri.p, selected, ri.dexrow)) {
 							revert();
 						}
 					}
