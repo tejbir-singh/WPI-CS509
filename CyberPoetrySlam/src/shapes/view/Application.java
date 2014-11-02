@@ -27,10 +27,10 @@ public class Application extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
 		getContentPane().setLayout(null);
-		
+
 		JPanel p = new JPanel();
 		p.setBounds(this.getBounds());
-		
+
 		JButton btnNewButton = new JButton("Move");
 		btnNewButton.setBounds(56, 31, 89, 23);
 		getContentPane().add(btnNewButton);
@@ -38,26 +38,26 @@ public class Application extends JFrame {
 		JButton btnNewButton_1 = new JButton("Connect");
 		btnNewButton_1.setBounds(176, 31, 89, 23);
 		getContentPane().add(btnNewButton_1);
-		
+
 		JButton btnNewButton_2 = new JButton("Disconnect");
 		btnNewButton_2.setBounds(296, 31, 89, 23);
 		getContentPane().add(btnNewButton_2);
-		
+
 		JButton btnNewButton_3 = new JButton("Release");
 		btnNewButton_3.setBounds(416, 31, 89, 23);
 		getContentPane().add(btnNewButton_3);
 		btnNewButton_3.setEnabled(false);
-		
+
 		JButton btnNewButton_4 = new JButton("Publish");
 		btnNewButton_4.setBounds(536, 31, 89, 23);
 		getContentPane().add(btnNewButton_4);
 		btnNewButton_4.setEnabled(false);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBounds(12, 66, 678, 595);
 		getContentPane().add(panel);
 		panel.setLayout(null);
-		
+
 		txtProtectedArea = new JTextField();
 		txtProtectedArea.setHorizontalAlignment(SwingConstants.CENTER);
 		txtProtectedArea.setText("Protected Area");
@@ -65,7 +65,7 @@ public class Application extends JFrame {
 		txtProtectedArea.setBounds(0, 11, 650, 20);
 		panel.add(txtProtectedArea);
 		txtProtectedArea.setColumns(10);
-		
+
 		txtUnprotectedArea = new JTextField();
 		txtUnprotectedArea.setText("Unprotected Area");
 		txtUnprotectedArea.setEditable(false);
@@ -73,7 +73,7 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
-		
+
 		// add the application panel
 		appPanel = new ApplicationPanel(gm);
 		panel.add(appPanel);
@@ -82,14 +82,14 @@ public class Application extends JFrame {
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
-		
+
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new MoveController(gm, appPanel).register();
 			}
 		});
-		
+
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {

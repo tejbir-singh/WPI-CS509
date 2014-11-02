@@ -30,16 +30,18 @@ public class GameManager {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(",");
-				// generate Words (Will need to be fixed when we determine the proper size Words should be)
-				
-				ua.add(new Word((int) Math.round(Math.random() * 600), (int) Math.round(Math.random() * (PROTECTED_AREA_HEIGHT - AREA_DIVIDER)) + AREA_DIVIDER,
-						words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));	
+				// generate Words (Will need to be fixed when we determine the
+				// proper size Words should be)
+
+				ua.add(new Word((int) Math.round(Math.random() * 600),
+						(int) Math.round(Math.random() * (PROTECTED_AREA_HEIGHT - AREA_DIVIDER)) + AREA_DIVIDER, 
+								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Reset Board to the state encoded by the Memento.
 	 * @param m Memento to restore to
