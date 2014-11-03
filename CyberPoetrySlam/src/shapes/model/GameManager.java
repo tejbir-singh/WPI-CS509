@@ -9,6 +9,7 @@ public class GameManager {
 	private static GameManager instance;
 	private final String wordBank = "words.txt";
 	private Word selected = null;
+	ReturnIndex selectedidx = null;
 	public static final int AREA_DIVIDER = 320;
 	public static final int PROTECTED_AREA_X = 0;
 	public static final int PROTECTED_AREA_Y = 0;
@@ -123,5 +124,13 @@ public class GameManager {
 	
 	public void setSelected(Word selected) {
 		this.selected = selected;
+	}
+	
+	public ReturnIndex getSelectedIdx() {
+		return selectedidx;
+	}
+	
+	public void setSelectedIdx(ReturnIndex selectedidx) {
+		this.selectedidx = selectedidx;
 	}
 }

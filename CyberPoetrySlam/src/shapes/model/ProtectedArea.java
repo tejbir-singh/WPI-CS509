@@ -138,6 +138,43 @@ public class ProtectedArea implements Serializable {
 		}
 		return null;
 	}
+	
+	/**
+	 * Get a ReturnIndex based on its x and y position.
+	 * 
+	 * @param x
+	 *            x-coordinate
+	 * @param y
+	 *            y-coordinate
+	 * @return ReturnIndex at given location (null if not found)
+	 */
+	public ReturnIndex getWordIdx(int x, int y) {
+		Word w = null;
+		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
+		int poem_idx = 0;
+		int row_idx = 0;
+		int word_idx = 0;
+		for (Poem poem : poems) {						// check through Poems
+			for (Row row : poem.getRows()) {
+				for (Word word : row.getWords()) {
+					Word tmp = new Word(x, y, 0, 0, null, null);
+					if (word.intersect(tmp)) {
+						ri.dexpoem = poem_idx;
+						ri.dexrow = row_idx;
+						ri.dexword = word_idx;
+						ri.w = word;
+						return ri;
+					}
+					word_idx += 1;
+				}
+				row_idx += 1;
+				word_idx = 0;
+			}
+			poem_idx += 1;
+			row_idx = 0;
+		}
+		return null;
+	}
 
 	/**
 	 * Check if an Entity is intersecting any others in the ProtectedArea.
@@ -404,8 +441,7 @@ public class ProtectedArea implements Serializable {
 	// disconnect ProtectedArea's No.dexp's poem's No.dexr row's No.dexw's word,
 	// and move the word to (x, y) without intersecting
 	public boolean disconnectWord(int dexp, int dexr, int dexw, int x, int y) {
-		if (this.moveEntity(
-				this.poems.get(dexp).rows.get(dexr).words.get(dexw), x, y)) {
+		if (this.moveEntity(this.poems.get(dexp).rows.get(dexr).words.get(dexw), x, y)) {
 			this.words.add(this.poems.get(dexp).rows.get(dexr).words.get(dexw));
 			this.poems.get(dexp).disconnectEdgeWord(dexr, dexw);
 			if (this.poems.get(dexp).rows.size() == 1

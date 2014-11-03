@@ -64,17 +64,27 @@ public class DisconnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean select(int x, int y) {
 		anchor = new Point (x, y);
+		Word w = null;
+		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
 			
-		// pieces are returned in order of Z coordinate
-		Word w = gm.findWord(anchor.x, anchor.y);
-		if (w == null) { return false; }
+		// select nothing
+		if (gm.getPa().getWordIdx(anchor.x, anchor.y) == null) { 
+			return false; 
+		}
 		
-		// no longer in the board since we are moving it around...
-		// gm.getUa().remove(w);
-		gm.getPa().remove(w);
-		gm.setSelected(w);
-		originalx = w.getX();
-		originaly = w.getY();
+		ri = gm.getPa().getWordIdx(anchor.x, anchor.y);
+		
+		// check if ri.w is the edge word in a poem
+		if (ri.dexword != 0 && ri.dexword != gm.getPa().getPoems().get(ri.dexpoem).getRows().get(ri.dexrow).getWords().size() - 1 ){
+			return false;
+		}
+		
+		Word selected = gm.getPa().getPoems().get(ri.dexpoem).getRows().get(ri.dexrow).getWords().get(ri.dexword);
+		gm.setSelectedIdx(ri);
+		gm.setSelected(selected);
+		
+		originalx = selected.getX();
+		originaly = selected.getY();
 			
 		// set anchor for smooth moving
 		deltaX = anchor.x - originalx;
@@ -94,37 +104,30 @@ public class DisconnectWordController extends MouseAdapter {
 		if (selected == null) { return false; }
 		
 		panel.paintBackground(selected);
-		int oldx = selected.getX();
-		int oldy = selected.getY();
-		
 		selected.setPosition(x - deltaX, y - deltaY);
-		
-		if (gm.getPa().doesIntersect(selected)) {
-			selected.setPosition(oldx, oldy);
-		} 
-		else {
-			panel.paintWord(selected);
-			panel.repaint();
-		}
-	
+		panel.paintWord(selected);
+		panel.repaint();
+
 		return true;
 	}
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
+		ReturnIndex selectedidx = gm.getSelectedIdx();
 		Word selected = gm.getSelected();
+		
 		if (selected == null) { return false; }
-
-		// now released we can move
-		if (y >= GameManager.AREA_DIVIDER) {			// check if it's in the unprotected area
-			gm.getUa().add(selected);
+		
+		//Check if the word can be disconnect without intersection, if yes, make the disconnectWord, otherwise, go back to the original position
+		if (!gm.getPa().disconnectWord(selectedidx.dexpoem, selectedidx.dexrow, selectedidx.dexword, selected.getX(), selected.getY())){
+			selected.setPosition(originalx, originaly);
 		}
-		else {
-			gm.getPa().add(selected);
-		}
+		System.out.println(gm.getPa().getPoems().size());
+		System.out.println(gm.getPa().getWords().size());
 		
 		// no longer selected
 		gm.setSelected(null);
+		gm.setSelectedIdx(null);
 		
 		panel.redraw();
 		panel.repaint();
