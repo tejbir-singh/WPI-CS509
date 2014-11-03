@@ -109,44 +109,33 @@ public class ConnectWordController extends MouseAdapter {
 		if (selected == null) { return false; }
 		
 		if (gm.getPa().entityIntersect(selected) == null) { // didn't select any word to connect
-			selected.setPosition(originalx, originaly);
-			gm.getPa().add(selected);
+			revert();
 		} else {
 			ri = gm.getPa().entityIntersect(selected);
 			if(ri.dexpoem == -1){ //ri.w is a single word
 				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
 					if(!gm.getPa().connectWordLeftWord(ri.w, selected)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+						revert();
 					}
 					
 				}else{
 					if(!gm.getPa().connectWordRightWord(ri.w, selected)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+						revert();
 					}
 					
 				} 
 			}else{ // ri.w is a word in a poem
-				System.out.println(ri.dexpoem);
-				System.out.println(ri.dexrow);
-				System.out.println(ri.dexword);
-				System.out.println(ri.w.value);
 				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
 					if(!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+						revert();
 					}
 					
 				}else{
 					if(!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
-						selected.setPosition(originalx, originaly);
-						gm.getPa().add(selected);
+						revert();
 					}
-					
 				}
 			}
-	
 		}
 		
 		// no longer selected
@@ -155,5 +144,10 @@ public class ConnectWordController extends MouseAdapter {
 		panel.redraw();
 		panel.repaint();
 		return true;
+	}
+	
+	public void revert() {
+		gm.getSelected().setPosition(originalx, originaly);
+		gm.getPa().add(gm.getSelected());
 	}
 }

@@ -1,22 +1,27 @@
 package shapes.controller;
 
+import java.util.ArrayList;
+
 import shapes.model.GameManager;
 import shapes.model.Type;
 import shapes.model.Word;
 import shapes.view.ApplicationPanel;
 import junit.framework.TestCase;
 
-public class MoveControllerTest extends TestCase {
+public class ConnectWordControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	MoveController mc;
+	ConnectWordController mc;
 	
 	@Override
 	protected void setUp() {
 		gm = GameManager.getInstance();
 		app = new ApplicationPanel(gm);
-		mc = new MoveController(gm, app);
-		gm.getPa().add(new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1"));
+		mc = new ConnectWordController(gm, app);
+		Word w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
+		Word w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
+		gm.getPa().add(w1);
+		gm.getPa().add(w2);
 	}
 	
 	public void testSelect() {
@@ -27,8 +32,8 @@ public class MoveControllerTest extends TestCase {
 	public void testRelease() {
 		mc.register();
 		mc.select(1, 1);
-		mc.drag(2, 2);
-		mc.release(2, 2);
-		assertTrue(gm.getPa().getWords().get(0).getValue().equals("test1"));
+		mc.drag(100, 100);
+		mc.release(100, 100);
+		assertNotNull(gm.getPa().getPoems().get(0));
 	}
 }
