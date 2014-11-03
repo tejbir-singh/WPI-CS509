@@ -125,15 +125,18 @@ public class ConnectWordController extends MouseAdapter {
 					
 				} 
 			}else{ // ri.w is a word in a poem
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
+				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.dexword == 0){
 					if(!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
 						revert();
 					}
 					
-				}else{
+				}
+				else if(selected.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.dexword == gm.getPa().getPoems().get(ri.dexpoem).getRows().get(ri.dexrow).getWords().size() - 1){
 					if(!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
 						revert();
 					}
+				} else{
+					revert();
 				}
 			}
 		}
