@@ -104,17 +104,17 @@ public class ApplicationPanel extends JPanel {
 		}
 	}
 
-	/** Paint the shape directly to the screen */
+	/** Paint the Word directly to the screen */
 	public void paintWord(Word w) {
 		paintWord(canvasGraphics, w);
 	}
 
-	/** Paint the shape directly to the screen */
+	/** Paint the Poem directly to the screen */
 	public void paintPoem(Poem p) {
 		paintPoem(canvasGraphics, p);
 	}
 
-	/** Paint the shape into the given graphics context. */
+	/** Paint the Word into the given graphics context. */
 	void paintWord(Graphics g, Word w) {
 		if (g == null) { return; }
 		if (w.getY() >= GameManager.AREA_DIVIDER) {
@@ -128,6 +128,7 @@ public class ApplicationPanel extends JPanel {
 		g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 	}
 	
+	/** Paint the Poem into the given graphics context. */
 	void paintPoem(Graphics g, Poem p) {
 		for (Row r : p.rows){
 			for(Word w : r.words){

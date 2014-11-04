@@ -6,6 +6,9 @@ import java.awt.event.*;
 import cps.model.*;
 import cps.view.*;
 
+/**
+ * @author Devin
+ */
 public class ConnectWordController extends MouseAdapter {
 
 	/** Needed for controller behavior. */
@@ -14,7 +17,7 @@ public class ConnectWordController extends MouseAdapter {
 	ReturnIndex ri;
 	ReturnIndex temp;
 	
-	/** Original x,y where shape was before move. */
+	/** Original x,y where the Entity was before move. */
 	int originalx;
 	int originaly;
 	
@@ -39,7 +42,7 @@ public class ConnectWordController extends MouseAdapter {
 	}
 
 	/**
-	 * Whenever mouse is pressed (left button), attempt to select object.
+	 * Whenever mouse is pressed (left button), attempt to select an object.
 	 */
 	@Override
 	public void mousePressed(MouseEvent me) {
@@ -72,8 +75,7 @@ public class ConnectWordController extends MouseAdapter {
 		Word w = gm.findWord(anchor.x, anchor.y);
 		
 		// TEMPORARY: Need to change to allow Poems to be connected to each other
-		if (w == null || gm.getPa().belongsToPoem(w) != null) { return false; }		
-		
+		if (w == null || gm.getPa().belongsToPoem(w) != null) { return false; }
 		
 		// no longer in the board since we are moving it around...
 		//gm.getUa().remove(w);
@@ -111,48 +113,66 @@ public class ConnectWordController extends MouseAdapter {
 		Word selected = gm.getSelected();
 		if (selected == null) { return false; }
 		
-		if (gm.getPa().entityIntersect(selected) == null) { // didn't select any word to connect
+		if (gm.getPa().entityIntersect(selected) == null) { 			// didn't select any word to connect
 			revert();
-		} else {
+		} 
+		else {
 			ri = gm.getPa().entityIntersect(selected);
-			if(ri.idxPoem == -1){ //ri.w is a single word
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
-					if(!gm.getPa().connectWordLeftWord(ri.w, selected)){
-						revert();
-					}
-					
-				}else{
-					if(!gm.getPa().connectWordRightWord(ri.w, selected)){
-						revert();
-					}
-					
-				} 
-			}else{ // ri.w is a word in a poem
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.idxWord == 0){
-					if(!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.idxPoem), selected, ri.idxRow)){
-						revert();
-					}
-					
-				}
-				else if(selected.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.idxWord == gm.getPa().getPoems().get(ri.idxPoem).getRows().get(ri.idxRow).getWords().size() - 1){
-					if(!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.idxPoem), selected, ri.idxRow)){
-						revert();
-					}
-				} else{
-					revert();
-				}
+			if(ri.idxPoem == -1){ 										//ri.w is a single word
+				connectWordToWord(selected);
+			}
+			else{ 														// ri.w is a word in a poem
+				connectWordToPoem(selected);
 			}
 		}
 		
 		// no longer selected
 		gm.setSelected(null);
-		
 		panel.redraw();
 		panel.repaint();
 		return true;
 	}
+
+	/**
+	 * Helper function.
+	 * Connect a Word to another single Word.
+	 * @param word Word to connect
+	 */
+	private void connectWordToWord(Word word) {
+		if (word.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())) {
+			if (!gm.getPa().connectWordLeftWord(ri.w, word)) {
+				revert();
+			}
+		}
+		else {
+			if (!gm.getPa().connectWordRightWord(ri.w, word)) {
+				revert();
+			}
+		}
+	}
+
+	/**
+	 * Helper function.
+	 * Connect a Word to a pre-existing Poem.
+	 * @param word Word to connect
+	 */
+	private void connectWordToPoem(Word word) {
+		if (word.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.idxWord == 0) {
+			if (!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.idxPoem), word, ri.idxRow)) {
+				revert();
+			}
+		} else if (word.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth())
+				&& ri.idxWord == gm.getPa().getPoems().get(ri.idxPoem).getRows().get(ri.idxRow).getWords().size() - 1) {
+			if (!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.idxPoem), word, ri.idxRow)) {
+				revert();
+			}
+		} 
+		else{
+			revert();
+		}
+	}
 	
-	public void revert() {
+	private void revert() {
 		gm.getSelected().setPosition(originalx, originaly);
 		gm.getPa().add(gm.getSelected());
 	}
