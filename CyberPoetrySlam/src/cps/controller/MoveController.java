@@ -1,10 +1,10 @@
-package shapes.controller;
+package cps.controller;
 
 import java.awt.Point;
 import java.awt.event.*;
 
-import shapes.model.*;
-import shapes.view.*;
+import cps.model.*;
+import cps.view.*;
 
 public class MoveController extends MouseAdapter {
 

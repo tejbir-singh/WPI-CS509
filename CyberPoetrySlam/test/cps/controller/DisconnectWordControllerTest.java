@@ -1,12 +1,13 @@
-package shapes.controller;
+package cps.controller;
 
 import java.util.ArrayList;
 
-import shapes.model.GameManager;
-import shapes.model.Type;
-import shapes.model.Word;
-import shapes.model.Poem;
-import shapes.view.ApplicationPanel;
+import cps.controller.DisconnectWordController;
+import cps.model.GameManager;
+import cps.model.Poem;
+import cps.model.Type;
+import cps.model.Word;
+import cps.view.ApplicationPanel;
 import junit.framework.TestCase;
 
 public class DisconnectWordControllerTest extends TestCase {

@@ -1,9 +1,10 @@
-package shapes.controller;
+package cps.controller;
 
-import shapes.model.GameManager;
-import shapes.model.Type;
-import shapes.model.Word;
-import shapes.view.ApplicationPanel;
+import cps.controller.MoveController;
+import cps.model.GameManager;
+import cps.model.Type;
+import cps.model.Word;
+import cps.view.ApplicationPanel;
 import junit.framework.TestCase;
 
 public class MoveControllerTest extends TestCase {

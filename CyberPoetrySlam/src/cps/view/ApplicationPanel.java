@@ -1,4 +1,4 @@
-package shapes.view;
+package cps.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,10 +8,10 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
-import shapes.model.GameManager;
-import shapes.model.Poem;
-import shapes.model.Row;
-import shapes.model.Word;
+import cps.model.GameManager;
+import cps.model.Poem;
+import cps.model.Row;
+import cps.model.Word;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;

@@ -1,4 +1,4 @@
-package shapes.model;
+package cps.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -159,9 +159,9 @@ public class ProtectedArea implements Serializable {
 				for (Word word : row.getWords()) {
 					Word tmp = new Word(x, y, 0, 0, null, null);
 					if (word.intersect(tmp)) {
-						ri.dexpoem = poem_idx;
-						ri.dexrow = row_idx;
-						ri.dexword = word_idx;
+						ri.idxPoem = poem_idx;
+						ri.idxRow = row_idx;
+						ri.idxWord = word_idx;
 						ri.w = word;
 						return ri;
 					}
@@ -251,9 +251,9 @@ public class ProtectedArea implements Serializable {
 		if(e instanceof Word){
 			for (Word word : words) {
 				if (!e.equals(word) && word.intersect(e) == true) {
-					ri.dexpoem = -1;
-					ri.dexrow = -1;
-					ri.dexword = -1;
+					ri.idxPoem = -1;
+					ri.idxRow = -1;
+					ri.idxWord = -1;
 					ri.w = word;
 				return ri;
 				}
@@ -265,9 +265,9 @@ public class ProtectedArea implements Serializable {
 					dw = 0;
 					for (Word word : row.words){
 						if (!e.equals(word) && word.intersect(e) == true) {
-							ri.dexpoem = dp;
-							ri.dexrow = dr;
-							ri.dexword = dw;
+							ri.idxPoem = dp;
+							ri.idxRow = dr;
+							ri.idxWord = dw;
 							ri.w = word;
 						return ri;
 						}
@@ -283,9 +283,9 @@ public class ProtectedArea implements Serializable {
 				for (Row rowe : ((Poem) e).rows){
 					for(Word worde : rowe.words){
 						if (word.intersect(worde) == true) {
-							ri.dexpoem = -1;
-							ri.dexrow = -1;
-							ri.dexword = -1;
+							ri.idxPoem = -1;
+							ri.idxRow = -1;
+							ri.idxWord = -1;
 							ri.w = word;
 						return ri;
 						}
@@ -300,9 +300,9 @@ public class ProtectedArea implements Serializable {
 						for (Row rowe : ((Poem) e).rows){
 							for (Word worde : rowe.words){
 								if (!word.equals(worde) && word.intersect(worde) == true) {
-									ri.dexpoem = dp;
-									ri.dexrow = dr;
-									ri.dexword = dw;
+									ri.idxPoem = dp;
+									ri.idxRow = dr;
+									ri.idxWord = dw;
 									ri.w = word;
 								return ri;
 								}
@@ -354,6 +354,21 @@ public class ProtectedArea implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Find the Poem which the Word is a part of.
+	 * @param w Word to check
+	 * @return Poem which the Word belongs to (null if none)
+	 */
+	public Poem belongsToPoem(Word w) {
+		for (Poem p : poems) {
+			for (Row r : p.getRows()) {
+				if (r.getWords().contains(w)) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
 
 
 	/**

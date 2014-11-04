@@ -1,4 +1,4 @@
-package shapes;
+package cps;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import shapes.model.GameManager;
-import shapes.model.GameManagerMemento;
-import shapes.view.Application;
+import cps.model.GameManager;
+import cps.model.GameManagerMemento;
+import cps.view.Application;
 
 public class Main {
 static final String defaultStorage = "CPS.storage";

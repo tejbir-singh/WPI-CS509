@@ -1,18 +1,16 @@
-package shapes.controller;
+package cps.controller;
 
 import java.awt.Point;
 import java.awt.event.*;
 
-import shapes.model.*;
-import shapes.view.*;
+import cps.model.*;
+import cps.view.*;
 
-public class ConnectWordController extends MouseAdapter {
-
+public class DisconnectWordController extends MouseAdapter {
 	/** Needed for controller behavior. */
 	GameManager gm;
 	ApplicationPanel panel;
-	ReturnIndex ri;
-	ReturnIndex temp;
+	
 	
 	/** Original x,y where shape was before move. */
 	int originalx;
@@ -27,17 +25,17 @@ public class ConnectWordController extends MouseAdapter {
 	int buttonType;
 	
 	/** Constructor holds onto key manager objects. */
-	public ConnectWordController(GameManager gm, ApplicationPanel panel) {
+	public DisconnectWordController(GameManager gm, ApplicationPanel panel) {
 		this.gm = gm;
 		this.panel = panel;
 	}
-
+	
 	/** Set up press events but no motion events. */
 	public void register() {
 		panel.setActiveListener(this);
 		panel.setActiveMotionListener(this);
 	}
-
+	
 	/**
 	 * Whenever mouse is pressed (left button), attempt to select object.
 	 */
@@ -46,7 +44,6 @@ public class ConnectWordController extends MouseAdapter {
 		buttonType = me.getButton();
 		select(me.getX(), me.getY());
 	}
-	
 	/**
 	 * Whenever mouse is dragged, attempt to drag the object.
 	 */
@@ -67,18 +64,27 @@ public class ConnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean select(int x, int y) {
 		anchor = new Point (x, y);
-			
-		// pieces are returned in order of Z coordinate
-		Word w = gm.findWord(anchor.x, anchor.y);
-		if (w == null) { return false; }
+		Word w = null;
+		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
 		
-		// no longer in the board since we are moving it around...
-		//gm.getUa().remove(w);
-		gm.getPa().remove(w);
-		gm.setSelected(w);
-		originalx = w.getX();
-		originaly = w.getY();
-			
+		ri = gm.getPa().getWordIdx(anchor.x, anchor.y);
+		
+		// select nothing
+		if (ri == null) {
+			return false;
+		}
+		
+		// check if ri.w is the edge word in a poem
+		if (ri.idxWord != 0 && ri.idxWord != gm.getPa().getPoems().get(ri.idxPoem).getRows().get(ri.idxRow).getWords().size() - 1) {
+			return false;
+		}
+
+		gm.setSelected(ri.w);
+		gm.setSelectedIdx(ri);
+
+		originalx = gm.getSelected().getX();
+		originaly = gm.getSelected().getY();
+
 		// set anchor for smooth moving
 		deltaX = anchor.x - originalx;
 		deltaY = anchor.y - originaly;
@@ -87,7 +93,8 @@ public class ConnectWordController extends MouseAdapter {
 		panel.redraw();
 		return true;
 	}	
-	
+
+
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
@@ -105,52 +112,23 @@ public class ConnectWordController extends MouseAdapter {
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
+		ReturnIndex selectedIdx = gm.getSelectedIdx();
 		Word selected = gm.getSelected();
+		
 		if (selected == null) { return false; }
 		
-		if (gm.getPa().entityIntersect(selected) == null) { // didn't select any word to connect
-			revert();
-		} else {
-			ri = gm.getPa().entityIntersect(selected);
-			if(ri.dexpoem == -1){ //ri.w is a single word
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth())){
-					if(!gm.getPa().connectWordLeftWord(ri.w, selected)){
-						revert();
-					}
-					
-				}else{
-					if(!gm.getPa().connectWordRightWord(ri.w, selected)){
-						revert();
-					}
-					
-				} 
-			}else{ // ri.w is a word in a poem
-				if(selected.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.dexword == 0){
-					if(!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
-						revert();
-					}
-					
-				}
-				else if(selected.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.dexword == gm.getPa().getPoems().get(ri.dexpoem).getRows().get(ri.dexrow).getWords().size() - 1){
-					if(!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.dexpoem), selected, ri.dexrow)){
-						revert();
-					}
-				} else{
-					revert();
-				}
-			}
+		//Check if the word can be disconnect without intersection, if yes, make the disconnectWord, otherwise, go back to the original position
+		if (!gm.getPa().disconnectWord(selectedIdx.idxPoem, selectedIdx.idxRow, selectedIdx.idxWord, selected.getX(), selected.getY())){
+			selected.setPosition(originalx, originaly);
 		}
 		
 		// no longer selected
 		gm.setSelected(null);
+		gm.setSelectedIdx(null);
 		
 		panel.redraw();
 		panel.repaint();
 		return true;
 	}
-	
-	public void revert() {
-		gm.getSelected().setPosition(originalx, originaly);
-		gm.getPa().add(gm.getSelected());
-	}
 }
+

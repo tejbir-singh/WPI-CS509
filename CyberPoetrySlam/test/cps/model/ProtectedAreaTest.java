@@ -1,7 +1,12 @@
-package shapes.model;
+package cps.model;
 
 import java.util.ArrayList;
 
+import cps.model.Poem;
+import cps.model.ProtectedArea;
+import cps.model.Row;
+import cps.model.Type;
+import cps.model.Word;
 import junit.framework.TestCase;
 
 public class ProtectedAreaTest extends TestCase {

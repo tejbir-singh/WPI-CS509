@@ -1,7 +1,7 @@
-package shapes;
+package cps;
 
-import shapes.model.GameManager;
-import shapes.view.Application;
+import cps.model.GameManager;
+import cps.view.Application;
 import junit.framework.TestCase;
 
 public class TestInitialize extends TestCase {

@@ -1,4 +1,4 @@
-package shapes.model;
+package cps.model;
 
 import java.util.ArrayList;
 

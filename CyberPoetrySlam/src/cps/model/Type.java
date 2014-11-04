@@ -1,4 +1,4 @@
-package shapes.model;
+package cps.model;
 
 /**
  * All of the Types which are applicable to Words.

@@ -1,11 +1,11 @@
-package shapes.view;
+package cps.view;
 
 import javax.swing.*;
 
-import shapes.controller.ConnectWordController;
-import shapes.controller.MoveController;
-import shapes.controller.DisconnectWordController;
-import shapes.model.GameManager;
+import cps.controller.ConnectWordController;
+import cps.controller.DisconnectWordController;
+import cps.controller.MoveController;
+import cps.model.GameManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

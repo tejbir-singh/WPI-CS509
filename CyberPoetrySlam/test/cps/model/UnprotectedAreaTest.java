@@ -1,7 +1,10 @@
-package shapes.model;
+package cps.model;
 
 import java.util.ArrayList;
 
+import cps.model.Type;
+import cps.model.UnprotectedArea;
+import cps.model.Word;
 import junit.framework.TestCase;
 
 public class UnprotectedAreaTest extends TestCase {

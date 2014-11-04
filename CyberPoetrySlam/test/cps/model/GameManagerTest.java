@@ -1,9 +1,12 @@
-package shapes.model;
+package cps.model;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import shapes.Main;
+import cps.Main;
+import cps.model.GameManager;
+import cps.model.Poem;
+import cps.model.Word;
 import junit.framework.TestCase;
 
 public class GameManagerTest extends TestCase {
@@ -49,5 +52,11 @@ public class GameManagerTest extends TestCase {
 		gm.getUa().add(word);
 		Main.loadState(tmpStorage.getAbsolutePath());
 		assertFalse(gm.getUa().remove(word));
+	}
+	
+	public void testIsPartOfPoem() {
+		Word word2 = new Word(2, 2, 1, 1, null, null);
+		gm.getPa().connectWordLeftWord(word, word2);
+		assertNotNull(gm.getPa().belongsToPoem(word));
 	}
 }
