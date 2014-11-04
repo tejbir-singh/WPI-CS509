@@ -74,7 +74,9 @@ public class MoveController extends MouseAdapter {
 			
 		// pieces are returned in order of Z coordinate
 		Word w = gm.findWord(anchor.x, anchor.y);
-		if (w == null) { return false; }
+		
+		// TEMPORARY: Need to change to allow Poems to be connected to each other
+		if (w == null || gm.getPa().belongsToPoem(w) != null) { return false; }
 		
 		// no longer in the board since we are moving it around...
 		gm.getUa().remove(w);
