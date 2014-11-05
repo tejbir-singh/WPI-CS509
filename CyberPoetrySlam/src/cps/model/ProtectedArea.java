@@ -3,6 +3,9 @@ package cps.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * @author Devin, Xinjie
+ */
 public class ProtectedArea implements Serializable {
 	private static final long serialVersionUID = 906074510836395079L;
 	ArrayList<Word> words;
@@ -21,7 +24,6 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Singleton implementation.
-	 * 
 	 * @return the instance of the class
 	 */
 	public static ProtectedArea getInstance() {
@@ -32,11 +34,8 @@ public class ProtectedArea implements Serializable {
 	}
 
 	/**
-	 * Add a Word to the ProtectedArea. %%% or add a poem to the ProtectedArea,
-	 * added by Xinjie
-	 * 
-	 * @param word
-	 *            Word to add
+	 * Add a Word or  Poem to the ProtectedArea
+	 * @param word Word to add
 	 * @return true if successful
 	 */
 	public boolean add(Entity e) {
@@ -58,9 +57,7 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Remove a word from the ProtectedArea.
-	 * 
-	 * @param word
-	 *            Word to remove
+	 * @param word Word to remove
 	 * @return true if successful
 	 */
 	public boolean remove(Word word) {
@@ -75,32 +72,25 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Move an Entity to the specified x and y coordinates if it is valid.
-	 * 
-	 * @param e
-	 *            Entity to move
-	 * @param x
-	 *            x-coordinate
-	 * @param y
-	 *            y-coordinate
+	 * @param e Entity to move
+	 * @param x x-coordinate
+	 * @param y y-coordinate
 	 * @return true if successful
 	 */
-	// modified by Xinjie, the original one didn't give e's width and height to
-	// tmp
 	public boolean moveEntity(Entity e, int x, int y) {
-		int tempx = e.x; //save the previous value e.x, added by Xinjie
-		int tempy = e.y; //save the previous value e.y, added by Xinjie
-		// create temporary copy for manipulation
+		int tempx = e.x; //save the previous value e.x
+		int tempy = e.y; //save the previous value e.y
 
 		if (e instanceof Word){
-			((Word) e).setPosition(x, y); // change the location of Entity e globally,added by Xinjie
+			((Word) e).setPosition(x, y); 								// change the location of Entity e globally
 			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
-				((Word) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
+				((Word) e).setPosition(tempx, tempy); 					// go back to its previous location
 				return false;
 			}	
 		}else{
 			((Poem) e).setPosition(x, y);
 			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
-				((Poem) e).setPosition(tempx, tempy); // go back to its previous location, added by Xinjie
+				((Poem) e).setPosition(tempx, tempy); 					// go back to its previous location
 				return false;
 			}
 		}
@@ -110,11 +100,8 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Get a Word based on its x and y position.
-	 * 
-	 * @param x
-	 *            x-coordinate
-	 * @param y
-	 *            y-coordinate
+	 * @param x x-coordinate
+	 * @param y y-coordinate
 	 * @return Word at given location (null if not found)
 	 */
 	public Word getWord(int x, int y) {
@@ -141,11 +128,8 @@ public class ProtectedArea implements Serializable {
 	
 	/**
 	 * Get a ReturnIndex based on its x and y position.
-	 * 
-	 * @param x
-	 *            x-coordinate
-	 * @param y
-	 *            y-coordinate
+	 * @param x x-coordinate
+	 * @param y y-coordinate
 	 * @return ReturnIndex at given location (null if not found)
 	 */
 	public ReturnIndex getWordIdx(int x, int y) {
@@ -178,9 +162,7 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Check if an Entity is intersecting any others in the ProtectedArea.
-	 * 
-	 * @param e
-	 *            Entity to check
+	 * @param e Entity to check
 	 * @return true if it intersects
 	 */
 	public boolean doesIntersect(Entity e) {
@@ -231,14 +213,11 @@ public class ProtectedArea implements Serializable {
 	/**
 	 * Check if an Entity is intersecting any others in the ProtectedArea.
 	 * 
-	 * @param e
-	 *            Entity to check
+	 * @param e Entity to check
 	 * @return the word that intersects with Entity e, and in order to save the
 	 *         word's index information of which poem's which row's which word,
-	 *         i create a class ReturnIndex to save them. if the index of poem
-	 *         equals to -1, that means it is a word instead of belonging to a
-	 *         poem
-	 * @author xinjie
+	 *         stored in ReturnIndex. if the index of poem equals to -1, that
+	 *         means it is a word instead of belonging to a Poem.
 	 *
 	 */
 	public ReturnIndex entityIntersect(Entity e) {
@@ -322,13 +301,9 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Check if an Entity is intersecting any boundary in the ProtectedArea.
-	 * 
 	 * @param e Entity to check
 	 * @return true if it intersecting boundary
-	 * @author xinjie
-	 *
 	 */
-	 //Is this necessary? The program is working fine without it.
 	public boolean boundaryIntersect(Entity e) {
 		if (e instanceof Word) {
 			if (e.x < GameManager.PROTECTED_AREA_X
@@ -375,20 +350,13 @@ public class ProtectedArea implements Serializable {
 	 * Connect Word wleft to the left of Word w, it will create a new poem(added
 	 * to ArrayList poems) with one row, two words, and the ArrayList words will
 	 * delete w and wleft
-	 * 
-	 * @param w
-	 *            Word to add to
-	 * @param wleft
-	 *            Word to add to w
+	 * @param w Word to add to
+	 * @param wleft Word to add to w
 	 * @return true if successful
 	 */
 	public boolean connectWordLeftWord(Word w, Word wleft) {
-		if (this.moveEntity(wleft, w.x - wleft.width, w.y)) { // check
-																// intersection
-																// while
-																// connecting
-			// create a new poem and add it to the ArrayList poems and delete w
-			// and wleft
+		if (this.moveEntity(wleft, w.x - wleft.width, w.y)) { // check for intersection while connecting
+			// create a new poem and add it to the ArrayList poems and delete w and wleft
 			ArrayList<Word> aw1 = new ArrayList<Word>();
 			aw1.add(wleft);
 			aw1.add(w);
@@ -405,11 +373,15 @@ public class ProtectedArea implements Serializable {
 			return false;
 	}
 
-	// Similar to connectWordLeftWord, connect Word right to the right of Word
-	// w,
-	// it will create a new poem(added to ArrayList poems) with one row, tow
-	// words,
-	// and the ArrayList words will delete w and right, added by Xinjie
+	
+	/**
+	 * Connect Word wright to the left of Word w, it will create a new poem(added
+	 * to ArrayList poems) with one row, two words, and the ArrayList words will
+	 * delete w and wright
+	 * @param w Word to add to
+	 * @param wleft Word to add to w
+	 * @return true if successful
+	 */
 	public boolean connectWordRightWord(Word w, Word wright) {
 		if (this.moveEntity(wright, w.x + w.width, w.y)) {
 			ArrayList<Word> aw1 = new ArrayList<Word>();
@@ -428,11 +400,16 @@ public class ProtectedArea implements Serializable {
 			return false;
 	}
 
-	// Connect Word w to the Poem p's No.dexr's row's left edge
-	// added by Xinjie
-	public boolean connectWordLeftPoem(Poem p, Word w, int dexr) {
-		if (this.moveEntity(w, p.rows.get(dexr).x - w.width, p.rows.get(dexr).y)) {
-			p.rows.get(dexr).connectWordLeft(w);
+	/**
+	 * Connect a Word to a Poem at the specified row index's left edge
+	 * @param p Poem to add the Word to
+	 * @param w Word to add
+	 * @param rowIndex index of the Row in the Poem to add the Word to
+	 * @return true if successful
+	 */
+	public boolean connectWordLeftPoem(Poem p, Word w, int rowIndex) {
+		if (this.moveEntity(w, p.rows.get(rowIndex).x - w.width, p.rows.get(rowIndex).y)) {
+			p.rows.get(rowIndex).connectWordLeft(w);
 			p.setX(p.rows.get(0).x);
 			p.setY(p.rows.get(0).y);
 			this.remove(w);
@@ -441,8 +418,13 @@ public class ProtectedArea implements Serializable {
 		return false;
 	}
 
-	// Connect Word w to the Poem p's No.dexr's row's right edge
-	// added by Xinjie
+	/**
+	 * Connect a Word to a Poem at the specified row index's right edge
+	 * @param p Poem to add the Word to
+	 * @param w Word to add
+	 * @param rowIndex index of the Row in the Poem to add the Word to
+	 * @return true if successful
+	 */
 	public boolean connectWordRightPoem(Poem p, Word w, int dexr) {
 		if (this.moveEntity(w, p.rows.get(dexr).x + p.rows.get(dexr).width,
 				p.rows.get(dexr).y)) {
@@ -453,16 +435,23 @@ public class ProtectedArea implements Serializable {
 		return false;
 	}
 
-	// disconnect ProtectedArea's No.dexp's poem's No.dexr row's No.dexw's word,
-	// and move the word to (x, y) without intersecting
-	public boolean disconnectWord(int dexp, int dexr, int dexw, int x, int y) {
-		if (this.moveEntity(this.poems.get(dexp).rows.get(dexr).words.get(dexw), x, y)) {
-			this.words.add(this.poems.get(dexp).rows.get(dexr).words.get(dexw));
-			this.poems.get(dexp).disconnectEdgeWord(dexr, dexw);
-			if (this.poems.get(dexp).rows.size() == 1
-					&& this.poems.get(dexp).rows.get(0).words.size() == 1) {
-				this.words.add(this.poems.get(dexp).rows.get(0).words.get(0));
-				this.poems.remove(dexp);
+	/**
+	 * Disconnect a Word from a Poem.
+	 * @param poemIndex index of the Poem in the ProtectedArea's ArrayList
+	 * @param rowIndex index of the Row in the Poem's ArrayList
+	 * @param wordIndex index of the Word in the Row's ArrayList
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return true if successful
+	 */
+	public boolean disconnectWord(int poemIndex, int rowIndex, int wordIndex, int x, int y) {
+		if (this.moveEntity(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex), x, y)) {
+			this.words.add(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex));
+			this.poems.get(poemIndex).disconnectEdgeWord(rowIndex, wordIndex);
+			if (this.poems.get(poemIndex).rows.size() == 1
+					&& this.poems.get(poemIndex).rows.get(0).words.size() == 1) {
+				this.words.add(this.poems.get(poemIndex).rows.get(0).words.get(0));
+				this.poems.remove(poemIndex);
 			}
 			return true;
 		} else

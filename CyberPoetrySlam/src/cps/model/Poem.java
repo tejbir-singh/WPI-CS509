@@ -16,32 +16,8 @@ public class Poem extends Entity{
 		this.y = r.get(0).y;
 		this.width = 0;
 		this.height = 0;
-	}
-	
-	
-	/*//get the height of the poem
-	public int getHeight() {
-		int h = this.rows.size() * this.rows.get(0).words.get(0).height;
-		return h;
-	}*/
-	
-	public void setX(int x){
-		this.x = x;
-	}
-	
-	public void setY(int y){
-		this.y = y;
-	}
-
-	
-	public void setPosition(int x, int y) {
-		for (Row r : this.rows){
-			r.setPosition(r.x - (this.x - x), r.y - (this.y - y));
-		}
-		this.x = x;
-		this.y = y;	
 	}  
-	
+
 	/*
 	public boolean connectRowTop(Row r){
 		//setPosition(r.x, r.y);
@@ -140,8 +116,20 @@ public class Poem extends Entity{
 		
 
 	
-	// getters
+	// getters and setters
 	public ArrayList<Row> getRows() {
 		return this.rows;
+	}
+	
+	public int getHeight() {
+		return this.rows.size() * this.rows.get(0).words.get(0).height;
+	}
+	
+	public void setPosition(int x, int y) {
+		for (Row r : this.rows){
+			r.setPosition(r.x - (this.x - x), r.y - (this.y - y));
+		}
+		this.x = x;
+		this.y = y;	
 	}
 }
