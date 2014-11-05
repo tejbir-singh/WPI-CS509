@@ -130,10 +130,11 @@ public class MoveController extends MouseAdapter {
 		else {
 			gm.getPa().add(selected);
 		}
-		
-		// no longer selected
+		// record the move to the stack
+		gm.getManipulations().push(new Manipulation(originalx, originaly, selected, MoveType.MOVE));
+
 		gm.setSelected(null);
-		
+		panel.isUndoValid();
 		panel.redraw();
 		panel.repaint();
 		return true;

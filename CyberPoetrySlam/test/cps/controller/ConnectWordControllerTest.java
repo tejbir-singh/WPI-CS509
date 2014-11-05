@@ -1,5 +1,7 @@
 package cps.controller;
 
+import javax.swing.JButton;
+
 import cps.controller.ConnectWordController;
 import cps.model.GameManager;
 import cps.model.Type;
@@ -15,7 +17,7 @@ public class ConnectWordControllerTest extends TestCase {
 	@Override
 	protected void setUp() {
 		gm = GameManager.getInstance();
-		app = new ApplicationPanel(gm);
+		app = new ApplicationPanel(gm, new JButton());
 		mc = new ConnectWordController(gm, app);
 		Word w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		Word w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");

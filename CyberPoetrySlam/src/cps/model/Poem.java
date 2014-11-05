@@ -107,7 +107,7 @@ public class Poem extends Entity{
 		if(this.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
 			return false;
 		else{
-			this.rows.get(dexr).disconnectWord(dexw);//it's up to Rej's implement of method disconnectWord()
+			this.rows.get(dexr).disconnectWord(dexw);
 			this.setX(this.rows.get(0).x);
 			this.setY(this.rows.get(0).y);
 			return true;

@@ -2,10 +2,12 @@ package cps.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Stack;
 
 public class GameManager {
 	private ProtectedArea pa;
 	private UnprotectedArea ua;
+	private Stack<Manipulation> manipulations;
 	private static GameManager instance;
 	private final String wordBank = "words.txt";
 	private Word selected = null;
@@ -23,6 +25,7 @@ public class GameManager {
 	private GameManager() {
 		pa = ProtectedArea.getInstance();
 		ua = UnprotectedArea.getInstance();
+		manipulations = new Stack<Manipulation>();
 		// populate the UnprotectedArea with the Words specified in words.txt
 		// for now we assume that Words will be stored with a type and value
 		BufferedReader br;
@@ -33,7 +36,7 @@ public class GameManager {
 				String[] words = line.split(",");
 				// generate Words
 				ua.add(new Word((int) Math.round(Math.random() * 600),
-						(int) Math.round(Math.random() * 100) + AREA_DIVIDER, 
+						(int) Math.round(Math.random() * 100) + AREA_DIVIDER + 20, 
 								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
 			}
 		} catch (Exception e) {
@@ -132,5 +135,9 @@ public class GameManager {
 	
 	public void setSelectedIdx(ReturnIndex selectedidx) {
 		this.selectedidx = selectedidx;
+	}
+	
+	public Stack<Manipulation> getManipulations() {
+		return this.manipulations;
 	}
 }

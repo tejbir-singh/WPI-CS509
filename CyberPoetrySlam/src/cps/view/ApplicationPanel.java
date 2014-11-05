@@ -6,9 +6,11 @@ import java.awt.Image;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import cps.model.GameManager;
+import cps.model.Manipulation;
 import cps.model.Poem;
 import cps.model.Row;
 import cps.model.Word;
@@ -21,6 +23,17 @@ public class ApplicationPanel extends JPanel {
 	Graphics canvasGraphics;
 	MouseListener activeListener;
 	MouseMotionListener activeMotionListener;
+	JButton undoButton;
+	
+	
+	/**
+	 * Constructor.
+	 */
+	public ApplicationPanel(GameManager gm, JButton undoButton) {
+		super();
+		this.gm = gm;
+		this.undoButton = undoButton;
+	}
 
 	/** Properly register new listener (and unregister old one if present). */
 	public void setActiveListener(MouseListener ml) {
@@ -41,14 +54,6 @@ public class ApplicationPanel extends JPanel {
 		if (mml != null) {
 			this.addMouseMotionListener(mml);
 		}
-	}
-
-	/**
-	 * Construct ApplicationPanel with a Model instance used for information.
-	 */
-	public ApplicationPanel(GameManager gm) {
-		super();
-		this.gm = gm;
 	}
 
 	/** Make sure that image is created as needed. */
@@ -148,6 +153,27 @@ public class ApplicationPanel extends JPanel {
 			canvasGraphics.drawImage(offscreenImage, w.getX(), w.getY(),
 					w.getWidth(), w.getHeight(), this);
 			repaint(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		}
+	}
+	
+	/**
+	 * Check if Undo is a valid option and adjust the button accordingly. 
+	 */
+	public void isUndoValid() {
+		if (!gm.getManipulations().isEmpty()) {
+			undoButton.setEnabled(true);
+			for (Manipulation m : gm.getManipulations()) {
+				if (m.getEntity() instanceof Word) {
+					System.out.print(m.getMoveType() + " " + ((Word) m.getEntity()).getValue() + ", ");
+				}
+				else {
+					System.out.print(m.getMoveType() + " Poem, ");
+				}
+			}
+			System.out.println();
+		}
+		else {
+			undoButton.setEnabled(false);
 		}
 	}
 }

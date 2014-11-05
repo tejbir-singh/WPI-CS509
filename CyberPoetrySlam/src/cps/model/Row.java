@@ -107,9 +107,10 @@ public class Row extends Entity implements Serializable {
 	 */
 	public void setWidth() {
 		this.width = 0;
-		if (this.words.size() > 0){
-			for(Word word : words)
+		if (this.words.size() > 0) {
+			for(Word word : words) {
 				this.width += word.width;
+			}
 		}
 	}
 
@@ -118,7 +119,7 @@ public class Row extends Entity implements Serializable {
 	 */
 	public void setHeight() {
 		this.height = 0;
-		if (this.words.size() > 0){
+		if (this.words.size() > 0) {
 			this.height = this.words.get(0).height;
 		}
 	}

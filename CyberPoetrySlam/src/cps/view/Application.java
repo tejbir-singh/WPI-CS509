@@ -5,8 +5,8 @@ import javax.swing.*;
 import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
+import cps.controller.UndoController;
 import cps.model.GameManager;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,7 +17,9 @@ public class Application extends JFrame {
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
 	ApplicationPanel appPanel;
-	GameManager gm;	
+	GameManager gm;
+	
+	
 
 	/**
 	 * Create the frame.
@@ -32,27 +34,29 @@ public class Application extends JFrame {
 		JPanel p = new JPanel();
 		p.setBounds(this.getBounds());
 
-		JButton btnNewButton = new JButton("Move");
-		btnNewButton.setBounds(56, 31, 89, 23);
-		getContentPane().add(btnNewButton);
+		JButton moveButton = new JButton("Move");
+		moveButton.setBounds(56, 31, 89, 23);
+		getContentPane().add(moveButton);
 
-		JButton btnNewButton_1 = new JButton("Connect");
-		btnNewButton_1.setBounds(176, 31, 89, 23);
-		getContentPane().add(btnNewButton_1);
+		JButton connectButton = new JButton("Connect");
+		connectButton.setBounds(176, 31, 89, 23);
+		getContentPane().add(connectButton);
 
-		JButton btnNewButton_2 = new JButton("Disconnect");
-		btnNewButton_2.setBounds(296, 31, 89, 23);
-		getContentPane().add(btnNewButton_2);
+		JButton disconnectButton = new JButton("Disconnect");
+		disconnectButton.setBounds(296, 31, 89, 23);
+		getContentPane().add(disconnectButton);
 
-		JButton btnNewButton_3 = new JButton("Release");
-		btnNewButton_3.setBounds(416, 31, 89, 23);
-		getContentPane().add(btnNewButton_3);
-		btnNewButton_3.setEnabled(false);
+		final JButton undoButton = new JButton("Undo");
+		undoButton.setBounds(416, 31, 89, 23);
+		getContentPane().add(undoButton);
+		if (gm.getManipulations().isEmpty()) {
+			undoButton.setEnabled(false);
+		}
 
-		JButton btnNewButton_4 = new JButton("Publish");
-		btnNewButton_4.setBounds(536, 31, 89, 23);
-		getContentPane().add(btnNewButton_4);
-		btnNewButton_4.setEnabled(false);
+		JButton publishButton = new JButton("Publish");
+		publishButton.setBounds(536, 31, 89, 23);
+		getContentPane().add(publishButton);
+		publishButton.setEnabled(false);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(12, 66, 678, 595);
@@ -76,7 +80,7 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setColumns(10);
 
 		// add the application panel
-		appPanel = new ApplicationPanel(gm);
+		appPanel = new ApplicationPanel(gm, undoButton);
 		panel.add(appPanel);
 		appPanel.setBounds(0, 31, 650, 550);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
@@ -84,24 +88,34 @@ public class Application extends JFrame {
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
 
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		moveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new MoveController(gm, appPanel).register();
 			}
 		});
 
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
+		connectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new ConnectWordController(gm, appPanel).register();
 			}
 		});
 		
-		btnNewButton_2.addMouseListener(new MouseAdapter() {
+		disconnectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new DisconnectWordController(gm, appPanel).register();
+			}
+		});
+		
+		undoButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (!undoButton.isEnabled()) {
+					return;
+				}
+				new UndoController(gm, appPanel).process();
 			}
 		});
 		

@@ -121,8 +121,13 @@ public class DisconnectWordController extends MouseAdapter {
 		if (!gm.getPa().disconnectWord(selectedIdx.idxPoem, selectedIdx.idxRow, selectedIdx.idxWord, selected.getX(), selected.getY())){
 			selected.setPosition(originalx, originaly);
 		}
+		else {
+			gm.getManipulations().add(new Manipulation(originalx, originaly, selected, MoveType.DISCONNECT));
+			panel.isUndoValid();
+		}
 		
 		// no longer selected
+		
 		gm.setSelected(null);
 		gm.setSelectedIdx(null);
 		

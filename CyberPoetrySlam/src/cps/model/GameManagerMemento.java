@@ -18,7 +18,7 @@ public class GameManagerMemento implements Serializable {
 	 */
 	public GameManagerMemento(ProtectedArea pa, UnprotectedArea ua) {
 		this.storedPa = pa;
-		this.storedUa = ua;	
+		this.storedUa = ua;
 	}
 	
 	private static final long serialVersionUID = 5474513144228020460L;
