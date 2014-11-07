@@ -10,33 +10,64 @@ import cps.model.ReturnIndex;
 import cps.model.Word;
 import cps.view.ApplicationPanel;
 
-public class UndoController extends MouseAdapter {
+/**
+ * The UndoRedoController is used to perform the Undo and Redo functions.
+ * @author Devin
+ */
+public class UndoRedoController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;
 	Manipulation man;
+	
+	/** true for Undos, false for Redos */
+	boolean doPushPrev;					
+	
+	/** used to store information to create Redos */
+	int prevX, prevY;					
 	
 	/**
 	 * Constructor.
 	 * @param gm GameManager 
 	 * @param panel ApplicationPanel
+	 * @param type 'u' for Undo, 'r' for Redo
 	 */
-	public UndoController(GameManager gm, ApplicationPanel panel) {
+	public UndoRedoController(GameManager gm, ApplicationPanel panel, URType type) {
 		this.gm = gm;
 		this.panel = panel;
-		man = gm.getManipulations().pop();
+		if (type == URType.UNDO) {
+			man = gm.getManipulations().pop();
+			this.prevX = man.getEntity().getX();
+			this.prevY = man.getEntity().getY();
+			doPushPrev = true;
+		}
+		else if (type == URType.REDO) {
+			man = gm.getPrevUndos().pop();
+			doPushPrev = false;
+		}
 	}
 
+	/**
+	 * Perform the Undo/Redo action based on the Manipulation this Controller was constructed with.
+	 */
 	public void process() {
 		if (man.getMoveType() == MoveType.MOVE) {					// undo move
-			undoMove();
+			if (undoMove() && doPushPrev) {
+				gm.getPrevUndos().push(new Manipulation(prevX, prevY, man.getEntity(), MoveType.MOVE));
+			}
 		}
 		else if (man.getMoveType() == MoveType.CONNECT) {			// undo connect
-			undoConnect();
+			if (undoConnect() && doPushPrev) {
+				gm.getPrevUndos().push(new Manipulation(prevX, prevY, man.getEntity(), MoveType.DISCONNECT));
+			}
 		}
 		else {														// undo disconnect
-			undoDisconnect();
+			if (undoDisconnect() && doPushPrev) {
+				gm.getPrevUndos().push(new Manipulation(prevX, prevY, man.getEntity(), MoveType.CONNECT));
+			}
 		}
-		panel.isUndoValid();
+		
+		panel.validateUndo();
+		panel.validateRedo(true);
 		panel.redraw();
 		panel.repaint();
 	}
@@ -77,11 +108,10 @@ public class UndoController extends MouseAdapter {
 		if (e instanceof Word) {
 			ReturnIndex ri = gm.getPa().getWordIdx(man.getEntity().getX(), man.getEntity().getY());
 			if (ri == null) {
-				System.out.println("could not find word index");
 				return false;
 			}
 			if (!gm.getPa().disconnectWord(ri.idxPoem, ri.idxRow, ri.idxWord, man.getX(), man.getY())) {
-				System.out.println("error at disconnect");
+				return false;
 			}
 		}
 		// reset to its previous location
@@ -98,29 +128,30 @@ public class UndoController extends MouseAdapter {
 	private boolean undoDisconnect() {
 		Entity e = man.getEntity();
 		ReturnIndex ri = null;
+		boolean ret = false;
 		if (e == null) { return false; }
 		
 		if (e instanceof Word) {
 			if ((ri = findEntityOrigin(e)) != null) {
 				if (ri.p == null) {						// intersects a word which is not connected to a poem
 					if (man.getX() < ri.w.getX()) {		// e belongs on the left
-						gm.getPa().connectWordLeftWord(ri.w, (Word) e);
+						ret = gm.getPa().connectWordLeftWord(ri.w, (Word) e);
 					}
 					else {
-						gm.getPa().connectWordRightWord(ri.w, (Word) e);
+						ret = gm.getPa().connectWordRightWord(ri.w, (Word) e);
 					}
 				}
 				else {
 					if (ri.idxWord == 0) {
-						gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
+						ret = gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
 					}
 					else {
-						gm.getPa().connectWordRightPoem(ri.p, (Word) e, ri.idxRow);
+						ret = gm.getPa().connectWordRightPoem(ri.p, (Word) e, ri.idxRow);
 					}
 				}
 			}
 		}
-		return true;
+		return ret;
 	}
 	
 	/**
@@ -142,5 +173,9 @@ public class UndoController extends MouseAdapter {
 		}
 		ri = gm.getPa().entityIntersect(tmp2);
 		return ri;
+	}
+	
+	public enum URType {
+		UNDO, REDO
 	}
 }

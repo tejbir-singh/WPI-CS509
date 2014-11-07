@@ -8,6 +8,7 @@ public class GameManager {
 	private ProtectedArea pa;
 	private UnprotectedArea ua;
 	private Stack<Manipulation> manipulations;
+	private Stack<Manipulation> prevUndos;
 	private static GameManager instance;
 	private final String wordBank = "words.txt";
 	private Word selected = null;
@@ -26,6 +27,7 @@ public class GameManager {
 		pa = ProtectedArea.getInstance();
 		ua = UnprotectedArea.getInstance();
 		manipulations = new Stack<Manipulation>();
+		prevUndos = new Stack<Manipulation>();
 		// populate the UnprotectedArea with the Words specified in words.txt
 		// for now we assume that Words will be stored with a type and value
 		BufferedReader br;
@@ -139,5 +141,9 @@ public class GameManager {
 	
 	public Stack<Manipulation> getManipulations() {
 		return this.manipulations;
+	}
+	
+	public Stack<Manipulation> getPrevUndos() {
+		return this.prevUndos;
 	}
 }

@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import cps.model.GameManager;
-import cps.model.Manipulation;
 import cps.model.Poem;
 import cps.model.Row;
 import cps.model.Word;
@@ -24,15 +23,16 @@ public class ApplicationPanel extends JPanel {
 	MouseListener activeListener;
 	MouseMotionListener activeMotionListener;
 	JButton undoButton;
-	
+	JButton redoButton;
 	
 	/**
 	 * Constructor.
 	 */
-	public ApplicationPanel(GameManager gm, JButton undoButton) {
+	public ApplicationPanel(GameManager gm, JButton undoButton, JButton redoButton) {
 		super();
 		this.gm = gm;
 		this.undoButton = undoButton;
+		this.redoButton = redoButton;
 	}
 
 	/** Properly register new listener (and unregister old one if present). */
@@ -159,21 +159,26 @@ public class ApplicationPanel extends JPanel {
 	/**
 	 * Check if Undo is a valid option and adjust the button accordingly. 
 	 */
-	public void isUndoValid() {
+	public void validateUndo() {
 		if (!gm.getManipulations().isEmpty()) {
 			undoButton.setEnabled(true);
-			for (Manipulation m : gm.getManipulations()) {
-				if (m.getEntity() instanceof Word) {
-					System.out.print(m.getMoveType() + " " + ((Word) m.getEntity()).getValue() + ", ");
-				}
-				else {
-					System.out.print(m.getMoveType() + " Poem, ");
-				}
-			}
-			System.out.println();
 		}
 		else {
 			undoButton.setEnabled(false);
+		}
+	}
+	
+	/**
+	 * Check if Redo is a valid option and adjust the button and prevUndo Stack accordingly. 
+	 * @param valid true only if the caller is Undo; this protects the integrity of the board
+	 */
+	public void validateRedo(boolean valid) {
+		if (valid && !gm.getPrevUndos().isEmpty()) {
+			redoButton.setEnabled(true);
+		}
+		else {
+			gm.getPrevUndos().clear(); 			// clear the stack; integrity no longer holds
+			redoButton.setEnabled(false);
 		}
 	}
 }

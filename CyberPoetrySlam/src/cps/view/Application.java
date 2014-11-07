@@ -5,8 +5,10 @@ import javax.swing.*;
 import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
-import cps.controller.UndoController;
+import cps.controller.UndoRedoController;
+import cps.controller.UndoRedoController.URType;
 import cps.model.GameManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -53,7 +55,7 @@ public class Application extends JFrame {
 			undoButton.setEnabled(false);
 		}
 
-		JButton publishButton = new JButton("Publish");
+		final JButton publishButton = new JButton("Redo");
 		publishButton.setBounds(536, 31, 89, 23);
 		getContentPane().add(publishButton);
 		publishButton.setEnabled(false);
@@ -80,7 +82,7 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setColumns(10);
 
 		// add the application panel
-		appPanel = new ApplicationPanel(gm, undoButton);
+		appPanel = new ApplicationPanel(gm, undoButton, publishButton);
 		panel.add(appPanel);
 		appPanel.setBounds(0, 31, 650, 550);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
@@ -115,7 +117,17 @@ public class Application extends JFrame {
 				if (!undoButton.isEnabled()) {
 					return;
 				}
-				new UndoController(gm, appPanel).process();
+				new UndoRedoController(gm, appPanel, URType.UNDO).process();
+			}
+		});
+		
+		publishButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (!publishButton.isEnabled()) {
+					return;
+				}
+				new UndoRedoController(gm, appPanel, URType.REDO).process();
 			}
 		});
 		

@@ -134,7 +134,8 @@ public class MoveController extends MouseAdapter {
 		gm.getManipulations().push(new Manipulation(originalx, originaly, selected, MoveType.MOVE));
 
 		gm.setSelected(null);
-		panel.isUndoValid();
+		panel.validateUndo();
+		panel.validateRedo(false);
 		panel.redraw();
 		panel.repaint();
 		return true;
