@@ -12,7 +12,7 @@ import cps.model.Poem;
 import cps.model.Row;
 import cps.view.ApplicationPanel;
 
-public class UndoController extends MouseAdapter {
+public class UndoRedoController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;
 	Manipulation man;
@@ -29,7 +29,7 @@ public class UndoController extends MouseAdapter {
 	 * @param panel ApplicationPanel
 	 * @param type 'u' for Undo, 'r' for Redo
 	 */
-	public UndoController(GameManager gm, ApplicationPanel panel, URType type) {
+	public UndoRedoController(GameManager gm, ApplicationPanel panel, URType type) {
 		this.gm = gm;
 		this.panel = panel;
 		if (type == URType.UNDO) {
