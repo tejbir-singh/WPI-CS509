@@ -40,7 +40,7 @@ public class ConnectWordControllerTest extends TestCase {
 	
 	public void testSelect() {
 		mc.select(1, 1);
-		assertTrue(gm.getSelected().getValue().equals("test1"));
+		assertTrue(((Word) gm.getSelected()).getValue().equals("test1"));
 	}
 	
 	public void testRelease() {

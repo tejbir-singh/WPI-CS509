@@ -44,8 +44,10 @@ public class ProtectedArea implements Serializable {
 			// other words, added by Xinjie
 			if (doesIntersect(e)) { // invalid move if so
 				return false;
-			} else
+			} else{
 				return this.words.add((Word) e);
+			}
+				
 		} else { // add poem
 			if (doesIntersect(e)) {
 				return false;
@@ -60,14 +62,28 @@ public class ProtectedArea implements Serializable {
 	 * @param word Word to remove
 	 * @return true if successful
 	 */
-	public boolean remove(Word word) {
-		int index = words.indexOf(word);
-		if (index == -1) { // word not found
+	public boolean remove(Entity e) {
+		int index;
+		if (e instanceof Word){
+			index = words.indexOf(e);
+			if (index == -1) { // word not found
+				return false;
+			} else {
+				words.remove(index);
+				return true;
+			}
+		}else if (e instanceof Poem){
+			index = poems.indexOf(e);
+			if (index == -1){ // poem not found
+				return false;
+			} else {
+				poems.remove(index);
+				return true;
+			}
+		} else{ // e is neither a word nor a poem
 			return false;
-		} else {
-			words.remove(index);
-			return true;
 		}
+		
 	}
 
 	/**

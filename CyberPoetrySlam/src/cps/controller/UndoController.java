@@ -8,6 +8,8 @@ import cps.model.Manipulation;
 import cps.model.MoveType;
 import cps.model.ReturnIndex;
 import cps.model.Word;
+import cps.model.Poem;
+import cps.model.Row;
 import cps.view.ApplicationPanel;
 
 public class UndoController extends MouseAdapter {
@@ -51,15 +53,24 @@ public class UndoController extends MouseAdapter {
 		if (e == null) { return false; }
 		
 		// make sure the Entity goes back where it belongs
-		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) {
+		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { // move from PA to UA
 			gm.release((Word) e);
+		} else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) { // move from UA to PA
+			gm.getPa().add(e); // modified by Xinjie
+			if(e instanceof Word){
+				gm.getUa().remove((Word) e);
+			} else{ // Poem
+				for (Row row : ((Poem) e).getRows()){
+					for (Word word : row.getWords()){
+						gm.getUa().remove(word);
+					}
+				}
+			}
 		}
-		else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) {
-			gm.release((Word) e);
-		}
-		e.setX(man.getX());
-		e.setY(man.getY());
-		
+		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
+		//e.setX(man.getX());
+		//e.setY(man.getY());
+		//System.out.println(gm.getUa().getWords().size());
 		panel.redraw();
 		panel.repaint();
 		return true;

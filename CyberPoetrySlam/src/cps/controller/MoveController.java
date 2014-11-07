@@ -74,14 +74,23 @@ public class MoveController extends MouseAdapter {
 			
 		// pieces are returned in order of Z coordinate
 		Word w = gm.findWord(anchor.x, anchor.y);
+		Poem p = gm.getPa().belongsToPoem(w);
 		
 		// TEMPORARY: Need to change to allow Poems to be connected to each other
-		if (w == null || gm.getPa().belongsToPoem(w) != null) { return false; }
+		if (w == null) { return false; }
 		
 		// no longer in the board since we are moving it around...
-		gm.getUa().remove(w);
-		gm.getPa().remove(w);
-		gm.setSelected(w);
+		if (p == null){
+			gm.getUa().remove(w);
+			gm.getPa().remove(w);
+			gm.setSelected(w);
+		} else{
+			//System.out.println(gm.getPa().getPoems().size());
+			gm.getPa().remove(p);
+			//System.out.println(gm.getPa().getPoems().size());
+			gm.setSelected(p);
+		}
+		
 		originalx = w.getX();
 		originaly = w.getY();
 			
@@ -97,41 +106,84 @@ public class MoveController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
-		Word selected = gm.getSelected();
-		
-		if (selected == null) { return false; }
-		
-		panel.paintBackground(selected);
-		int oldx = selected.getX();
-		int oldy = selected.getY();
-		
-		selected.setPosition(x - deltaX, y - deltaY);
-		
-		if (gm.getPa().doesIntersect(selected)) {
-			selected.setPosition(oldx, oldy);
-		} 
-		else {
-			panel.paintWord(selected);
-			panel.repaint();
+		Word selected = null;
+		Poem selectedpoem = null;
+		if (gm.getSelected() instanceof Word) {
+			selected = (Word) gm.getSelected();
+		} else{
+			selectedpoem = (Poem) gm.getSelected();
 		}
-	
-		return true;
+		
+		if (selected == null && selectedpoem == null) { return false; }
+		
+		if (gm.getSelected() instanceof Word){
+			panel.paintBackground(selected);
+			int oldx = selected.getX();
+			int oldy = selected.getY();
+			
+			selected.setPosition(x - deltaX, y - deltaY);
+			
+			if (gm.getPa().doesIntersect(selected)) {
+				selected.setPosition(oldx, oldy);
+			} 
+			else {
+				panel.paintWord(selected);
+				panel.repaint();
+			}
+			return true;
+		} else{ // Poem
+			panel.paintBackground(selectedpoem);
+			int oldx = selectedpoem.getX();
+			int oldy = selectedpoem.getY();
+			
+			selectedpoem.setPosition(x - deltaX, y - deltaY);
+			
+			if (gm.getPa().doesIntersect(selectedpoem)) {
+				selectedpoem.setPosition(oldx, oldy);
+			} 
+			else {
+				panel.paintPoem(selectedpoem);
+				panel.repaint();
+			}
+			return true;
+		}	
 	}
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
-		Word selected = gm.getSelected();
-		if (selected == null) { return false; }
+		Word selected = null;
+		Poem selectedpoem = null;
+		if (gm.getSelected() instanceof Word) {
+			selected = (Word) gm.getSelected();
+		} else{ //Poem
+			selectedpoem = (Poem) gm.getSelected();
+		}
+		
+		if (selected == null && selectedpoem == null) { return false; }
 
 		// now released we can move
 		if (y >= GameManager.AREA_DIVIDER) {			// check if it is in the unprotected area
-			gm.getUa().add(selected);
-		}
-		else {
-			gm.getPa().add(selected);
+			if (gm.getSelected() instanceof Word){
+				gm.getUa().add(selected);
+			} else{
+				gm.getUa().add(selectedpoem);
+			}
+			
+		} else {
+			if (gm.getSelected() instanceof Word){
+				gm.getPa().add(selected);
+			} else{
+				gm.getPa().add(selectedpoem);
+			}
+			
 		}
 		// record the move to the stack
-		gm.getManipulations().push(new Manipulation(originalx, originaly, selected, MoveType.MOVE));
+		if (gm.getSelected() instanceof Word){
+			gm.getManipulations().push(new Manipulation(originalx, originaly, selected, MoveType.MOVE));
+		} else{  // Poem
+			gm.getManipulations().push(new Manipulation(originalx, originaly, selectedpoem, MoveType.MOVE));
+		}
+		
 
 		gm.setSelected(null);
 		panel.isUndoValid();

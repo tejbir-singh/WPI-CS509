@@ -96,7 +96,7 @@ public class ConnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		
 		if (selected == null) { return false; }
 		
@@ -110,7 +110,7 @@ public class ConnectWordController extends MouseAdapter {
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		if (selected == null) { return false; }
 		
 		if (gm.getPa().entityIntersect(selected) == null) { 			// didn't select any word to connect
