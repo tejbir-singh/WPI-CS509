@@ -13,6 +13,7 @@ import cps.model.GameManager;
 import cps.model.Poem;
 import cps.model.Row;
 import cps.model.Word;
+import cps.model.Entity;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
@@ -101,12 +102,21 @@ public class ApplicationPanel extends JPanel {
 
 		ensureImageAvailable(g);
 		g.drawImage(offscreenImage, 0, 0, getWidth(), getHeight(), this);
-
+		Word selectedword = null;
+		Poem selectedpoem = null;
 		// draw selected
-		Word selected = gm.getSelected();
-		if (selected != null) {
-			paintWord(g, selected);
+		if (gm.getSelected() instanceof Word){
+			selectedword = (Word) gm.getSelected();
+			if (selectedword != null) {
+				paintWord(g, selectedword);
+			}
+		} else{
+			selectedpoem = (Poem) gm.getSelected();
+			if (selectedpoem != null) {
+				paintPoem(g, selectedpoem);
+			}
 		}
+		
 	}
 
 	/** Paint the Word directly to the screen */
@@ -147,13 +157,25 @@ public class ApplicationPanel extends JPanel {
 	}
 
 	/** Repaint to the screen just the given part of the image. */
-	public void paintBackground(Word w) {
+	public void paintBackground(Entity e) {
 		// Only updates to the screen the given region
-		if (canvasGraphics != null) {
-			canvasGraphics.drawImage(offscreenImage, w.getX(), w.getY(),
-					w.getWidth(), w.getHeight(), this);
-			repaint(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		if (e instanceof Word){
+			if (canvasGraphics != null) {
+				canvasGraphics.drawImage(offscreenImage, e.getX(), e.getY(),
+						e.getWidth(), e.getHeight(), this);
+				repaint(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			}
+		} else {
+			if (canvasGraphics != null) {
+				for (Row row : ((Poem) e).getRows()){
+					canvasGraphics.drawImage(offscreenImage, row.getX(), row.getY(),
+						row.getWidth(), row.getHeight(), this);
+				repaint(row.getX(), row.getY(), row.getWidth(), row.getHeight());
+				}
+				
+			}
 		}
+		
 	}
 	
 	/**

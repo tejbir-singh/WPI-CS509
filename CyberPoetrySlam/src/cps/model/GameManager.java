@@ -11,7 +11,7 @@ public class GameManager {
 	private Stack<Manipulation> prevUndos;
 	private static GameManager instance;
 	private final String wordBank = "words.txt";
-	private Word selected = null;
+	private Entity selected = null;
 	ReturnIndex selectedidx = null;
 	public static final int AREA_DIVIDER = 320;
 	public static final int PROTECTED_AREA_X = 0;
@@ -123,11 +123,11 @@ public class GameManager {
 		this.ua = ua;
 	}
 
-	public Word getSelected() {
+	public Entity getSelected() {
 		return selected;
 	}
 	
-	public void setSelected(Word selected) {
+	public void setSelected(Entity selected) {
 		this.selected = selected;
 	}
 	

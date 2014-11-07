@@ -5,8 +5,8 @@ import javax.swing.*;
 import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
-import cps.controller.UndoRedoController;
-import cps.controller.UndoRedoController.URType;
+import cps.controller.UndoController;
+import cps.controller.UndoController.URType;
 import cps.model.GameManager;
 
 import java.awt.event.MouseAdapter;
@@ -117,7 +117,7 @@ public class Application extends JFrame {
 				if (!undoButton.isEnabled()) {
 					return;
 				}
-				new UndoRedoController(gm, appPanel, URType.UNDO).process();
+				new UndoController(gm, appPanel, URType.UNDO).process();
 			}
 		});
 		
@@ -127,7 +127,7 @@ public class Application extends JFrame {
 				if (!publishButton.isEnabled()) {
 					return;
 				}
-				new UndoRedoController(gm, appPanel, URType.REDO).process();
+				new UndoController(gm, appPanel, URType.REDO).process();
 			}
 		});
 		

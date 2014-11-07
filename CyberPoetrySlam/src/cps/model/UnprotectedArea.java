@@ -29,12 +29,20 @@ public class UnprotectedArea implements Serializable {
 	
 
 	/**
-	 * Add a Word to the UnprotectedArea.
-	 * @param word Word to add
+	 * Add an Entity to the UnprotectedArea.
+	 * @param Entity e to add
 	 * @return true if successful
 	 */
-	public boolean add(Word word) {
-		words.add(word);
+	public boolean add(Entity e) {
+		if (e instanceof Word){
+			words.add((Word) e);
+		} else{
+			for(Row row : ((Poem) e).getRows()){
+				for(Word word : row.getWords()){
+					words.add(word);
+				}	
+			}
+		}
 		return true;
 	}
 	

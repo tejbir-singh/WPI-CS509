@@ -22,6 +22,8 @@ public abstract class Entity implements Serializable {
 		}
 	 	return false;
 	}
+	
+	public abstract void setPosition(int x, int y); 
 
 	// getters and setters
 	public int getX() {

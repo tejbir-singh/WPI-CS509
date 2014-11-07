@@ -8,13 +8,11 @@ import cps.model.Manipulation;
 import cps.model.MoveType;
 import cps.model.ReturnIndex;
 import cps.model.Word;
+import cps.model.Poem;
+import cps.model.Row;
 import cps.view.ApplicationPanel;
 
-/**
- * The UndoRedoController is used to perform the Undo and Redo functions.
- * @author Devin
- */
-public class UndoRedoController extends MouseAdapter {
+public class UndoController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;
 	Manipulation man;
@@ -31,7 +29,7 @@ public class UndoRedoController extends MouseAdapter {
 	 * @param panel ApplicationPanel
 	 * @param type 'u' for Undo, 'r' for Redo
 	 */
-	public UndoRedoController(GameManager gm, ApplicationPanel panel, URType type) {
+	public UndoController(GameManager gm, ApplicationPanel panel, URType type) {
 		this.gm = gm;
 		this.panel = panel;
 		if (type == URType.UNDO) {
@@ -46,9 +44,6 @@ public class UndoRedoController extends MouseAdapter {
 		}
 	}
 
-	/**
-	 * Perform the Undo/Redo action based on the Manipulation this Controller was constructed with.
-	 */
 	public void process() {
 		if (man.getMoveType() == MoveType.MOVE) {					// undo move
 			if (undoMove() && doPushPrev) {
@@ -82,15 +77,24 @@ public class UndoRedoController extends MouseAdapter {
 		if (e == null) { return false; }
 		
 		// make sure the Entity goes back where it belongs
-		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) {
+		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { // move from PA to UA
 			gm.release((Word) e);
+		} else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) { // move from UA to PA
+			gm.getPa().add(e); // modified by Xinjie
+			if(e instanceof Word){
+				gm.getUa().remove((Word) e);
+			} else{ // Poem
+				for (Row row : ((Poem) e).getRows()){
+					for (Word word : row.getWords()){
+						gm.getUa().remove(word);
+					}
+				}
+			}
 		}
-		else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) {
-			gm.release((Word) e);
-		}
-		e.setX(man.getX());
-		e.setY(man.getY());
-		
+		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
+		//e.setX(man.getX());
+		//e.setY(man.getY());
+		//System.out.println(gm.getUa().getWords().size());
 		panel.redraw();
 		panel.repaint();
 		return true;
@@ -108,10 +112,11 @@ public class UndoRedoController extends MouseAdapter {
 		if (e instanceof Word) {
 			ReturnIndex ri = gm.getPa().getWordIdx(man.getEntity().getX(), man.getEntity().getY());
 			if (ri == null) {
+				System.out.println("could not find word index");
 				return false;
 			}
 			if (!gm.getPa().disconnectWord(ri.idxPoem, ri.idxRow, ri.idxWord, man.getX(), man.getY())) {
-				return false;
+				System.out.println("error at disconnect");
 			}
 		}
 		// reset to its previous location
@@ -128,30 +133,29 @@ public class UndoRedoController extends MouseAdapter {
 	private boolean undoDisconnect() {
 		Entity e = man.getEntity();
 		ReturnIndex ri = null;
-		boolean ret = false;
 		if (e == null) { return false; }
 		
 		if (e instanceof Word) {
 			if ((ri = findEntityOrigin(e)) != null) {
 				if (ri.p == null) {						// intersects a word which is not connected to a poem
 					if (man.getX() < ri.w.getX()) {		// e belongs on the left
-						ret = gm.getPa().connectWordLeftWord(ri.w, (Word) e);
+						gm.getPa().connectWordLeftWord(ri.w, (Word) e);
 					}
 					else {
-						ret = gm.getPa().connectWordRightWord(ri.w, (Word) e);
+						gm.getPa().connectWordRightWord(ri.w, (Word) e);
 					}
 				}
 				else {
 					if (ri.idxWord == 0) {
-						ret = gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
+						gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
 					}
 					else {
-						ret = gm.getPa().connectWordRightPoem(ri.p, (Word) e, ri.idxRow);
+						gm.getPa().connectWordRightPoem(ri.p, (Word) e, ri.idxRow);
 					}
 				}
 			}
 		}
-		return ret;
+		return true;
 	}
 	
 	/**
@@ -175,6 +179,7 @@ public class UndoRedoController extends MouseAdapter {
 		return ri;
 	}
 	
+
 	public enum URType {
 		UNDO, REDO
 	}
