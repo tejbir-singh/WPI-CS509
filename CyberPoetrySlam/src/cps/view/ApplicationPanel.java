@@ -179,13 +179,15 @@ public class ApplicationPanel extends JPanel {
 	}
 	
 	/**
-	 * Check if Undo is a valid option and adjust the button accordingly. 
+	 * Check if Undo is a valid option and adjust the button and manipulations Stack accordingly. 
+	 * @param valid true only if the caller is not Redo; this protects the integrity of the board
 	 */
-	public void validateUndo() {
-		if (!gm.getManipulations().isEmpty()) {
+	public void validateUndo(boolean valid) {
+		if (valid && !gm.getManipulations().isEmpty()) {
 			undoButton.setEnabled(true);
 		}
 		else {
+			gm.getManipulations().clear();		// clear the stack; integrity no longer holds
 			undoButton.setEnabled(false);
 		}
 	}

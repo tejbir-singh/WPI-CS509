@@ -61,7 +61,7 @@ public class UndoRedoController extends MouseAdapter {
 			}
 		}
 		
-		panel.validateUndo();
+		panel.validateUndo(doPushPrev);
 		panel.validateRedo(true);
 		panel.redraw();
 		panel.repaint();
@@ -77,8 +77,21 @@ public class UndoRedoController extends MouseAdapter {
 		if (e == null) { return false; }
 		
 		// make sure the Entity goes back where it belongs
-		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { // move from PA to UA
-			gm.release((Word) e);
+		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to UA
+			if (e instanceof Word) {
+				gm.getPa().remove((Word) e);
+				gm.getUa().add(e);
+			}
+			else {					// poem
+				for (Row row : ((Poem) e).getRows()){
+					for (Word word : row.getWords()){
+						gm.getUa().add(word);
+						gm.getPa().remove(word);
+					}
+				}
+				gm.getPa().remove(e);
+			}
+			
 		} else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) { // move from UA to PA
 			gm.getPa().add(e); // modified by Xinjie
 			if(e instanceof Word){
@@ -92,9 +105,6 @@ public class UndoRedoController extends MouseAdapter {
 			}
 		}
 		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
-		//e.setX(man.getX());
-		//e.setY(man.getY());
-		//System.out.println(gm.getUa().getWords().size());
 		panel.redraw();
 		panel.repaint();
 		return true;

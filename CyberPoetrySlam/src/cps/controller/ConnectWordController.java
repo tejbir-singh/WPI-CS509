@@ -144,14 +144,14 @@ public class ConnectWordController extends MouseAdapter {
 				revert();
 			}
 			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
-			panel.validateUndo();
+			panel.validateUndo(true);
 		}
 		else {
 			if (!gm.getPa().connectWordRightWord(ri.w, word)) {
 				revert();
 			}
 			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
-			panel.validateUndo();
+			panel.validateUndo(true);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class ConnectWordController extends MouseAdapter {
 				return;
 			}
 			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
-			panel.validateUndo();
+			panel.validateUndo(true);
 		} else if (word.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth())
 				&& ri.idxWord == gm.getPa().getPoems().get(ri.idxPoem).getRows().get(ri.idxRow).getWords().size() - 1) {
 			if (!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.idxPoem), word, ri.idxRow)) {
@@ -175,7 +175,7 @@ public class ConnectWordController extends MouseAdapter {
 				return;
 			}
 			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
-			panel.validateUndo();
+			panel.validateUndo(true);
 			panel.validateRedo(false);
 		} 
 		else{

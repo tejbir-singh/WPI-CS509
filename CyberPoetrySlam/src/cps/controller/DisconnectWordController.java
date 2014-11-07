@@ -123,7 +123,7 @@ public class DisconnectWordController extends MouseAdapter {
 		}
 		else {
 			gm.getManipulations().add(new Manipulation(originalx, originaly, selected, MoveType.DISCONNECT));
-			panel.validateUndo();
+			panel.validateUndo(true);
 			panel.validateRedo(false);
 		}
 		

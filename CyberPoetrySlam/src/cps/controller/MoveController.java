@@ -186,7 +186,7 @@ public class MoveController extends MouseAdapter {
 		
 
 		gm.setSelected(null);
-		panel.validateUndo();
+		panel.validateUndo(true);
 		panel.validateRedo(false);
 		panel.redraw();
 		panel.repaint();
