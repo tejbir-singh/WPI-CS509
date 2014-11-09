@@ -104,6 +104,13 @@ public class UndoRedoController extends MouseAdapter {
 				}
 			}
 		}
+		if (e instanceof Poem) {
+			// In case it was previously undone, get the new Poem at this location
+			ReturnIndex ri = gm.getPa().getWordIdx(((Poem) e).getRows().get(0).getWords().get(0).getX(), 
+					((Poem) e).getRows().get(0).getWords().get(0).getY());
+			e = ri.p;
+		}
+		
 		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
 		panel.redraw();
 		panel.repaint();

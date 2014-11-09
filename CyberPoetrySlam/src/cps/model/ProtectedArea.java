@@ -163,6 +163,7 @@ public class ProtectedArea implements Serializable {
 						ri.idxRow = row_idx;
 						ri.idxWord = word_idx;
 						ri.w = word;
+						ri.p = belongsToPoem(word);
 						return ri;
 					}
 					word_idx += 1;
