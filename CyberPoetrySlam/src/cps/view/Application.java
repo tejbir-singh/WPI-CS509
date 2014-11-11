@@ -5,6 +5,7 @@ import javax.swing.*;
 import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
+import cps.controller.PublishPoem;
 import cps.model.GameManager;
 
 import java.awt.event.MouseAdapter;
@@ -52,7 +53,7 @@ public class Application extends JFrame {
 		JButton btnNewButton_4 = new JButton("Publish");
 		btnNewButton_4.setBounds(536, 31, 89, 23);
 		getContentPane().add(btnNewButton_4);
-		btnNewButton_4.setEnabled(false);
+		//btnNewButton_4.setEnabled(false);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(12, 66, 678, 595);
@@ -102,6 +103,13 @@ public class Application extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new DisconnectWordController(gm, appPanel).register();
+			}
+		});
+		
+		btnNewButton_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				new PublishPoem(gm, appPanel).register();
 			}
 		});
 		
