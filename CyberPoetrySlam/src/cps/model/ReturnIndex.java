@@ -10,10 +10,10 @@ public class ReturnIndex implements Serializable {
 	public Word w;
 	public Poem p = null;
 	
-	public ReturnIndex(int dexpoem, int dexrow, int dexword, Word w){
-		this.idxPoem = dexpoem;
-		this.idxRow = dexrow;
-		this.idxWord = dexword;
+	public ReturnIndex(int idxPoem, int idxRow, int idxWord, Word w){
+		this.idxPoem = idxPoem;
+		this.idxRow = idxRow;
+		this.idxWord = idxWord;
 		this.w = w;
 	}
 }
