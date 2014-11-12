@@ -98,7 +98,7 @@ public class DisconnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		
 		if (selected == null) { return false; }
 		
@@ -113,7 +113,7 @@ public class DisconnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
 		ReturnIndex selectedIdx = gm.getSelectedIdx();
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		
 		if (selected == null) { return false; }
 		
@@ -121,8 +121,14 @@ public class DisconnectWordController extends MouseAdapter {
 		if (!gm.getPa().disconnectWord(selectedIdx.idxPoem, selectedIdx.idxRow, selectedIdx.idxWord, selected.getX(), selected.getY())){
 			selected.setPosition(originalx, originaly);
 		}
+		else {
+			gm.getManipulations().add(new Manipulation(originalx, originaly, selected, MoveType.DISCONNECT));
+			panel.validateUndo(true);
+			panel.validateRedo(false);
+		}
 		
 		// no longer selected
+		
 		gm.setSelected(null);
 		gm.setSelectedIdx(null);
 		

@@ -1,5 +1,7 @@
 package cps.controller;
 
+import javax.swing.JButton;
+
 import cps.controller.MoveController;
 import cps.model.GameManager;
 import cps.model.Type;
@@ -15,14 +17,14 @@ public class MoveControllerTest extends TestCase {
 	@Override
 	protected void setUp() {
 		gm = GameManager.getInstance();
-		app = new ApplicationPanel(gm);
+		app = new ApplicationPanel(gm, new JButton(), new JButton());
 		mc = new MoveController(gm, app);
 		gm.getPa().add(new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1"));
 	}
 	
 	public void testSelect() {
 		mc.select(1, 1);
-		assertTrue(gm.getSelected().getValue().equals("test1"));
+		assertTrue(((Word) gm.getSelected()).getValue().equals("test1"));
 	}
 	
 	public void testRelease() {

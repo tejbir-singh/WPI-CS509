@@ -6,12 +6,14 @@ import java.awt.Image;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import cps.model.GameManager;
 import cps.model.Poem;
 import cps.model.Row;
 import cps.model.Word;
+import cps.model.Entity;
 
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
@@ -21,6 +23,18 @@ public class ApplicationPanel extends JPanel {
 	Graphics canvasGraphics;
 	MouseListener activeListener;
 	MouseMotionListener activeMotionListener;
+	JButton undoButton;
+	JButton redoButton;
+	
+	/**
+	 * Constructor.
+	 */
+	public ApplicationPanel(GameManager gm, JButton undoButton, JButton redoButton) {
+		super();
+		this.gm = gm;
+		this.undoButton = undoButton;
+		this.redoButton = redoButton;
+	}
 
 	/** Properly register new listener (and unregister old one if present). */
 	public void setActiveListener(MouseListener ml) {
@@ -41,14 +55,6 @@ public class ApplicationPanel extends JPanel {
 		if (mml != null) {
 			this.addMouseMotionListener(mml);
 		}
-	}
-
-	/**
-	 * Construct ApplicationPanel with a Model instance used for information.
-	 */
-	public ApplicationPanel(GameManager gm) {
-		super();
-		this.gm = gm;
 	}
 
 	/** Make sure that image is created as needed. */
@@ -96,12 +102,21 @@ public class ApplicationPanel extends JPanel {
 
 		ensureImageAvailable(g);
 		g.drawImage(offscreenImage, 0, 0, getWidth(), getHeight(), this);
-
+		Word selectedword = null;
+		Poem selectedpoem = null;
 		// draw selected
-		Word selected = gm.getSelected();
-		if (selected != null) {
-			paintWord(g, selected);
+		if (gm.getSelected() instanceof Word){
+			selectedword = (Word) gm.getSelected();
+			if (selectedword != null) {
+				paintWord(g, selectedword);
+			}
+		} else{
+			selectedpoem = (Poem) gm.getSelected();
+			if (selectedpoem != null) {
+				paintPoem(g, selectedpoem);
+			}
 		}
+		
 	}
 
 	/** Paint the Word directly to the screen */
@@ -142,12 +157,52 @@ public class ApplicationPanel extends JPanel {
 	}
 
 	/** Repaint to the screen just the given part of the image. */
-	public void paintBackground(Word w) {
+	public void paintBackground(Entity e) {
 		// Only updates to the screen the given region
-		if (canvasGraphics != null) {
-			canvasGraphics.drawImage(offscreenImage, w.getX(), w.getY(),
-					w.getWidth(), w.getHeight(), this);
-			repaint(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		if (e instanceof Word){
+			if (canvasGraphics != null) {
+				canvasGraphics.drawImage(offscreenImage, e.getX(), e.getY(),
+						e.getWidth(), e.getHeight(), this);
+				repaint(e.getX(), e.getY(), e.getWidth(), e.getHeight());
+			}
+		} else {
+			if (canvasGraphics != null) {
+				for (Row row : ((Poem) e).getRows()){
+					canvasGraphics.drawImage(offscreenImage, row.getX(), row.getY(),
+						row.getWidth(), row.getHeight(), this);
+				repaint(row.getX(), row.getY(), row.getWidth(), row.getHeight());
+				}
+				
+			}
+		}
+		
+	}
+	
+	/**
+	 * Check if Undo is a valid option and adjust the button and manipulations Stack accordingly. 
+	 * @param valid true only if the caller is not Redo; this protects the integrity of the board
+	 */
+	public void validateUndo(boolean valid) {
+		if (valid && !gm.getManipulations().isEmpty()) {
+			undoButton.setEnabled(true);
+		}
+		else {
+			gm.getManipulations().clear();		// clear the stack; integrity no longer holds
+			undoButton.setEnabled(false);
+		}
+	}
+	
+	/**
+	 * Check if Redo is a valid option and adjust the button and prevUndo Stack accordingly. 
+	 * @param valid true only if the caller is Undo; this protects the integrity of the board
+	 */
+	public void validateRedo(boolean valid) {
+		if (valid && !gm.getPrevUndos().isEmpty()) {
+			redoButton.setEnabled(true);
+		}
+		else {
+			gm.getPrevUndos().clear(); 			// clear the stack; integrity no longer holds
+			redoButton.setEnabled(false);
 		}
 	}
 }

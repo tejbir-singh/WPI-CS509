@@ -44,8 +44,10 @@ public class ProtectedArea implements Serializable {
 			// other words, added by Xinjie
 			if (doesIntersect(e)) { // invalid move if so
 				return false;
-			} else
+			} else{
 				return this.words.add((Word) e);
+			}
+				
 		} else { // add poem
 			if (doesIntersect(e)) {
 				return false;
@@ -60,14 +62,28 @@ public class ProtectedArea implements Serializable {
 	 * @param word Word to remove
 	 * @return true if successful
 	 */
-	public boolean remove(Word word) {
-		int index = words.indexOf(word);
-		if (index == -1) { // word not found
+	public boolean remove(Entity e) {
+		int index;
+		if (e instanceof Word){
+			index = words.indexOf(e);
+			if (index == -1) { // word not found
+				return false;
+			} else {
+				words.remove(index);
+				return true;
+			}
+		}else if (e instanceof Poem){
+			index = poems.indexOf(e);
+			if (index == -1){ // poem not found
+				return false;
+			} else {
+				poems.remove(index);
+				return true;
+			}
+		} else{ // e is neither a word nor a poem
 			return false;
-		} else {
-			words.remove(index);
-			return true;
 		}
+		
 	}
 
 	/**
@@ -147,6 +163,7 @@ public class ProtectedArea implements Serializable {
 						ri.idxRow = row_idx;
 						ri.idxWord = word_idx;
 						ri.w = word;
+						ri.p = belongsToPoem(word);
 						return ri;
 					}
 					word_idx += 1;
@@ -176,14 +193,14 @@ public class ProtectedArea implements Serializable {
 
 			for (Poem poem : poems) {
 				for (Row row : poem.rows) {
-					if (row.intersect(e)) {
+					if (!row.getWords().contains(e) && row.intersect(e)) {
 						return true;
 					}
 				}
 			}
 
 			return false;
-		} else { // e instanceof Poem
+		} else { 					// e instanceof Poem
 			for (Word word : words) {
 				for (Row rowe : ((Poem) e).rows) {
 					for (Word worde : rowe.words) {
@@ -197,8 +214,7 @@ public class ProtectedArea implements Serializable {
 			for (Poem poem : poems) {
 				for (Row row : poem.rows) {
 					for (Row rowe : ((Poem) e).rows) {
-						if (!poem.equals((Poem) e)
-								&& row.intersect(rowe) == true) {
+						if (!poem.equals((Poem) e) && row.intersect(rowe) == true) {
 							return true;
 						}
 					}
@@ -229,12 +245,14 @@ public class ProtectedArea implements Serializable {
 		int dw = 0;
 		if(e instanceof Word){
 			for (Word word : words) {
-				if (!e.equals(word) && word.intersect(e) == true) {
+				if (!e.equals(word) && word.intersect(e)
+						&& !((Word) e).getValue().equals("TEMP TEST " + word.getValue())) {
 					ri.idxPoem = -1;
 					ri.idxRow = -1;
 					ri.idxWord = -1;
 					ri.w = word;
-				return ri;
+					ri.p = belongsToPoem(w);
+					return ri;
 				}
 			}
 		
@@ -243,12 +261,14 @@ public class ProtectedArea implements Serializable {
 				for (Row row : poem.rows){
 					dw = 0;
 					for (Word word : row.words){
-						if (!e.equals(word) && word.intersect(e) == true) {
+						if (!e.equals(word) && word.intersect(e) 
+								&& !((Word) e).getValue().equals("TEMP TEST " + word.getValue())) {
 							ri.idxPoem = dp;
 							ri.idxRow = dr;
 							ri.idxWord = dw;
 							ri.w = word;
-						return ri;
+							ri.p = belongsToPoem(ri.w);
+							return ri;
 						}
 						dw += 1;
 					}
@@ -266,7 +286,8 @@ public class ProtectedArea implements Serializable {
 							ri.idxRow = -1;
 							ri.idxWord = -1;
 							ri.w = word;
-						return ri;
+							ri.p = belongsToPoem(w);
+							return ri;
 						}
 					}	
 				}	
@@ -283,7 +304,8 @@ public class ProtectedArea implements Serializable {
 									ri.idxRow = dr;
 									ri.idxWord = dw;
 									ri.w = word;
-								return ri;
+									ri.p = belongsToPoem(w);
+									return ri;
 								}
 							}	
 						}
@@ -383,6 +405,7 @@ public class ProtectedArea implements Serializable {
 	 * @return true if successful
 	 */
 	public boolean connectWordRightWord(Word w, Word wright) {
+
 		if (this.moveEntity(wright, w.x + w.width, w.y)) {
 			ArrayList<Word> aw1 = new ArrayList<Word>();
 			aw1.add(w);
@@ -449,7 +472,7 @@ public class ProtectedArea implements Serializable {
 			this.words.add(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex));
 			this.poems.get(poemIndex).disconnectEdgeWord(rowIndex, wordIndex);
 			if (this.poems.get(poemIndex).rows.size() == 1
-					&& this.poems.get(poemIndex).rows.get(0).words.size() == 1) {
+					&& this.poems.get(poemIndex).rows.get(0).words.size() == 1) {	// no longer a Poem
 				this.words.add(this.poems.get(poemIndex).rows.get(0).words.get(0));
 				this.poems.remove(poemIndex);
 			}

@@ -70,12 +70,12 @@ public class ConnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean select(int x, int y) {
 		anchor = new Point (x, y);
-			
+
 		// pieces are returned in order of Z coordinate
 		Word w = gm.findWord(anchor.x, anchor.y);
 		
 		// TEMPORARY: Need to change to allow Poems to be connected to each other
-		if (w == null || gm.getPa().belongsToPoem(w) != null) { return false; }
+		if (w == null || gm.getPa().belongsToPoem(w) != null || w.getY() > GameManager.AREA_DIVIDER) { return false; }
 		
 		// no longer in the board since we are moving it around...
 		//gm.getUa().remove(w);
@@ -96,7 +96,7 @@ public class ConnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
 		if (buttonType == MouseEvent.BUTTON3) { return false; }
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		
 		if (selected == null) { return false; }
 		
@@ -110,12 +110,12 @@ public class ConnectWordController extends MouseAdapter {
 	
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
-		Word selected = gm.getSelected();
+		Word selected = (Word) gm.getSelected();
 		if (selected == null) { return false; }
 		
 		if (gm.getPa().entityIntersect(selected) == null) { 			// didn't select any word to connect
 			revert();
-		} 
+		}
 		else {
 			ri = gm.getPa().entityIntersect(selected);
 			if(ri.idxPoem == -1){ 										//ri.w is a single word
@@ -143,11 +143,15 @@ public class ConnectWordController extends MouseAdapter {
 			if (!gm.getPa().connectWordLeftWord(ri.w, word)) {
 				revert();
 			}
+			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
+			panel.validateUndo(true);
 		}
 		else {
 			if (!gm.getPa().connectWordRightWord(ri.w, word)) {
 				revert();
 			}
+			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
+			panel.validateUndo(true);
 		}
 	}
 
@@ -160,12 +164,19 @@ public class ConnectWordController extends MouseAdapter {
 		if (word.getX() < (ri.w.getX() + 0.5 * ri.w.getWidth()) && ri.idxWord == 0) {
 			if (!gm.getPa().connectWordLeftPoem(gm.getPa().getPoems().get(ri.idxPoem), word, ri.idxRow)) {
 				revert();
+				return;
 			}
+			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
+			panel.validateUndo(true);
 		} else if (word.getX() >= (ri.w.getX() + 0.5 * ri.w.getWidth())
 				&& ri.idxWord == gm.getPa().getPoems().get(ri.idxPoem).getRows().get(ri.idxRow).getWords().size() - 1) {
 			if (!gm.getPa().connectWordRightPoem(gm.getPa().getPoems().get(ri.idxPoem), word, ri.idxRow)) {
 				revert();
+				return;
 			}
+			gm.getManipulations().add(new Manipulation(originalx, originaly, gm.getSelected(), MoveType.CONNECT));
+			panel.validateUndo(true);
+			panel.validateRedo(false);
 		} 
 		else{
 			revert();
