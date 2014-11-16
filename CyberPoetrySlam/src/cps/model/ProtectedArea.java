@@ -110,7 +110,6 @@ public class ProtectedArea implements Serializable {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -147,6 +146,7 @@ public class ProtectedArea implements Serializable {
 	 * @param x x-coordinate
 	 * @param y y-coordinate
 	 * @return ReturnIndex at given location (null if not found)
+	 * @author Xinjie
 	 */
 	public ReturnIndex getWordIdx(int x, int y) {
 		Word w = null;
@@ -234,7 +234,7 @@ public class ProtectedArea implements Serializable {
 	 *         word's index information of which poem's which row's which word,
 	 *         stored in ReturnIndex. if the index of poem equals to -1, that
 	 *         means it is a word instead of belonging to a Poem.
-	 *
+	 * @author Xinjie
 	 */
 	public ReturnIndex entityIntersect(Entity e) {
 		// compare e to each existing Entity
@@ -325,6 +325,7 @@ public class ProtectedArea implements Serializable {
 	 * Check if an Entity is intersecting any boundary in the ProtectedArea.
 	 * @param e Entity to check
 	 * @return true if it intersecting boundary
+	 * @author Xinjie
 	 */
 	public boolean boundaryIntersect(Entity e) {
 		if (e instanceof Word) {
@@ -375,6 +376,7 @@ public class ProtectedArea implements Serializable {
 	 * @param w Word to add to
 	 * @param wleft Word to add to w
 	 * @return true if successful
+	 * @author Xinjie
 	 */
 	public boolean connectWordLeftWord(Word w, Word wleft) {
 		if (this.moveEntity(wleft, w.x - wleft.width, w.y)) { // check for intersection while connecting
@@ -403,6 +405,7 @@ public class ProtectedArea implements Serializable {
 	 * @param w Word to add to
 	 * @param wleft Word to add to w
 	 * @return true if successful
+	 * @author Xinjie
 	 */
 	public boolean connectWordRightWord(Word w, Word wright) {
 
@@ -429,6 +432,7 @@ public class ProtectedArea implements Serializable {
 	 * @param w Word to add
 	 * @param rowIndex index of the Row in the Poem to add the Word to
 	 * @return true if successful
+	 * @author Xinjie
 	 */
 	public boolean connectWordLeftPoem(Poem p, Word w, int rowIndex) {
 		if (this.moveEntity(w, p.rows.get(rowIndex).x - w.width, p.rows.get(rowIndex).y)) {
@@ -447,6 +451,7 @@ public class ProtectedArea implements Serializable {
 	 * @param w Word to add
 	 * @param rowIndex index of the Row in the Poem to add the Word to
 	 * @return true if successful
+	 * @author Xinjie
 	 */
 	public boolean connectWordRightPoem(Poem p, Word w, int dexr) {
 		if (this.moveEntity(w, p.rows.get(dexr).x + p.rows.get(dexr).width,
@@ -460,77 +465,203 @@ public class ProtectedArea implements Serializable {
 
 	/**
 	 * Disconnect a Word from a Poem.
-	 * @param poemIndex index of the Poem in the ProtectedArea's ArrayList
-	 * @param rowIndex index of the Row in the Poem's ArrayList
-	 * @param wordIndex index of the Word in the Row's ArrayList
-	 * @param x x-coordinate
-	 * @param y y-coordinate
+	 * @param poemidx index of the Poem in the ProtectedArea's ArrayList
+	 * @param rowidx index of the Row in the Poem's ArrayList
+	 * @param wordidx index of the Word in the Row's ArrayList
+	 * @param x x-coordinate of Word been disconnected to
+	 * @param y y-coordinate of Word been disconnected to
 	 * @return true if successful
+	 * @author Xinjie
 	 */
-	public boolean disconnectWord(int poemIndex, int rowIndex, int wordIndex, int x, int y) {
-		if (this.moveEntity(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex), x, y)) {
-			this.words.add(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex));
-			this.poems.get(poemIndex).disconnectEdgeWord(rowIndex, wordIndex);
-			if (this.poems.get(poemIndex).rows.size() == 1
-					&& this.poems.get(poemIndex).rows.get(0).words.size() == 1) {	// no longer a Poem
-				this.words.add(this.poems.get(poemIndex).rows.get(0).words.get(0));
-				this.poems.remove(poemIndex);
+	public boolean disconnectWord(int poemidx, int rowidx, int wordidx, int x, int y) {
+		if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y)) {
+			if (this.poems.get(poemidx).rows.size() == 1
+					&& this.poems.get(poemidx).rows.get(0).words.size() == 1) {	// no longer a Poem
+				this.words.add(this.poems.get(poemidx).rows.get(0).words.get(0));
+				this.poems.remove(poemidx);
+				return true;
 			}
-			return true;
+			
+			if(this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx) == true){
+				this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
+				return true;
+			}
+
+			return false;
 		} else
 			return false;
 	}
 
-	/*
-	 * public boolean connectPoemTop(Poem p, Poem top){ p.setPosition(top.x,
-	 * top.y); for(int i = p.rows.size() - 1; i >= 0; i--) p.rows.add(0,
-	 * top.rows.get(i)); return true; }
-	 * 
-	 * public boolean connectPoemBottom(Poem p, Poem bottom){ for(int i = 0; i <
-	 * p.rows.size(); i++) p.rows.add(p.rows.size(), bottom.rows.get(i)); return
-	 * true; }
-	 * 
-	 * public boolean disconnectRow(ArrayList<Poem> p, int dexp, int dexr, int
-	 * newx, int newy){ // dexp is the index of the selected poem, dexr is the
-	 * index of the selected row, (newx, newy) is the position of being dragged
-	 * to if(p.get(dexp).rows.size() == 1) return false; else{ if(dexr == 0){ //
-	 * disconnect first row // the disconnected row constructs a new poem
-	 * ArrayList<Row> newrowlist = new ArrayList<Row>(); //it's up to Rej's
-	 * constructor of class Row newrowlist.add(p.get(dexp).rows.get(dexr)); Poem
-	 * newpoem = new Poem(newrowlist); newpoem.setPosition(newx, newy);
-	 * p.add(newpoem);
-	 * 
-	 * // modify original poem
-	 * p.get(dexp).setPosition(p.get(dexp).rows.get(1).x,
-	 * p.get(dexp).rows.get(1).y); p.get(dexp).rows.remove(dexr); } else if(dexr
-	 * == p.get(dexp).rows.size() - 1){ //disconnect last row // the
-	 * disconnected row constructs a new poem ArrayList<Row> newrowlist1 = new
-	 * ArrayList<Row>(); //it's up to Rej's constructor of class Row
-	 * newrowlist1.add(p.get(dexp).rows.get(dexr)); Poem newpoem1 = new
-	 * Poem(newrowlist1); newpoem1.setPosition(newx, newy); p.add(newpoem1);
-	 * 
-	 * // modify original poem
-	 * p.get(dexp).rows.remove(p.get(dexp).rows.get(dexr)); } else{ //disconnect
-	 * middle row // the lower rows construct a new poem ArrayList<Row>
-	 * newrowlist2 = new ArrayList<Row>(); //it's up to Rej's constructor of
-	 * class Row for(int i = dexr + 1; i < p.get(dexp).rows.size(); i++)
-	 * newrowlist2.add(p.get(dexp).rows.get(i)); Poem newpoem2 = new
-	 * Poem(newrowlist2); newpoem2.setPosition(p.get(dexp).rows.get(dexr + 1).x,
-	 * p.get(dexp).rows.get(dexr + 1).y); p.add(newpoem2);
-	 * 
-	 * // the disconnected row constructs a new poem ArrayList<Row> newrowlist3
-	 * = new ArrayList<Row>(); //it's up to Rej's constructor of class Row
-	 * newrowlist3.add(p.get(dexp).rows.get(dexr)); Poem newpoem3 = new
-	 * Poem(newrowlist3); newpoem3.setPosition(newx, newy); p.add(newpoem3);
-	 * 
-	 * // modify the original poem for (int i = dexr; i <
-	 * p.get(dexp).rows.size(); i++ )
-	 * p.get(dexp).rows.remove(p.get(dexp).rows.get(i)); } }
-	 * 
-	 * return true;
-	 * 
-	 * }
+	/**
+	 * Connect a Poem on the top of another Poem and set its last row's x-coordinate with x.
+	 * @param p the Poem which will be connected on top of
+	 * @param ptop the Poem to be connected on the top of p
+	 * @param bottomrow_x the x-coordinate of the last row of ptop when connects to p
+	 * @return true if successful
+	 * @author Xinjie
 	 */
+	public boolean connectPoemTop(Poem p, Poem ptop, int bottomrow_x){
+		int ptop_x = bottomrow_x - (ptop.getRows().get(ptop.getRows().size() - 1).getX() - ptop.getRows().get(0).getX());
+		int ptop_y = p.getRows().get(0).getY() - ptop.getHeight();
+		if (this.moveEntity(ptop, ptop_x, ptop_y)) {
+			for(int i = ptop.getRows().size() - 1; i >= 0; i --){
+				p.connectRowTop(ptop.getRows().get(i));
+			}
+			p.setX(ptop_x);
+			p.setY(ptop_y);
+			this.remove(ptop);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Connect a Poem under the bottom of another Poem and set its x-coordinate with x.
+	 * @param p the Poem which will be connected under the bottom of
+	 * @param pbottom the Poem to be connected under the bottom of p
+	 * @param toprow_x the x-coordinate of pbottom when connects to p
+	 * @return true if successful
+	 * @author Xinjie
+	 */
+	public boolean connectPoemBottom(Poem p, Poem pbottom, int toprow_x){
+		int pbottom_x = toprow_x;
+		int pbottom_y = p.getRows().get(p.getRows().size() - 1).getY() + p.getRows().get(p.getRows().size() - 1).getHeight();
+		if (this.moveEntity(pbottom, pbottom_x, pbottom_y)) {
+			for(Row r: pbottom.getRows()){
+				p.connectRowBottom(r);
+			}
+			this.remove(pbottom);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Connect a Word on the top of another Poem and set its x-coordinate with x.
+	 * @param p the Poem which will be connected on the top of
+	 * @param w the Word to be connected on the top of p
+	 * @param x the x-coordinate of w when connects to p
+	 * @return true if successful
+	 * @author Xinjie
+	 */
+	public boolean connectWordTopPoem(Poem p, Word w, int x){
+		int w_x = x;
+		int w_y = p.getRows().get(0).y - w.getHeight();
+		if(this.moveEntity(w, w_x, w_y)){
+			ArrayList<Word> aw1 = new ArrayList<Word>();
+			aw1.add(w);
+			Row row1 = new Row(aw1);
+			p.getRows().add(0, row1);
+			p.setX(w_x);
+			p.setY(w_y);
+			this.remove(w);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Connect a Word under the bottom of another Poem and set its x-coordinate with x.
+	 * @param p the Poem which will be connected under the bottom of
+	 * @param w the Word to be connected under the bottom of p
+	 * @param x the x-coordinate of w when connects to p
+	 * @return true if successful
+	 * @author Xinjie
+	 */
+	public boolean connectWordBottomPoem(Poem p, Word w, int x){
+		int w_x = x;
+		int w_y = p.getY() + p.getHeight();
+		if(this.moveEntity(w, w_x, w_y)){
+			ArrayList<Word> aw1 = new ArrayList<Word>();
+			aw1.add(w);
+			Row row1 = new Row(aw1);
+			p.rows.add(row1);
+			this.remove(w);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Disconnect a Row from a Poem and set its coordinate to (x, y).
+	 * @param poemidx index of the Poem in ProtectedArea
+	 * @param rowidx index of the Row been disconnected
+	 * @param x the x-coordinate of Row been disconnected to
+	 * @return y the y-coordinate of Row been disconnected to
+	 * @author Xinjie
+	 */
+	public boolean disconnectRow(int poemidx, int rowidx, int x, int y){
+		Poem targetpoem = this.getPoems().get(poemidx);
+		Row targetrow = targetpoem.getRows().get(rowidx);
+		
+		if(targetpoem.getRows().size() == 1){
+			return false;
+		} else{
+			if(rowidx == 0 || rowidx == targetpoem.getRows().size() - 1){ // disconnect first row
+				if(targetrow.getWords().size() > 1){ // the row has multiple words
+					ArrayList<Row> ar1 = new ArrayList<Row>();
+					ar1.add(targetrow);
+					Poem newpoem = new Poem(ar1);
+					targetpoem.removeRow(rowidx);
+					if(this.moveEntity(newpoem, x, y)){
+						this.getPoems().add(newpoem);
+						//targetpoem.removeRow(rowidx);
+						return true;
+					}else{
+						targetpoem.getRows().add(rowidx, targetrow);
+						targetpoem.setX(targetpoem.getRows().get(0).x);
+						targetpoem.setY(targetpoem.getRows().get(0).y);
+					}
+					
+				}else{ // the row has only one word
+					if(this.moveEntity(targetrow.getWords().get(0), x, y)){
+						this.getWords().add(targetrow.getWords().get(0));
+						targetpoem.removeRow(rowidx);
+						return true;
+					}
+				}
+			} else{ //disconnect middle row
+				if(targetrow.getWords().size() > 1){ // the row has multiple words
+					ArrayList<Row> ar1 = new ArrayList<Row>();
+					ar1.add(targetrow);
+					Poem ap1 = new Poem(ar1);
+					targetpoem.removeRow(rowidx);
+					if(this.moveEntity(ap1, x, y)){
+						this.getPoems().add(ap1);
+						ArrayList<Row> ar2 = new ArrayList<Row>();
+						for(int i = rowidx; i < targetpoem.getRows().size(); i ++){
+							ar2.add(targetpoem.getRows().get(i));
+						}
+						Poem ap2 = new Poem(ar2);
+						this.getPoems().add(ap2);
+						while ((targetpoem.getRows().size() - rowidx) > 0 ){
+							targetpoem.removeRow(rowidx);
+						}
+						return true;
+					}else{
+						targetpoem.getRows().add(rowidx, targetrow);
+					}
+					
+				}else{ // the row has only one word
+					if(this.moveEntity(targetrow.getWords().get(0), x, y)){
+						this.getWords().add(targetrow.getWords().get(0));
+						ArrayList<Row> ar2 = new ArrayList<Row>();
+						for(int i = rowidx + 1; i < targetpoem.getRows().size(); i ++){
+							ar2.add(targetpoem.getRows().get(i));	
+						}
+						while ((targetpoem.getRows().size() - rowidx) > 0 ){
+							targetpoem.removeRow(rowidx);
+						}
+						Poem ap2 = new Poem(ar2);
+						this.getPoems().add(ap2);
+						return true;
+					}
+				}	
+			}
+		}			
+		return false;	
+	}
+	
 
 	// Getters and setters
 	public ArrayList<Word> getWords() {

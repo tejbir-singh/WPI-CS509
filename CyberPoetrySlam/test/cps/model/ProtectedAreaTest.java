@@ -13,6 +13,7 @@ public class ProtectedAreaTest extends TestCase {
 	ProtectedArea pa = ProtectedArea.getInstance();
 	Word word = new Word(1, 1, 1, 1, Type.NOUN, "test");
 	Poem poem1;
+	Poem poem2;
 	Word w5 = new Word(22, 33, 4, 1, Type.NOUN, "word5");
 	
 	protected void setUp() {
@@ -35,6 +36,23 @@ public class ProtectedAreaTest extends TestCase {
 		assertEquals(true, ar1.add(row1));
 		assertEquals(true, ar1.add(row2));
 		poem1 = new Poem(ar1);
+		
+		Word w11 = new Word(1, 1, 3, 1, Type.ADJECTIVE, "word1");
+		Word w22 = new Word(4, 1, 5, 1, Type.ADVERB, "word2");
+		Word w33 = new Word(3, 2, 6, 1, Type.CONJUNCTION, "word3");
+		Word w44 = new Word(9, 2, 9, 1, Type.NOUN, "word4");
+		ArrayList<Word> aw3 = new ArrayList<Word>();
+		assertEquals(true, aw3.add(w11));
+		assertEquals(true, aw3.add(w22));
+		ArrayList<Word> aw4 = new ArrayList<Word>();
+		assertEquals(true, aw4.add(w33));
+		assertEquals(true, aw4.add(w44));
+		Row row3 = new Row(aw3);
+		Row row4 = new Row(aw4);
+		ArrayList<Row> ar2 = new ArrayList<Row>();
+		assertEquals(true, ar2.add(row3));
+		assertEquals(true, ar2.add(row4));
+		poem2 = new Poem(ar2);
 	}
 	
 	public void testSingletonPattern() {
@@ -232,5 +250,134 @@ public class ProtectedAreaTest extends TestCase {
 		assertEquals(4, pa.poems.get(0).x);
 		assertEquals(4, pa.poems.get(0).rows.get(0).x);
 	}
+	
+	public void testConnectWordTopPoem(){
+		assertEquals(true, pa.add(poem1));
+		assertEquals(true, pa.moveEntity(poem1, 1, 2));
+		assertEquals(true, pa.add(w5));
+		assertEquals(true, pa.add(word)); // no room between poem1's top and word
+		assertEquals(false, pa.connectWordTopPoem(poem1, pa.words.get(0), 1));
+		assertEquals(2, pa.poems.get(0).y);
+		assertEquals(true, pa.connectWordTopPoem(poem1, pa.words.get(0), 2));
+		assertEquals(1, pa.poems.get(0).y);
+
+		assertEquals(true, pa.moveEntity(poem1, 60, 60));
+		assertEquals(true, pa.connectWordTopPoem(poem1, pa.words.get(0), 62)); //w5 constructs poem1's first row
+		assertEquals(62, pa.poems.get(0).x);
+		}
+
+		public void testConnectWordBottomPoem(){
+		assertEquals(true, pa.add(poem1));
+		assertEquals(true, pa.moveEntity(poem1, 22, 31));
+		assertEquals(true, pa.add(w5)); // no room between poem1's bottom and w5
+		assertEquals(true, pa.add(word));
+		assertEquals(false, pa.connectWordBottomPoem(poem1, pa.words.get(1), 23));
+		assertEquals(2, pa.poems.get(0).getRows().size());
+		assertEquals(true, pa.connectWordBottomPoem(poem1, pa.words.get(1), 39));
+		assertEquals(39, pa.poems.get(0).rows.get(pa.poems.get(0).rows.size() - 1).x);
+		assertEquals(3, pa.poems.get(0).getRows().size());
+
+		assertEquals(true, pa.moveEntity(poem1, 60, 60));
+		assertEquals(true, pa.connectWordBottomPoem(poem1, pa.words.get(0), 61)); //w constructs poem1's last row
+		assertEquals(63, pa.poems.get(0).rows.get(pa.poems.get(0).rows.size() - 1).y);
+		}
+		
+		public void testConnectPoemTop(){
+			assertEquals(true, pa.add(poem1));
+			assertEquals(true, pa.moveEntity(poem1, 22, 31));
+			assertEquals(true, pa.add(w5)); // no room between poem1's bottom and w5
+			assertEquals(true, pa.add(word));
+			assertEquals(true, pa.moveEntity(word, 60, 60));
+			assertEquals(true, pa.add(poem2));
+			
+			//assertEquals(true,pa.moveEntity(word, 22, 29));
+			assertEquals(true, pa.connectPoemTop(poem1, poem2, 24));
+			assertEquals(1, pa.getPoems().size());
+			assertEquals(29, pa.getPoems().get(0).y);
+			assertEquals(22, pa.getPoems().get(0).x);
+		}
+		
+		public void testConnectPoemBottom(){
+			assertEquals(true, pa.add(poem1));
+			assertEquals(true, pa.moveEntity(poem1, 22, 31));
+			assertEquals(true, pa.add(w5)); // no room between poem1's bottom and w5
+			assertEquals(true, pa.add(word));
+			assertEquals(true, pa.moveEntity(word, 60, 60));
+			assertEquals(true, pa.add(poem2));
+			
+			//assertEquals(true,pa.moveEntity(word, 7, 33));
+			assertEquals(true, pa.connectPoemBottom(poem1, poem2, 7));
+			assertEquals(1, pa.getPoems().size());
+			assertEquals(31, pa.getPoems().get(0).y);
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(7, pa.getPoems().get(0).getRows().get(2).x);
+		}
+		
+		public void testDisconnectRow(){
+			assertEquals(true, pa.add(poem1));
+			assertEquals(true, pa.moveEntity(poem1, 22, 31));
+			assertEquals(true, pa.add(w5)); // no room between poem1's bottom and w5
+			assertEquals(true, pa.add(word));
+			assertEquals(true, pa.moveEntity(word, 50, 50));
+			assertEquals(true, pa.add(poem2));
+			
+			//assertEquals(true, pa.disconnectWord(0, 0, 0, 60, 60));
+			assertEquals(true, pa.disconnectRow(0, 1, 90, 90));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(false, pa.disconnectRow(0, 0, 100, 100));
+			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(2), 24));
+			
+			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(1), 30));
+			//assertEquals(true, pa.disconnectWord(0, 1, 0, 70, 70));
+			assertEquals(false, pa.disconnectRow(0, 1, 50, 50));
+			assertEquals(4, pa.getPoems().get(0).getRows().size());
+			assertEquals(24, pa.getPoems().get(0).getRows().get(1).x);
+			assertEquals(true, pa.disconnectRow(0, 1, 80, 80));
+			assertEquals(2, pa.getWords().size());
+			assertEquals(3, pa.getPoems().size());
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(80, pa.getPoems().get(1).x);
+			assertEquals(80, pa.getPoems().get(1).getRows().get(0).x);
+			/*assertEquals(true, pa.disconnectRow(0, 0, 60, 60));
+			assertEquals(3, pa.getPoems().size());
+			assertEquals(24, pa.getPoems().get(0).x);
+			assertEquals(24, pa.getPoems().get(0).getRows().get(0).x);
+			//assertEquals(true, pa.moveEntity(pa.getPoems().get(0), 23, 32));
+			assertEquals(true, pa.connectPoemTop(pa.getPoems().get(0), pa.getPoems().get(2), 22));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(2, pa.getPoems().size());
+			assertEquals(false, pa.disconnectRow(0, 0, 50, 50));
+			assertEquals(true, pa.disconnectRow(0, 1, 60, 60));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(3, pa.getPoems().size());
+			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(2), 22));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(false, pa.disconnectRow(0, 0, 50, 50));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(true, pa.moveEntity(w5, 80, 80));
+			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(1), 22));
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(4, pa.getPoems().get(0).getRows().size());
+			assertEquals(1, pa.getPoems().size());
+			assertEquals(22, pa.getPoems().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
+			assertEquals(22, pa.getPoems().get(0).getRows().get(1).x);
+			
+			assertEquals(true, pa.disconnectWord(0, 0, 0, 60, 60));
+			assertEquals(1, pa.getPoems().get(0).getRows().get(0).getWords().size());
+			assertEquals(true, pa.disconnectRow(0, 0, 70, 70));
+			assertEquals(4, pa.getWords().size());
+			assertEquals(22, pa.getPoems().get(0).x);*/
+			
+			
+			
+		}
 	
 }
