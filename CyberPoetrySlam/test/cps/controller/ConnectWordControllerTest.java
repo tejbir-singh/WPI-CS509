@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 public class ConnectWordControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	ConnectWordController mc;
+	ConnectWordController cwc;
 	
 	@Override
 	protected void setUp() {
@@ -24,7 +24,7 @@ public class ConnectWordControllerTest extends TestCase {
 		gm.getPa().setPoems(new ArrayList<Poem>());
 		gm.getUa().setWords(new ArrayList<Word>());
 		app = new ApplicationPanel(gm, new JButton(), new JButton());
-		mc = new ConnectWordController(gm, app);
+		cwc = new ConnectWordController(gm, app);
 		Word w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		Word w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 		gm.getPa().add(w1);
@@ -39,15 +39,15 @@ public class ConnectWordControllerTest extends TestCase {
 	}
 	
 	public void testSelect() {
-		mc.select(1, 1);
+		cwc.select(1, 1);
 		assertTrue(((Word) gm.getSelected()).getValue().equals("test1"));
 	}
 	
 	public void testRelease() {
-		mc.register();
-		mc.select(1, 1);
-		mc.drag(100, 100);
-		mc.release(100, 100);
+		cwc.register();
+		cwc.select(1, 1);
+		cwc.drag(100, 100);
+		cwc.release(100, 100);
 		assertNotNull(gm.getPa().getPoems().get(0));
 	}
 }

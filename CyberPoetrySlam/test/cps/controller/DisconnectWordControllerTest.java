@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 public class DisconnectWordControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	DisconnectWordController mc;
+	DisconnectWordController dwc;
 	Word w1, w2;
 	
 	@Override
@@ -25,7 +25,7 @@ public class DisconnectWordControllerTest extends TestCase {
 		gm.getPa().setPoems(new ArrayList<Poem>());
 		gm.getUa().setWords(new ArrayList<Word>());
 		app = new ApplicationPanel(gm, new JButton(), new JButton());
-		mc = new DisconnectWordController(gm, app);
+		dwc = new DisconnectWordController(gm, app);
 		w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 		gm.getPa().add(w1);
@@ -37,15 +37,15 @@ public class DisconnectWordControllerTest extends TestCase {
 		if (gm.getPa().getPoems().isEmpty()) {
 			gm.getPa().connectWordLeftWord(w1, w2);
 		}
-		mc.select(1, 1);
+		dwc.select(1, 1);
 		assertTrue(((Word) gm.getSelected()).getValue().equals("test1"));
 	}
 	
 	public void testRelease() {
-		mc.register();
-		mc.select(1, 1);
-		mc.drag(101, 101);
-		mc.release(101, 101);
+		dwc.register();
+		dwc.select(1, 1);
+		dwc.drag(101, 101);
+		dwc.release(101, 101);
 		assertTrue(gm.getPa().getPoems().isEmpty());
 	}
 }
