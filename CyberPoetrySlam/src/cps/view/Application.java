@@ -5,7 +5,7 @@ import javax.swing.*;
 import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
-import cps.controller.PublishPoem;
+import cps.controller.PublishPoemController;
 import cps.controller.UndoRedoController;
 import cps.controller.UndoRedoController.URType;
 import cps.model.GameManager;
@@ -22,7 +22,7 @@ public class Application extends JFrame {
 	ApplicationPanel appPanel;
 	GameManager gm;
 	
-	
+	WordTable table;
 
 	/**
 	 * Create the frame.
@@ -85,7 +85,7 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
-
+/*
 		// add the application panel
 		appPanel = new ApplicationPanel(gm, undoButton, redoButton);
 		panel.add(appPanel);
@@ -94,7 +94,7 @@ public class Application extends JFrame {
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
-
+*/
 		moveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -119,7 +119,7 @@ public class Application extends JFrame {
 		publishButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new PublishPoem(gm, appPanel).register();
+				new PublishPoemController(gm, appPanel).register();
 			}
 		});
 		
