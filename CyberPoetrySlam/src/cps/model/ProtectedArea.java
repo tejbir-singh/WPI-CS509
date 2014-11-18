@@ -475,35 +475,29 @@ public class ProtectedArea implements Serializable {
 	 * @return true if successful
 	 * @author Xinjie
 	 */
-	public boolean disconnectWord(int poemIndex, int rowIndex, int wordIndex, int x, int y) {
-		if (this.moveEntity(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex), x, y)) {
-			this.words.add(this.poems.get(poemIndex).rows.get(rowIndex).words.get(wordIndex));
-			this.poems.get(poemIndex).disconnectEdgeWord(rowIndex, wordIndex);
-			if (this.poems.get(poemIndex).rows.size() == 1
-					&& this.poems.get(poemIndex).rows.get(0).words.size() == 1) {	// no longer a Poem
-				this.words.add(this.poems.get(poemIndex).rows.get(0).words.get(0));
-				this.poems.remove(poemIndex);
-			}
-			return true;
-		} else
-			return false;
-		
-		/*if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y)) {
-			if (this.poems.get(poemidx).rows.size() == 1
-					&& this.poems.get(poemidx).rows.get(0).words.size() == 1) {	// no longer a Poem
-				this.words.add(this.poems.get(poemidx).rows.get(0).words.get(0));
-				this.poems.remove(poemidx);
-				return true;
-			}
-			
-			if(this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx) == true){
+	public boolean disconnectWord(int poemidx, int rowidx, int wordidx, int x, int y) {
+		if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y)) {
+			if (this.poems.get(poemidx).rows.size() == 1){ // if the Poem has only one row
 				this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
+				this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx);
+				if (this.poems.get(poemidx).rows.size() == 1
+						&& this.poems.get(poemidx).rows.get(0).words.size() == 1) {	// no longer a Poem
+					this.words.add(this.poems.get(poemidx).rows.get(0).words.get(0));
+					this.poems.remove(poemidx);
+				}
 				return true;
+			} else{
+				if(this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx) == true){
+					this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
+					return true;	
+				}else{
+					return false;
+				}
+				
 			}
-
-			return false;
+		
 		} else
-			return false;*/
+			return false;
 	}
 
 	/**
