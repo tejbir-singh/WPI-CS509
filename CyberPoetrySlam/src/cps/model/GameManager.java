@@ -10,6 +10,7 @@ public class GameManager {
 	private Stack<Manipulation> manipulations;
 	private Stack<Manipulation> prevUndos;
 	private static GameManager instance;
+	private SwapManager swapManager;
 	private final String wordBank = "words.txt";
 	private Entity selected = null;
 	ReturnIndex selectedidx = null;
@@ -18,6 +19,7 @@ public class GameManager {
 	public static final int PROTECTED_AREA_Y = 0;
 	public static final int PROTECTED_AREA_WIDTH = 650;
 	public static final int PROTECTED_AREA_HEIGHT = 550;
+	public static final int SWAP_AREA_DIVIDER = 660;
 	
 	
 	/**
@@ -26,6 +28,7 @@ public class GameManager {
 	private GameManager() {
 		pa = ProtectedArea.getInstance();
 		ua = UnprotectedArea.getInstance();
+		swapManager = SwapManager.getInstance();
 		manipulations = new Stack<Manipulation>();
 		prevUndos = new Stack<Manipulation>();
 		// populate the UnprotectedArea with the Words specified in words.txt
@@ -103,6 +106,9 @@ public class GameManager {
 		if (w == null) {
 			w = pa.getWord(x, y);
 		}
+		if (w == null) {
+			w = swapManager.getWord(x, y);
+		}
 		return w;
 	}
 
@@ -145,5 +151,9 @@ public class GameManager {
 	
 	public Stack<Manipulation> getPrevUndos() {
 		return this.prevUndos;
+	}
+	
+	public SwapManager getSwapManager() {
+		return this.swapManager;
 	}
 }

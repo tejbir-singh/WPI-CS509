@@ -6,23 +6,26 @@ import cps.controller.ConnectWordController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
 import cps.controller.PublishPoemController;
+import cps.controller.RequestSwapController;
 import cps.controller.UndoRedoController;
 import cps.controller.UndoRedoController.URType;
 import cps.model.GameManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Application extends JFrame {
 
+	private static final int BUTTON_OFFSET = 31;
 	private static final long serialVersionUID = 8238490728667512551L;
 	// private JTextField txtSwapActions;
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
 	ApplicationPanel appPanel;
 	GameManager gm;
-	
-	WordTable table;
+	private JTextField textField;
 
 	/**
 	 * Create the frame.
@@ -31,42 +34,50 @@ public class Application extends JFrame {
 	public Application(GameManager g) {
 		this.gm = g;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 700);
+		setBounds(100, 100, 700, 900);
 		getContentPane().setLayout(null);
 
 		JPanel p = new JPanel();
 		p.setBounds(this.getBounds());
 
 		JButton moveButton = new JButton("Move");
-		moveButton.setBounds(56, 31, 89, 23);
+		moveButton.setBounds(20, 31, 89, 23);
 		getContentPane().add(moveButton);
 
 		JButton connectButton = new JButton("Connect");
-		connectButton.setBounds(176, 31, 89, 23);
+		connectButton.setBounds(130, 31, 89, 23);
 		getContentPane().add(connectButton);
 
 		JButton disconnectButton = new JButton("Disconnect");
-		disconnectButton.setBounds(296, 31, 89, 23);
+		disconnectButton.setBounds(240, 31, 89, 23);
 		getContentPane().add(disconnectButton);
 
 		final JButton undoButton = new JButton("Undo");
-		undoButton.setBounds(416, 10, 89, 23);
+		undoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		undoButton.setBounds(350, 8, 89, 23);
 		getContentPane().add(undoButton);
 		if (gm.getManipulations().isEmpty()) {
 			undoButton.setEnabled(false);
 		}
 		
 		final JButton redoButton = new JButton("Redo");
-		redoButton.setBounds(416, 40, 89, 23);
+		redoButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		redoButton.setBounds(350, 42, 89, 23);
 		getContentPane().add(redoButton);
 		redoButton.setEnabled(false);
 
 		JButton publishButton = new JButton("Publish");
-		publishButton.setBounds(536, 31, 89, 23);
+		publishButton.setBounds(570, 31, 89, 23);
 		getContentPane().add(publishButton);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(12, 66, 678, 595);
+		panel.setBounds(12, 66, 678, 888);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -85,16 +96,28 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
-/*
+		
+		textField = new JTextField();
+		textField.setText("Swap Area");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setEditable(false);
+		textField.setColumns(10);
+		textField.setBounds(0, GameManager.SWAP_AREA_DIVIDER + BUTTON_OFFSET, 650, 20);
+		panel.add(textField);
+
 		// add the application panel
 		appPanel = new ApplicationPanel(gm, undoButton, redoButton);
-		panel.add(appPanel);
-		appPanel.setBounds(0, 31, 650, 550);
+		
+		JButton swapButton = new JButton("Swap");
+		swapButton.setBounds(460, 31, 89, 23);
+		getContentPane().add(swapButton);
+		// panel.add(appPanel);
+		appPanel.setBounds(0, BUTTON_OFFSET, 700, 800);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
-*/
+
 		moveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -140,6 +163,16 @@ public class Application extends JFrame {
 					return;
 				}
 				new UndoRedoController(gm, appPanel, URType.REDO).process();
+			}
+		});
+		
+		swapButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (gm.getSwapManager().getWords().isEmpty()) {
+					return;
+				}
+				new RequestSwapController(gm, appPanel).process();
 			}
 		});
 		

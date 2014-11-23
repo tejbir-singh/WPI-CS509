@@ -87,6 +87,9 @@ public class ApplicationPanel extends JPanel {
 		for (Poem p : gm.getPa().getPoems()) {
 			paintPoem(offscreenGraphics, p);
 		}
+		for (Word w : gm.getSwapManager().getWords()) {
+			paintWord(offscreenGraphics, w);
+		}
 	}
 
 	/**
@@ -132,10 +135,13 @@ public class ApplicationPanel extends JPanel {
 	/** Paint the Word into the given graphics context. */
 	void paintWord(Graphics g, Word w) {
 		if (g == null) { return; }
-		if (w.getY() >= GameManager.AREA_DIVIDER) {
+		if (w.getY() >= GameManager.SWAP_AREA_DIVIDER) {		// Swap Area
+			g.setColor(Color.orange);
+		}
+		else if (w.getY() >= GameManager.AREA_DIVIDER && w.getY() <= GameManager.SWAP_AREA_DIVIDER) { // UA
 			g.setColor(Color.gray);
 		}
-		else {
+		else {							// PA
 			g.setColor(Color.cyan);
 		}
 		g.fillRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
@@ -152,7 +158,6 @@ public class ApplicationPanel extends JPanel {
 				g.setColor(Color.black);
 				g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 			}
-			
 		}
 	}
 

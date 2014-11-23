@@ -77,24 +77,73 @@ public class UndoRedoController extends MouseAdapter {
 		if (e == null) { return false; }
 		
 		// make sure the Entity goes back where it belongs
-		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to UA
-			if (e instanceof Word) {
-				gm.getPa().remove((Word) e);
+		// TODO: Check if going to swap area from UA or PA
+		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to other
+			if (man.getY() >= GameManager.SWAP_AREA_DIVIDER) {		// move to Swap
+				if (e instanceof Word) {
+					gm.getSwapManager().add(e);
+					gm.getPa().remove((Word) e);
+				}
+				else {					// poem
+					for (Row row : ((Poem) e).getRows()){
+						for (Word word : row.getWords()){
+							gm.getSwapManager().add(word);
+							gm.getPa().remove(word);
+						}
+					}
+					gm.getPa().remove(e);
+				}
+			}
+			else {													// move to UA
+				if (e instanceof Word) {
+					gm.getPa().remove((Word) e);
+					gm.getUa().add(e);
+				}
+				else {					// poem
+					for (Row row : ((Poem) e).getRows()){
+						for (Word word : row.getWords()){
+							gm.getUa().add(word);
+							gm.getPa().remove(word);
+						}
+					}
+					gm.getPa().remove(e);
+				}
+			}
+		}
+		else if (man.getY() <= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.SWAP_AREA_DIVIDER) { // move from Swap to other
+			if (man.getY() < GameManager.AREA_DIVIDER) { 	// Move to PA
+				gm.getPa().add(e); 
+			}
+			else {											// Move to UA
 				gm.getUa().add(e);
 			}
-			else {					// poem
+			if(e instanceof Word){
+				gm.getSwapManager().remove((Word) e);
+			} 
+			else{ 	// Poem
 				for (Row row : ((Poem) e).getRows()){
 					for (Word word : row.getWords()){
-						gm.getUa().add(word);
-						gm.getPa().remove(word);
+						gm.getSwapManager().remove(word);
 					}
 				}
-				gm.getPa().remove(e);
 			}
-			
-		} else if (man.getY() < GameManager.AREA_DIVIDER && e.getY() >= GameManager.AREA_DIVIDER) { // move from UA to PA
-			gm.getPa().add(e); // modified by Xinjie
-			if(e instanceof Word){
+		}
+		else if (man.getY() <= GameManager.AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER) { // move from UA to PA
+			gm.getPa().add(e);
+			if(e instanceof Word) {
+				gm.getUa().remove((Word) e);
+			}
+			else{ // Poem
+				for (Row row : ((Poem) e).getRows()){
+					for (Word word : row.getWords()){
+						gm.getUa().remove(word);
+					}
+				}
+			}
+		}
+		else if (man.getY() >= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER) {	// move from UA to Swap
+			gm.getSwapManager().add(e); // modified by Xinjie
+			if (e instanceof Word) {
 				gm.getUa().remove((Word) e);
 			} else{ // Poem
 				for (Row row : ((Poem) e).getRows()){
@@ -106,11 +155,15 @@ public class UndoRedoController extends MouseAdapter {
 		}
 		if (e instanceof Poem) {
 			// In case it was previously undone, get the new Poem at this location
-			ReturnIndex ri = gm.getPa().getWordIdx(((Poem) e).getRows().get(0).getWords().get(0).getX(), 
-					((Poem) e).getRows().get(0).getWords().get(0).getY());
-			e = ri.p;
+			try {
+				ReturnIndex ri = gm.getPa().getWordIdx(((Poem) e).getRows().get(0).getWords().get(0).getX(), 
+						((Poem) e).getRows().get(0).getWords().get(0).getY());
+				e = ri.p;
+			} catch (NullPointerException npe) {
+				// If this occurs, we're redoing a release so this is handled elsewhere. This can be ignored.
+			}
+			
 		}
-		
 		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
 		panel.redraw();
 		panel.repaint();
