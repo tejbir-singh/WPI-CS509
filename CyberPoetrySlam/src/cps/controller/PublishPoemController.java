@@ -19,7 +19,7 @@ import cps.view.ApplicationPanel;
  * @author marek
  */
 
-public class PublishPoem extends MouseAdapter{
+public class PublishPoemController extends MouseAdapter{
 	
 	/** needed for controller behavior */
 	GameManager gm;
@@ -32,7 +32,7 @@ public class PublishPoem extends MouseAdapter{
 	int buttonType;
 	
 	/** Constructor	 */
-		public PublishPoem (GameManager gm, ApplicationPanel panel) {
+		public PublishPoemController (GameManager gm, ApplicationPanel panel) {
 			this.gm = gm;
 			this.panel = panel;
 		}
@@ -70,11 +70,7 @@ public class PublishPoem extends MouseAdapter{
 			}
 			return true;
 		}
-			//Still need to clear them from the board!!!!
-		
-			//panel.paintBackground();
-			//panel.paintWord();
-			//panel.repaint();
+
 		
 		/**
 		 * this published the finished poem to the "wall"
@@ -90,13 +86,28 @@ public class PublishPoem extends MouseAdapter{
 			if (!file.exists()) {
 				file.createNewFile();
 			}
- 
+			
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content + "\n");
 			bw.close();
- 
-			System.out.println("Done");
+			
+			for (Row r : finishedPoem.getRows()) {
+				for (Word w : r.getWords()) {
+					w.setY(w.getY()+GameManager.AREA_DIVIDER);
+					gm.getUa().add(w);
+				}
+			}
+							
+			gm.getPa().remove(finishedPoem);
+			
+			
+			panel.validateUndo(false);
+			panel.validateRedo(false);
+			panel.redraw();
+			panel.repaint();
+			
+			System.out.println("Poem Published!");
  
 		} catch (IOException e) {
 			e.printStackTrace();

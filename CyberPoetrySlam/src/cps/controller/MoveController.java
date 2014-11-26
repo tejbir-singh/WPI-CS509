@@ -80,9 +80,10 @@ public class MoveController extends MouseAdapter {
 		if (w == null) { return false; }
 		
 		// no longer in the board since we are moving it around...
-		if (p == null){
+		if (p == null) {
 			gm.getUa().remove(w);
 			gm.getPa().remove(w);
+			gm.getSwapManager().remove(w);
 			gm.setSelected(w);
 		} else{
 			//System.out.println(gm.getPa().getPoems().size());
@@ -116,7 +117,7 @@ public class MoveController extends MouseAdapter {
 		
 		if (selected == null && selectedpoem == null) { return false; }
 		
-		if (gm.getSelected() instanceof Word){
+		if (gm.getSelected() instanceof Word) {
 			panel.paintBackground(selected);
 			int oldx = selected.getX();
 			int oldy = selected.getY();
@@ -131,7 +132,8 @@ public class MoveController extends MouseAdapter {
 				panel.repaint();
 			}
 			return true;
-		} else{ // Poem
+		} 
+		else { // Poem
 			panel.paintBackground(selectedpoem);
 			int oldx = selectedpoem.getX();
 			int oldy = selectedpoem.getY();
@@ -162,21 +164,16 @@ public class MoveController extends MouseAdapter {
 		if (selected == null && selectedpoem == null) { return false; }
 
 		// now released we can move
-		if (y >= GameManager.AREA_DIVIDER) {			// check if it is in the unprotected area
-			if (gm.getSelected() instanceof Word){
-				gm.getUa().add(selected);
-			} else{
-				gm.getUa().add(selectedpoem);
-			}
-			
-		} else {
-			if (gm.getSelected() instanceof Word){
-				gm.getPa().add(selected);
-			} else{
-				gm.getPa().add(selectedpoem);
-			}
-			
+		if (y >= GameManager.SWAP_AREA_DIVIDER) {				// Swap Area
+			gm.getSwapManager().add(gm.getSelected());
 		}
+		else if (y >= GameManager.AREA_DIVIDER && y <= GameManager.SWAP_AREA_DIVIDER) {		// check if it is in the unprotected area
+			gm.getUa().add(gm.getSelected());
+		} 
+		else {
+			gm.getPa().add(gm.getSelected());			
+		}
+		
 		// record the move to the stack
 		if (gm.getSelected() instanceof Word){
 			gm.getManipulations().push(new Manipulation(originalx, originaly, selected, MoveType.MOVE));

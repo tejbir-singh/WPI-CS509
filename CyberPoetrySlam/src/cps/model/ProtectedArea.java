@@ -251,7 +251,7 @@ public class ProtectedArea implements Serializable {
 					ri.idxRow = -1;
 					ri.idxWord = -1;
 					ri.w = word;
-					ri.p = belongsToPoem(w);
+					ri.p = belongsToPoem(ri.w);
 					return ri;
 				}
 			}
@@ -277,7 +277,7 @@ public class ProtectedArea implements Serializable {
 				dp += 1;
 			}
 			return null;
-		} else{   //e instanceof Poem
+		} else {   				// e instanceof Poem
 			for (Word word : words) {
 				for (Row rowe : ((Poem) e).rows){
 					for(Word worde : rowe.words){
@@ -286,7 +286,7 @@ public class ProtectedArea implements Serializable {
 							ri.idxRow = -1;
 							ri.idxWord = -1;
 							ri.w = word;
-							ri.p = belongsToPoem(w);
+							ri.p = belongsToPoem(ri.w);
 							return ri;
 						}
 					}	
@@ -304,7 +304,7 @@ public class ProtectedArea implements Serializable {
 									ri.idxRow = dr;
 									ri.idxWord = dw;
 									ri.w = word;
-									ri.p = belongsToPoem(w);
+									ri.p = belongsToPoem(ri.w);
 									return ri;
 								}
 							}	
