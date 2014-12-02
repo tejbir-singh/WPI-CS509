@@ -23,7 +23,7 @@ public class UndoRedoControllerTest extends TestCase {
 		gm.getPa().setWords(new ArrayList<Word>());
 		gm.getPa().setPoems(new ArrayList<Poem>());
 		gm.getUa().setWords(new ArrayList<Word>());
-		app = new ApplicationPanel(gm, new JButton(), new JButton());
+		app = new ApplicationPanel(gm, new JButton(), new JButton(), new JButton());
 		w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 		gm.getPa().add(w1);

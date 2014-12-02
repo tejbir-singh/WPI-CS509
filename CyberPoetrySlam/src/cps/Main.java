@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 
 import cps.model.GameManager;
 import cps.model.GameManagerMemento;
+import cps.model.SwapManager;
 import cps.view.Application;
 
 public class Main {
@@ -64,15 +65,21 @@ static final String defaultStorage = "CPS.storage";
 	 */
 	public static void main(String[] args) {
 		final GameManager gm = loadState(defaultStorage);
-
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					final Application frame = new Application(gm);
+					final SwapManager sm = new SwapManager(frame.getAppPanel());
+					if (sm.connect("localhost")) {
+						gm.setSwapManager(sm);
+					} else if (sm.connect("gheineman.cs.wpi.edu")) {
+						gm.setSwapManager(sm);
+					}
 					frame.setVisible(true);
 					frame.addWindowListener (new WindowAdapter() {
 						public void windowClosing(WindowEvent e) {
 							storeState(gm, defaultStorage);
+							sm.shutdown();
 							System.exit(0);
 						}
 					});

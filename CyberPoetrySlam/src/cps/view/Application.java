@@ -20,7 +20,6 @@ public class Application extends JFrame {
 
 	private static final int BUTTON_OFFSET = 31;
 	private static final long serialVersionUID = 8238490728667512551L;
-	// private JTextField txtSwapActions;
 	private JTextField txtProtectedArea;
 	private JTextField txtUnprotectedArea;
 	ApplicationPanel appPanel;
@@ -30,6 +29,9 @@ public class Application extends JFrame {
 	/**
 	 * Create the frame.
 	 * @param gm GameManager
+	 */
+	/**
+	 * @param g
 	 */
 	public Application(GameManager g) {
 		this.gm = g;
@@ -62,7 +64,7 @@ public class Application extends JFrame {
 		if (gm.getManipulations().isEmpty()) {
 			undoButton.setEnabled(false);
 		}
-		
+
 		final JButton redoButton = new JButton("Redo");
 		redoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -75,8 +77,8 @@ public class Application extends JFrame {
 		JButton publishButton = new JButton("Publish");
 		publishButton.setBounds(570, 31, 89, 23);
 		getContentPane().add(publishButton);
-		
-		JPanel panel = new JPanel();
+
+		final JPanel panel = new JPanel();
 		panel.setBounds(12, 66, 678, 888);
 		getContentPane().add(panel);
 		panel.setLayout(null);
@@ -96,7 +98,7 @@ public class Application extends JFrame {
 		txtUnprotectedArea.setBounds(0, 345, 650, 20);
 		panel.add(txtUnprotectedArea);
 		txtUnprotectedArea.setColumns(10);
-		
+
 		textField = new JTextField();
 		textField.setText("Swap Area");
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -105,13 +107,12 @@ public class Application extends JFrame {
 		textField.setBounds(0, GameManager.SWAP_AREA_DIVIDER + BUTTON_OFFSET, 650, 20);
 		panel.add(textField);
 
-		// add the application panel
-		appPanel = new ApplicationPanel(gm, undoButton, redoButton);
-		
-		JButton swapButton = new JButton("Swap");
+		final JButton swapButton = new JButton("Swap");
 		swapButton.setBounds(460, 31, 89, 23);
 		getContentPane().add(swapButton);
-		// panel.add(appPanel);
+		// add the application panel
+		appPanel = new ApplicationPanel(gm, undoButton, redoButton, swapButton);
+		panel.add(appPanel);
 		appPanel.setBounds(0, BUTTON_OFFSET, 700, 800);
 		appPanel.setAlignmentX(CENTER_ALIGNMENT);
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
@@ -131,21 +132,21 @@ public class Application extends JFrame {
 				new ConnectEntityController(gm, appPanel).register();
 			}
 		});
-		
+
 		disconnectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new DisconnectWordController(gm, appPanel).register();
 			}
 		});
-		
+
 		publishButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new PublishPoemController(gm, appPanel).register();
 			}
 		});
-		
+
 		undoButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -155,7 +156,7 @@ public class Application extends JFrame {
 				new UndoRedoController(gm, appPanel, URType.UNDO).process();
 			}
 		});
-		
+
 		redoButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -166,47 +167,62 @@ public class Application extends JFrame {
 			}
 		});
 		
+		final JTextField requestWords = new JTextField(20);
+		final JTextField requestTypes = new JTextField(20);
+		final JPanel swapPanel = new JPanel();
+		swapPanel.add(new JLabel("Words:"));
+		swapPanel.add(requestWords);
+		swapPanel.add(Box.createVerticalStrut(15)); // a spacer
+		swapPanel.add(new JLabel("Types:"));
+		swapPanel.add(requestTypes);
+
 		swapButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (gm.getSwapManager().getWords().isEmpty()) {
 					return;
 				}
-				new RequestSwapController(gm, appPanel).process();
+				JOptionPane.showConfirmDialog(null, swapPanel, 
+						"Please enter the words and types to request", JOptionPane.OK_CANCEL_OPTION);
+				new RequestSwapController(gm, appPanel, requestWords.getText(), requestTypes.getText()).process();
 			}
 		});
-		
+
 		/*
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Swap Initiated");
 		chckbxNewCheckBox.setBounds(566, 566, 97, 23);
 		getContentPane().add(chckbxNewCheckBox);
-		
+
 		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Processing Swap");
 		chckbxNewCheckBox_1.setBounds(566, 592, 112, 23);
 		getContentPane().add(chckbxNewCheckBox_1);
-		
+
 		JCheckBox chckbxNewCheckBox_2 = new JCheckBox("Swap Completed");
 		chckbxNewCheckBox_2.setBounds(566, 618, 108, 23);
 		getContentPane().add(chckbxNewCheckBox_2);
-		
+
 		JButton btnNewButton_5 = new JButton("Request");
 		btnNewButton_5.setBounds(570, 449, 89, 40);
 		getContentPane().add(btnNewButton_5);
-		
+
 		JButton btnNewButton_6 = new JButton("Check");
 		btnNewButton_6.setBounds(570, 489, 89, 35);
 		getContentPane().add(btnNewButton_6);
-		
+
 		txtSwapActions = new JTextField();
 		txtSwapActions.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSwapActions.setText("Swap Actions");
 		txtSwapActions.setBounds(570, 426, 86, 20);
 		getContentPane().add(txtSwapActions);
 		txtSwapActions.setColumns(10);
-		
+
 		JButton btnNewButton_7 = new JButton("Revoke");
 		btnNewButton_7.setBounds(570, 524, 89, 35);
 		getContentPane().add(btnNewButton_7);
-		*/
+		 */
+	}
+
+	public ApplicationPanel getAppPanel() {
+		return this.appPanel;
 	}
 }

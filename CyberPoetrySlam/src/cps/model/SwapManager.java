@@ -1,7 +1,9 @@
 package cps.model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import cps.view.ApplicationPanel;
 import broker.BrokerClient;
 import broker.handler.IHandleBrokerMessage;
 import broker.handler.ReaderThread;
@@ -11,12 +13,12 @@ import broker.util.MatchSwapMessage;
 import broker.util.Swap;
 
 public class SwapManager implements IHandleBrokerMessage {
-	private static SwapManager instance;
 	private ArrayList<Word> words;
-	private UnprotectedArea ua;
-	private ArrayList<String> requestWords;
-	private ArrayList<Type> requestTypes;
+	private GameManager gm;
+	private String[] requestWords;
+	private String[] requestTypes;
 	private BrokerClient broker;
+	private ApplicationPanel panel;
 	
 	/** Thread managing connections. When you are done, call shutdown for clean exit. */
 	ReaderThread thread;
@@ -35,21 +37,10 @@ public class SwapManager implements IHandleBrokerMessage {
 	/** 
 	 * Constructor.
 	 */
-	private SwapManager() {
-		words = new ArrayList<Word>();
-		requestWords = new ArrayList<String>();
-		ua = UnprotectedArea.getInstance();
-	}
-	
-	/**
-	 * Singleton pattern implementation.
-	 * @return the instance of SwapManager
-	 */
-	public static SwapManager getInstance() {
-		if (instance == null) {
-			instance = new SwapManager();
-		}
-		return instance;
+	public SwapManager(ApplicationPanel appPanel) {
+		this.words = new ArrayList<Word>();
+		this.gm = GameManager.getInstance();
+		this.panel = appPanel;
 	}
 	
 	/**
@@ -66,6 +57,9 @@ public class SwapManager implements IHandleBrokerMessage {
 				}	
 			}
 		}
+		if (!words.isEmpty()) {
+			panel.getSwapButton().setEnabled(true);
+		}
 	}
 	
 	/**
@@ -74,40 +68,9 @@ public class SwapManager implements IHandleBrokerMessage {
 	 */
 	public void remove(Word w) {
 		words.remove(w);
-	}
-	
-	/**
-	 * Send the request to swap with the Broker
-	 * @return true if successful
-	 */
-	public boolean sendSwapRequest() {
-		// for each Word, get the value and type
-		String request = "";
-		String[] values = new String[words.size()];
-		String[] types = new String[words.size()];
-		String[] requestTypes = new String[words.size()];
-		for (int i = 0; i < values.length; i++) {
-			values[i] = words.get(i).getValue();
-			types[i] = words.get(i).getType().toString().toLowerCase();
-			requestTypes[i] = this.requestTypes.get(i).toString().toLowerCase();
+		if (words.isEmpty()) {
+			panel.getSwapButton().setEnabled(false);
 		}
-		
-		// Generate swap request
-		request.concat("" + values.length + ":");
-		for (String t : types) {
-			request.concat("" + t + ":");
-		}
-		for (String v : values) {
-			request.concat("" + v + ":");
-		}
-		for (String rt : requestTypes) {
-			request.concat("" + rt + ":");
-		}
-		for (String rw : requestWords) {
-			request.concat("" + rw + ":");
-		}
-		request.substring(0, request.length()-1);
-		return true;
 	}
 	
 	/** Are we connected to the broker? */
@@ -177,11 +140,13 @@ public class SwapManager implements IHandleBrokerMessage {
 		
 		if (msg.startsWith(IProtocol.denySwapMsg)) {
 			System.out.println("Denied swap request");
+			panel.getSwapButton().setEnabled(true);
 			return;
 		}
 		
 		// some third party has asked for a swap. Pull this out into its own controller
 		if (msg.startsWith(IProtocol.matchSwapMsg)) {
+			Random r = new Random();
 			Swap s = MatchSwapMessage.getSwap(msg);
 			System.out.println("Third party trying a swap:" + s.flatten());
 			
@@ -192,8 +157,23 @@ public class SwapManager implements IHandleBrokerMessage {
 			boolean failed = true;
 			for (int i = 0; i < s.requestWords.length; i++) {
 				failed = true;
-				for (Word w : ua.getWords()) {
-					if (w.getValue().equals(s.requestWords[i])) {
+				if (s.requestWords[i].equals("*")) {
+					// use a random word
+					while (true) {
+						Word w = gm.getUa().getWords().get(r.nextInt(gm.getUa().getWords().size()));
+						if (!matched.contains(w) 
+								&& (w.getType().toString().toLowerCase().equals(s.requestTypes[i].toLowerCase()) 
+										|| s.requestTypes[i].equals("*"))) {
+							matched.add(w);
+							break;
+						}
+					}
+					failed = false;
+				}
+				for (Word w : gm.getUa().getWords()) {
+					if (w.getValue().equals(s.requestWords[i]) 
+							&& (w.getType().toString().toLowerCase().equals(s.requestTypes[i].toLowerCase()) 
+									|| s.requestTypes[i].equals("*"))) {
 						matched.add(w);
 						failed = false;
 						break;
@@ -210,9 +190,13 @@ public class SwapManager implements IHandleBrokerMessage {
 			
 			System.out.println("Accepting satisfy swap request");
 			
-			// what should we do? Agree of course! Here is where your code would
-			// normally "convert" wildcards into actual words in your board state.
-			// for now this is already assumed (note sample/other swap)
+			s.acceptor_id = broker.getID();
+			for (int i = 0; i < matched.size(); i++) {
+				Word w = matched.get(i);
+				s.requestWords[i] = w.getValue();
+				s.requestTypes[i] = w.getType().toString().toLowerCase();
+			}
+			
 			broker.getBrokerOutput().println(IProtocol.confirmSwapMsg + IProtocol.separator + s.flatten());
 			return;
 		}
@@ -220,8 +204,6 @@ public class SwapManager implements IHandleBrokerMessage {
 		// Execute the swap
 		if (msg.startsWith(IProtocol.confirmSwapMsg)) {
 			Swap s = ConfirmSwapMessage.getSwap(msg);
-			
-			System.out.println("Before Swap:");
 			
 			// carry out the swap. We were the one making the request...
 			String wordsToRemove[];
@@ -234,33 +216,73 @@ public class SwapManager implements IHandleBrokerMessage {
 				wordsToAdd = s.offerWords;
 			}
 
+			// notify client of swap
+			String output = "SWAPPING ";
+			for (String str : wordsToRemove) {
+				output += str + " ";
+			}
+			output += "FOR ";
+			for (String str : wordsToAdd) {
+				output += str + " ";
+			}
+			System.out.println(output);
+			
 			// remove each word as found
+			boolean found = false;
 			for (int i = 0; i < s.n; i++) {
-				for (Word w : ua.getWords()) {
+				for (Word w : this.words) {
 					if (w.getValue().equals(wordsToRemove[i])) {
-						ua.remove(w);
+						words.remove(w);
+						found = true;
 						break;
+					}
+				}
+				if (!found) {
+					for (Word w : gm.getUa().getWords()) {
+						if (w.getValue().equals(wordsToRemove[i])) {
+							gm.getUa().remove(w);
+							break;
+						}
 					}
 				}
 			}
 				
-			// now we add new shapes. (at least 40 pixels inwards on all sides)
 			// TODO: Update JTable, change number to constant
 			for (int i = 0; i < s.n; i++) {
 				int rx = (int) Math.round(Math.random() * 600);
-				int ry = (int) Math.round((Math.random() * 100) + GameManager.AREA_DIVIDER);
+				int ry = (int) Math.round((Math.random() * 200) + GameManager.AREA_DIVIDER);
 				
 				// TODO: Get Word type
-				Word w = new Word (rx, ry, words.get(i).getValue().length() * 15, 15, Type.ADJECTIVE, wordsToAdd[i]);
-				ua.add(w);
+				Word w = new Word (rx, ry, wordsToAdd[i].length() * 15, 15, Type.ADJECTIVE, wordsToAdd[i]);
+				gm.getUa().add(w);
 			}
 			
-			// TODO: must refresh viewing area
-			// gui.getWordPanel().redraw();
-			// gui.getWordPanel().repaint();
-				
-			return;
+			// refresh viewing area
+			panel.validateUndo(false);
+			panel.validateRedo(false);
+			panel.redraw();
+			panel.repaint();
 		}
+	}
+	
+	/**
+	 * Format the request to swap for the Broker.
+	 * @return true if successful
+	 */
+	public String formatSwapRequest() {
+		// for each Word, get the value and type
+		String[] values = new String[words.size()];
+		String[] types = new String[words.size()];
+		
+		for (int i = 0; i < values.length; i++) {
+			values[i] = words.get(i).getValue();
+			types[i] = words.get(i).getType().toString().toLowerCase().trim();
+		}
+		
+		Swap s = new Swap(broker.getID(), "*", values.length, types, values, requestTypes, requestWords);
+		
+		// Generate swap request
+		return s.flatten();
 	}
 
 	/**
@@ -270,8 +292,7 @@ public class SwapManager implements IHandleBrokerMessage {
 	@Override
 	public void brokerGone() {
 		System.err.println("Lost broker connection.");
-		// gui.getSwapOtherSampButton().setEnabled(false);
-		// gui.getSwapSampOtherButton().setEnabled(false);
+		panel.getSwapButton().setEnabled(false);
 	}
 	
 	public ArrayList<Word> getWords() {
@@ -287,5 +308,13 @@ public class SwapManager implements IHandleBrokerMessage {
 			}
 		}
 		return null;
+	}
+	
+	public void setRequestWords(String[] str) {
+		this.requestWords = str;
+	}
+	
+	public void setRequestTypes(String[] str) {
+		this.requestTypes = str;
 	}
 }

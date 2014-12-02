@@ -25,15 +25,17 @@ public class ApplicationPanel extends JPanel {
 	MouseMotionListener activeMotionListener;
 	JButton undoButton;
 	JButton redoButton;
+	JButton swapButton;
 	
 	/**
 	 * Constructor.
 	 */
-	public ApplicationPanel(GameManager gm, JButton undoButton, JButton redoButton) {
+	public ApplicationPanel(GameManager gm, JButton undoButton, JButton redoButton, JButton swapButton) {
 		super();
 		this.gm = gm;
 		this.undoButton = undoButton;
 		this.redoButton = redoButton;
+		this.swapButton = swapButton;
 	}
 
 	/** Properly register new listener (and unregister old one if present). */
@@ -209,5 +211,9 @@ public class ApplicationPanel extends JPanel {
 			gm.getPrevUndos().clear(); 			// clear the stack; integrity no longer holds
 			redoButton.setEnabled(false);
 		}
+	}
+	
+	public JButton getSwapButton() {
+		return this.swapButton;
 	}
 }

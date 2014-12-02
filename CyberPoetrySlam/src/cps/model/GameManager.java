@@ -28,7 +28,6 @@ public class GameManager {
 	private GameManager() {
 		pa = ProtectedArea.getInstance();
 		ua = UnprotectedArea.getInstance();
-		swapManager = SwapManager.getInstance();
 		manipulations = new Stack<Manipulation>();
 		prevUndos = new Stack<Manipulation>();
 		// populate the UnprotectedArea with the Words specified in words.txt
@@ -41,7 +40,7 @@ public class GameManager {
 				String[] words = line.split(",");
 				// generate Words
 				ua.add(new Word((int) Math.round(Math.random() * 600),
-						(int) Math.round(Math.random() * 100) + AREA_DIVIDER + 20, 
+						(int) Math.round(Math.random() * 200) + AREA_DIVIDER + 20, 
 								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
 			}
 		} catch (Exception e) {
@@ -155,5 +154,9 @@ public class GameManager {
 	
 	public SwapManager getSwapManager() {
 		return this.swapManager;
+	}
+	
+	public void setSwapManager(SwapManager sm) {
+		this.swapManager = sm;
 	}
 }

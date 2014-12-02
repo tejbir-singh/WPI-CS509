@@ -17,7 +17,7 @@ public class MoveControllerTest extends TestCase {
 	@Override
 	protected void setUp() {
 		gm = GameManager.getInstance();
-		app = new ApplicationPanel(gm, new JButton(), new JButton());
+		app = new ApplicationPanel(gm, new JButton(), new JButton(), new JButton());
 		mc = new MoveController(gm, app);
 		gm.getPa().add(new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1"));
 	}
