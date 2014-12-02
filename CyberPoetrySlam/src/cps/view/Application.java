@@ -2,7 +2,7 @@ package cps.view;
 
 import javax.swing.*;
 
-import cps.controller.ConnectWordController;
+import cps.controller.ConnectEntityController;
 import cps.controller.DisconnectWordController;
 import cps.controller.MoveController;
 import cps.controller.PublishPoemController;
@@ -128,7 +128,7 @@ public class Application extends JFrame {
 		connectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new ConnectWordController(gm, appPanel).register();
+				new ConnectEntityController(gm, appPanel).register();
 			}
 		});
 		

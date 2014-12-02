@@ -66,7 +66,7 @@ public class UndoRedoControllerTest extends TestCase {
 	}
 	
 	public void testUndoRedoConnect() {
-		ConnectWordController cwc = new ConnectWordController(gm, app);
+		ConnectEntityController cwc = new ConnectEntityController(gm, app);
 		cwc.select(1, 1);
 		cwc.drag(100, 100);
 		cwc.release(100, 100);
@@ -80,7 +80,7 @@ public class UndoRedoControllerTest extends TestCase {
 	}
 	
 	public void testUndoRedoDisconnect() {
-		ConnectWordController cwc = new ConnectWordController(gm, app);
+		ConnectEntityController cwc = new ConnectEntityController(gm, app);
 		cwc.select(1, 1);
 		cwc.drag(100, 100);
 		cwc.release(100, 100);

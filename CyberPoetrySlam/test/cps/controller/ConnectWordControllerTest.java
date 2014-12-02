@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-import cps.controller.ConnectWordController;
+import cps.controller.ConnectEntityController;
 import cps.model.GameManager;
 import cps.model.Type;
 import cps.model.Word;
@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 public class ConnectWordControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	ConnectWordController cwc;
+	ConnectEntityController cwc;
 	
 	@Override
 	protected void setUp() {
@@ -24,7 +24,7 @@ public class ConnectWordControllerTest extends TestCase {
 		gm.getPa().setPoems(new ArrayList<Poem>());
 		gm.getUa().setWords(new ArrayList<Word>());
 		app = new ApplicationPanel(gm, new JButton(), new JButton());
-		cwc = new ConnectWordController(gm, app);
+		cwc = new ConnectEntityController(gm, app);
 		Word w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		Word w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 		gm.getPa().add(w1);

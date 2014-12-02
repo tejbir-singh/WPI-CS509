@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-import cps.controller.ConnectWordController;
+import cps.controller.ConnectEntityController;
 import cps.model.GameManager;
 import cps.model.Type;
 import cps.model.Word;
@@ -18,7 +18,7 @@ public class PublishPoemControllerTest extends TestCase {
 		GameManager gm;
 		ApplicationPanel app;
 		PublishPoemController pp;
-		ConnectWordController cw;
+		ConnectEntityController cw;
 		Poem testPoem;
 			
 		@Override
@@ -28,7 +28,7 @@ public class PublishPoemControllerTest extends TestCase {
 			gm.getPa().setPoems(new ArrayList<Poem>());
 			gm.getUa().setWords(new ArrayList<Word>());
 			app = new ApplicationPanel(gm, new JButton(), new JButton());
-			cw = new ConnectWordController(gm, app);
+			cw = new ConnectEntityController(gm, app);
 			Word w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 			Word w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 			gm.getPa().add(w1);
