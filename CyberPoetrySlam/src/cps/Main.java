@@ -70,11 +70,10 @@ static final String defaultStorage = "CPS.storage";
 				try {
 					final Application frame = new Application(gm);
 					final SwapManager sm = new SwapManager(frame.getAppPanel());
-					if (sm.connect("localhost")) {
-						gm.setSwapManager(sm);
-					} else if (sm.connect("gheineman.cs.wpi.edu")) {
-						gm.setSwapManager(sm);
+					if (!sm.connect("localhost")) {
+						sm.connect("gheineman.cs.wpi.edu");
 					}
+					gm.setSwapManager(sm);
 					frame.setVisible(true);
 					frame.addWindowListener (new WindowAdapter() {
 						public void windowClosing(WindowEvent e) {

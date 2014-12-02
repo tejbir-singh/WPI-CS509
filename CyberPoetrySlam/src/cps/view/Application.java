@@ -109,6 +109,7 @@ public class Application extends JFrame {
 
 		final JButton swapButton = new JButton("Swap");
 		swapButton.setBounds(460, 31, 89, 23);
+		swapButton.setEnabled(false);
 		getContentPane().add(swapButton);
 		// add the application panel
 		appPanel = new ApplicationPanel(gm, undoButton, redoButton, swapButton);
