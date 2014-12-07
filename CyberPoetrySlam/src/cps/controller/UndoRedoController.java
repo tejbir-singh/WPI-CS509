@@ -141,7 +141,7 @@ public class UndoRedoController extends MouseAdapter {
 				}
 			}
 		}
-		else if (man.getY() >= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER) {	// move from UA to Swap
+		else if (man.getY() >= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER && e.getY() <= GameManager.SWAP_AREA_DIVIDER) {	// move from UA to Swap
 			gm.getSwapManager().add(e); // modified by Xinjie
 			if (e instanceof Word) {
 				gm.getUa().remove((Word) e);

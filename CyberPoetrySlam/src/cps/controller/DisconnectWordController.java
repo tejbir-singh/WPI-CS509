@@ -118,7 +118,7 @@ public class DisconnectWordController extends MouseAdapter {
 		if (selected == null) { return false; }
 		
 		//Check if the word can be disconnect without intersection, if yes, make the disconnectWord, otherwise, go back to the original position
-		if (!gm.getPa().disconnectWord(selectedIdx.idxPoem, selectedIdx.idxRow, selectedIdx.idxWord, selected.getX(), selected.getY())){
+		if (!gm.getPa().disconnectWord(selectedIdx.idxPoem, selectedIdx.idxRow, selectedIdx.idxWord, selected.getX(), selected.getY())) {
 			selected.setPosition(originalx, originaly);
 		}
 		else {

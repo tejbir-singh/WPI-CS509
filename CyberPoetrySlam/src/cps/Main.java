@@ -69,7 +69,8 @@ static final String defaultStorage = "CPS.storage";
 			public void run() {
 				try {
 					final Application frame = new Application(gm);
-					final SwapManager sm = new SwapManager(frame.getAppPanel());
+					final SwapManager sm = SwapManager.getInstance();
+					sm.setAppPanel(frame.getAppPanel());
 					if (!sm.connect("localhost")) {
 						sm.connect("gheineman.cs.wpi.edu");
 					}

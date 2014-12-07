@@ -83,7 +83,9 @@ public class MoveController extends MouseAdapter {
 		if (p == null) {
 			gm.getUa().remove(w);
 			gm.getPa().remove(w);
-			gm.getSwapManager().remove(w);
+			if (gm.getSwapManager() != null) {
+				gm.getSwapManager().remove(w);
+			}
 			gm.setSelected(w);
 		} else{
 			//System.out.println(gm.getPa().getPoems().size());
@@ -126,7 +128,7 @@ public class MoveController extends MouseAdapter {
 			
 			if (gm.getPa().doesIntersect(selected)) {
 				selected.setPosition(oldx, oldy);
-			} 
+			}
 			else {
 				panel.paintWord(selected);
 				panel.repaint();

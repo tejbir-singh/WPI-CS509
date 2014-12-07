@@ -13,6 +13,7 @@ import broker.util.MatchSwapMessage;
 import broker.util.Swap;
 
 public class SwapManager implements IHandleBrokerMessage {
+	private static SwapManager instance;
 	private ArrayList<Word> words;
 	private GameManager gm;
 	private String[] requestWords;
@@ -37,10 +38,16 @@ public class SwapManager implements IHandleBrokerMessage {
 	/** 
 	 * Constructor.
 	 */
-	public SwapManager(ApplicationPanel appPanel) {
+	private SwapManager() {
 		this.words = new ArrayList<Word>();
 		this.gm = GameManager.getInstance();
-		this.panel = appPanel;
+	}
+	
+	public static SwapManager getInstance() {
+		if (instance == null) {
+			instance = new SwapManager();
+		}
+		return instance;
 	}
 	
 	/**
@@ -316,5 +323,9 @@ public class SwapManager implements IHandleBrokerMessage {
 	
 	public void setRequestTypes(String[] str) {
 		this.requestTypes = str;
+	}
+
+	public void setAppPanel(ApplicationPanel panel) {
+		this.panel = panel;
 	}
 }
