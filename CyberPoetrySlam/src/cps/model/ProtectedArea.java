@@ -476,7 +476,8 @@ public class ProtectedArea implements Serializable {
 	 * @author Xinjie
 	 */
 	public boolean disconnectWord(int poemidx, int rowidx, int wordidx, int x, int y) {
-		if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y)) {
+		if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y) 
+				/*&& this.poems.get(poemidx).rows.get(rowidx).words.size() > 1 */) {
 			if (this.poems.get(poemidx).rows.size() == 1){ // if the Poem has only one row
 				this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
 				this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx);
@@ -487,17 +488,67 @@ public class ProtectedArea implements Serializable {
 				}
 				return true;
 			} else{
-				if(this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx) == true){
-					this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
-					return true;	
+				Word tempword = this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx);
+				if(!isPoemSplit(this.poems.get(poemidx), rowidx, wordidx)){
+					if(this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx) == true){
+						this.words.add(tempword);
+						if (this.poems.get(poemidx).rows.size() == 1
+								&& this.poems.get(poemidx).rows.get(0).words.size() == 1) {	// no longer a Poem
+							this.words.add(this.poems.get(poemidx).rows.get(0).words.get(0));
+							System.out.print(this.poems.get(poemidx).rows.get(0).words.get(0));
+							this.poems.remove(poemidx);
+							
+						}
+						return true;	
+					}else{
+						return false;
+					}
 				}else{
 					return false;
-				}
-				
+				}	
 			}
 		
 		} else
 			return false;
+	}
+	
+	/**
+	 * Check if the poem will be split when disconnect word from it.
+	 * @param p the Poem which will be check
+	 * @param rowidx the word's row index
+	 * @param wordidx the word's word index
+	 * @return true if successful
+	 * @author Xinjie
+	 */
+	public boolean isPoemSplit(Poem p, int rowidx, int wordidx){
+		if(p.rows.size() < 2 || p.rows.get(rowidx).words.size() == 1){
+			return false;
+		}
+		if(rowidx + 1 < p.rows.size()){ // check with row below
+			if(wordidx == 0){
+				if(p.rows.get(rowidx).words.get(wordidx + 1).x > 
+						p.rows.get(rowidx + 1).words.get(0).x + p.rows.get(rowidx + 1).width){
+					return true;
+				}
+			}else{
+				if(p.rows.get(rowidx).words.get(wordidx).x < p.rows.get(rowidx + 1).x){
+					return true;
+				}
+			}
+		}
+		if(rowidx -1 >= 0){ // check with row above
+			if(wordidx == 0){
+				if(p.rows.get(rowidx).words.get(wordidx + 1).x >
+						p.rows.get(rowidx - 1).words.get(0).x + p.rows.get(rowidx - 1).width){
+					return true;
+				}
+			}else{
+				if(p.rows.get(rowidx).words.get(wordidx).x < p.rows.get(rowidx - 1).x){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -26,14 +26,24 @@ public class Poem extends Entity{
 	 * @return
 	 */
 	public boolean disconnectEdgeWord(int dexr, int dexw){
-		if(this.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
-			return false;
-		else{
-			this.rows.get(dexr).disconnectWord(dexw);
+		if(this.rows.size() == 1){
+			if(this.rows.get(dexr).words.size() == 1) //rows[dexr] has at least 2 words, otherwise, it will disconnect the poem
+				return false;
+			else{
+				this.rows.get(dexr).disconnectWord(dexw);
+				this.setX(this.rows.get(0).x);
+				this.setY(this.rows.get(0).y);
+				return true;
+			}
+		}else{
+			if(this.rows.get(dexr).disconnectWord(dexw) == false){ //Row[dexr] has no words any more
+				this.rows.remove(dexr);
+			}
 			this.setX(this.rows.get(0).x);
 			this.setY(this.rows.get(0).y);
 			return true;
 		}
+		
 	}
 	
 	public boolean removeRow(int index){

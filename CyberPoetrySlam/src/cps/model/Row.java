@@ -90,11 +90,17 @@ public class Row extends Entity implements Serializable {
 	 */	
 	public boolean disconnectWord(int dexw) {
 		this.words.remove(dexw);
-		this.setX(this.words.get(0).x);
-		this.setY(this.words.get(0).y);
-		this.setWidth();
-		this.setHeight();
-		return true;
+		if(this.words.size() > 0){
+			this.setX(this.words.get(0).x);
+			this.setY(this.words.get(0).y);
+			this.setWidth();
+			this.setHeight();
+			return true;
+		}else{ //the row has no words
+			return false;
+		}
+		
+		
 	}
 	
 	// getters and setters
