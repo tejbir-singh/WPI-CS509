@@ -1,6 +1,7 @@
 package cps.controller;
 
 import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
 
 import cps.model.Entity;
 import cps.model.GameManager;
@@ -77,7 +78,6 @@ public class UndoRedoController extends MouseAdapter {
 		if (e == null) { return false; }
 		
 		// make sure the Entity goes back where it belongs
-		// TODO: Check if going to swap area from UA or PA
 		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to other
 			if (man.getY() >= GameManager.SWAP_AREA_DIVIDER) {		// move to Swap
 				if (e instanceof Word) {
@@ -145,7 +145,7 @@ public class UndoRedoController extends MouseAdapter {
 			gm.getSwapManager().add(e); // modified by Xinjie
 			if (e instanceof Word) {
 				gm.getUa().remove((Word) e);
-			} else{ // Poem
+			} else { // Poem
 				for (Row row : ((Poem) e).getRows()){
 					for (Word word : row.getWords()){
 						gm.getUa().remove(word);
@@ -208,15 +208,32 @@ public class UndoRedoController extends MouseAdapter {
 		if (e instanceof Word) {
 			if ((ri = findEntityOrigin(e)) != null) {
 				if (ri.p == null) {						// intersects a word which is not connected to a poem
-					if (man.getX() < ri.w.getX()) {		// e belongs on the left
-						gm.getPa().connectWordLeftWord(ri.w, (Word) e);
+					if (man.getY() < ri.w.getY()) {		// place on top of the word
+						rebuildPoem(e, ri, true);
 					}
-					else {
-						gm.getPa().connectWordRightWord(ri.w, (Word) e);
+					else if (man.getY() == ri.w.getY()) { // place on the same row
+						if (man.getX() < ri.w.getX()) {		// e belongs on the left
+							gm.getPa().connectWordLeftWord(ri.w, (Word) e);
+						}
+						else {
+							gm.getPa().connectWordRightWord(ri.w, (Word) e);
+						}
+					}
+					else {								// place it on the row below
+						rebuildPoem(e, ri, false);
 					}
 				}
 				else {
-					if (ri.idxWord == 0) {
+					// use y to figure out which row the word originated from
+					for (int i = 0; i < ri.p.getRows().size(); i++) {
+						Row r = ri.p.getRows().get(i);
+						if (r.getY() == man.getY()) {
+							ri.idxRow = i;
+							break;
+						}
+					}
+					
+					if (man.getX() < ri.p.getRows().get(ri.idxRow).getX()) {
 						gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
 					}
 					else {
@@ -237,18 +254,54 @@ public class UndoRedoController extends MouseAdapter {
 	private ReturnIndex findEntityOrigin(Entity e) {
 		Word tmp1 = null, tmp2 = null;
 		if (e instanceof Word) {
-			tmp1 = new Word(man.getX()+1, man.getY()+1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
-			tmp2 = new Word(man.getX()-1, man.getY()-1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
+			tmp1 = new Word(man.getX()-1, man.getY()-1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
+			tmp2 = new Word(man.getX()+1, man.getY()+1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
 		}
 		
 		ReturnIndex ri = gm.getPa().entityIntersect(tmp1);
-		if (ri != null) { 
-			 return ri;
+		if (ri != null) {
+			// check if the word goes on the left or right using its row as a basis
+			
+			return ri;
 		}
 		ri = gm.getPa().entityIntersect(tmp2);
+		
 		return ri;
 	}
 	
+	/**
+	 * Helper function.
+	 * Make two poems out of the words and connect them.
+	 * @param e Entity to build from
+	 * @param ri RowIndex containing the second Entity
+	 * @param top true if e is meant to become the top word in the poem
+	 */
+	private void rebuildPoem(Entity e, ReturnIndex ri, boolean top) {
+		ArrayList<Row> rows = new ArrayList<Row>();
+		ArrayList<Word> word1 = new ArrayList<Word>();
+		word1.add(ri.w);
+		Row r = new Row(word1);
+		rows.add(r);
+		Poem p = new Poem(rows);
+		
+		ArrayList<Word> word2 = new ArrayList<Word>();
+		word2.add((Word) e);
+		Row r2 = new Row(word2);
+		
+		if (top) {
+			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() - p.getRows().get(rows.size()-1).getHeight());
+			p.connectRowTop(r2);
+		}
+		else {
+			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() + p.getRows().get(rows.size()-1).getHeight());
+			p.connectRowBottom(r2);
+		}
+		
+		// remove the words from the protected area
+		gm.getPa().remove(e);
+		gm.getPa().remove(ri.w);
+		gm.getPa().add(p);
+	}
 
 	public enum URType {
 		UNDO, REDO
