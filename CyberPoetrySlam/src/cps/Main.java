@@ -15,7 +15,6 @@ import cps.view.Application;
 
 public class Main {
 static final String defaultStorage = "CPS.storage";
-	
 	/**
 	 * Store the game's state.
 	 * @param gm GameManager to store

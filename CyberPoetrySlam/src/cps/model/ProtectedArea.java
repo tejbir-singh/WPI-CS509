@@ -477,7 +477,7 @@ public class ProtectedArea implements Serializable {
 	 */
 	public boolean disconnectWord(int poemidx, int rowidx, int wordidx, int x, int y) {
 		if (this.moveEntity(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx), x, y) 
-				/*&& this.poems.get(poemidx).rows.get(rowidx).words.size() > 1 */) {
+				&& this.poems.get(poemidx).rows.get(rowidx).words.size() > 1 ) {
 			if (this.poems.get(poemidx).rows.size() == 1){ // if the Poem has only one row
 				this.words.add(this.poems.get(poemidx).rows.get(rowidx).words.get(wordidx));
 				this.poems.get(poemidx).disconnectEdgeWord(rowidx, wordidx);
