@@ -122,10 +122,10 @@ public class DisconnectWordController extends MouseAdapter {
 	protected boolean drag (int x, int y) {
 		if (mouseRightClick == true){ // disconnectRow Controller
 			ReturnIndex selectedIdx = gm.getSelectedIdx();
+			
+			
+			if (selectedIdx == null) { return false; }
 			selectedRow = gm.getPa().getPoems().get(selectedIdx.idxPoem).getRows().get(selectedIdx.idxRow);
-			
-			if (selectedIdx == null || selectedIdx.idxPoem == -1) { return false; }
-			
 			selectedRow.setPosition(x - deltaRowX, y - deltaRowY);
 			
 			panel.paintPoem(gm.getPa().getPoems().get(selectedIdx.idxPoem));
@@ -151,10 +151,9 @@ public class DisconnectWordController extends MouseAdapter {
 	/** Separate out this function for testing purposes. */
 	protected boolean release (int x, int y) {
 		ReturnIndex selectedIdx = gm.getSelectedIdx();
-		selectedRow = gm.getPa().getPoems().get(selectedIdx.idxPoem).getRows().get(selectedIdx.idxRow);
 		if (mouseRightClick == true){ // disconnectRow Controller
-			if (selectedIdx == null || selectedIdx.idxPoem == -1) { return false; }
-			
+			if (selectedIdx == null) { return false; }
+			selectedRow = gm.getPa().getPoems().get(selectedIdx.idxPoem).getRows().get(selectedIdx.idxRow);
 			if (!gm.getPa().disconnectRow(selectedIdx.idxPoem, selectedIdx.idxRow, x-deltaRowX, y-deltaRowY)) {
 				selectedRow.setPosition(originalRowX, originalRowY);
 			}

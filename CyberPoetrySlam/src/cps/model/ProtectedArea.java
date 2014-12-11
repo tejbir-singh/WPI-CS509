@@ -656,7 +656,7 @@ public class ProtectedArea implements Serializable {
 		if(targetpoem.getRows().size() == 1){
 			return false;
 		} else{
-			if(rowidx == 0 || rowidx == targetpoem.getRows().size() - 1){ // disconnect first row
+			if(rowidx == 0 || rowidx == targetpoem.getRows().size() - 1){ // disconnect first or last row
 				if(targetrow.getWords().size() > 1){ // the row has multiple words
 					ArrayList<Row> ar1 = new ArrayList<Row>();
 					ar1.add(targetrow);
@@ -664,7 +664,10 @@ public class ProtectedArea implements Serializable {
 					targetpoem.removeRow(rowidx);
 					if(this.moveEntity(newpoem, x, y)){
 						this.getPoems().add(newpoem);
-						//targetpoem.removeRow(rowidx);
+						if (targetpoem.rows.size() == 1 && targetpoem.rows.get(0).words.size() == 1){
+							this.getWords().add(targetpoem.rows.get(0).words.get(0));
+							this.getPoems().remove(targetpoem);
+						}
 						return true;
 					}else{
 						targetpoem.getRows().add(rowidx, targetrow);
@@ -676,6 +679,10 @@ public class ProtectedArea implements Serializable {
 					if(this.moveEntity(targetrow.getWords().get(0), x, y)){
 						this.getWords().add(targetrow.getWords().get(0));
 						targetpoem.removeRow(rowidx);
+						if (targetpoem.rows.size() == 1 && targetpoem.rows.get(0).words.size() == 1){
+							this.getWords().add(targetpoem.rows.get(0).words.get(0));
+							this.getPoems().remove(targetpoem);
+						}
 						return true;
 					}
 				}
@@ -691,10 +698,19 @@ public class ProtectedArea implements Serializable {
 						for(int i = rowidx; i < targetpoem.getRows().size(); i ++){
 							ar2.add(targetpoem.getRows().get(i));
 						}
-						Poem ap2 = new Poem(ar2);
+						if (ar2.size() == 1 && ar2.get(0).words.size() == 1){
+							this.getWords().add(ar2.get(0).words.get(0));
+						}else{
+							Poem ap2 = new Poem(ar2);
 						this.getPoems().add(ap2);
+						}
+						
 						while ((targetpoem.getRows().size() - rowidx) > 0 ){
 							targetpoem.removeRow(rowidx);
+						}
+						if (targetpoem.rows.size() == 1 && targetpoem.rows.get(0).words.size() == 1){
+							this.getWords().add(targetpoem.rows.get(0).words.get(0));
+							this.getPoems().remove(targetpoem);
 						}
 						return true;
 					}else{
@@ -711,8 +727,16 @@ public class ProtectedArea implements Serializable {
 						while ((targetpoem.getRows().size() - rowidx) > 0 ){
 							targetpoem.removeRow(rowidx);
 						}
-						Poem ap2 = new Poem(ar2);
-						this.getPoems().add(ap2);
+						if (ar2.size() == 1 && ar2.get(0).words.size() == 1){
+							this.getWords().add(ar2.get(0).words.get(0));
+						}else{
+							Poem ap2 = new Poem(ar2);
+							this.getPoems().add(ap2);
+						}
+						if (targetpoem.rows.size() == 1 && targetpoem.rows.get(0).words.size() == 1){
+							this.getWords().add(targetpoem.rows.get(0).words.get(0));
+							this.getPoems().remove(targetpoem);
+						}
 						return true;
 					}
 				}	
