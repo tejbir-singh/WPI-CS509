@@ -103,7 +103,15 @@ public class ProtectedArea implements Serializable {
 				((Word) e).setPosition(tempx, tempy); 					// go back to its previous location
 				return false;
 			}	
-		}else{
+		}
+		else if (e instanceof Row) {
+			((Row) e).setPosition(x, y);
+			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
+				((Row) e).setPosition(tempx, tempy); 					// go back to its previous location
+				return false;
+			}
+		}
+		else{
 			((Poem) e).setPosition(x, y);
 			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
 				((Poem) e).setPosition(tempx, tempy); 					// go back to its previous location
@@ -137,6 +145,32 @@ public class ProtectedArea implements Serializable {
 					}
 				}
 			}
+		}
+		return null;
+	}
+	
+	public ReturnIndex getPoemRowIdx(int x, int y, Poem p) {
+		Word w = null;
+		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
+		int poem_idx = 0;
+		int row_idx = 0;
+		int word_idx = 0;
+		
+		for (Row row : p.getRows()) {
+			for (Word word : row.getWords()) {
+				Word tmp = new Word(x, y, 0, 0, null, null);
+				if (word.intersect(tmp)) {
+					ri.idxPoem = poem_idx; // poem_idx will always be 0
+					ri.idxRow = row_idx;
+					ri.idxWord = word_idx;
+					ri.w = word;
+					ri.p = belongsToPoem(word);
+					return ri;
+				}
+				word_idx += 1;
+			}
+			row_idx += 1;
+			word_idx = 0;
 		}
 		return null;
 	}
@@ -177,6 +211,27 @@ public class ProtectedArea implements Serializable {
 		return null;
 	}
 
+	public Row getPoemRowFromIdx(int x, int y, Poem p) {
+		//ArrayList<Row> rows = p.getRows(); // does this do what I'm intending for it to do
+		
+		for (Row r: p.getRows()) {
+			int currentRowX = r.x;
+			int currentRowY = r.y;
+			int rowHeightDiff = currentRowY + r.height;
+
+			if (y > currentRowY && y < rowHeightDiff) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
+	// check if another row is intersecting this row
+	public boolean rowIntersect(Row r1, Row r2) {
+		if (r1.intersect(r2)) { return true; }
+		else  { return false; }
+	}
+	
 	/**
 	 * Check if an Entity is intersecting any others in the ProtectedArea.
 	 * @param e Entity to check
@@ -200,7 +255,7 @@ public class ProtectedArea implements Serializable {
 			}
 
 			return false;
-		} else { 					// e instanceof Poem
+		} else if (e instanceof Poem){ 					// e instanceof Poem
 			for (Word word : words) {
 				for (Row rowe : ((Poem) e).rows) {
 					for (Word worde : rowe.words) {
@@ -223,8 +278,13 @@ public class ProtectedArea implements Serializable {
 
 			return false;
 		}
+		else { // TODO: e instance of row; only happens when checking intersection of two rows
+			return false;
+		}
 
 	}
+	
+
 
 	/**
 	 * Check if an Entity is intersecting any others in the ProtectedArea.
@@ -347,6 +407,18 @@ public class ProtectedArea implements Serializable {
 				} else {
 					return false;
 				}
+			}
+		}
+		else if(e instanceof Row) { // invoked when shifting rows of a poem 
+			for (Word word: ((Row) e).words){
+				if ( word.x < GameManager.PROTECTED_AREA_X
+					|| word.y < GameManager.PROTECTED_AREA_Y
+					|| word.x + e.width > GameManager.PROTECTED_AREA_WIDTH
+					|| word.y + word.height > GameManager.AREA_DIVIDER - 10) {
+						return true;
+					} else {
+						return false;
+					}
 			}
 		}
 		return false;

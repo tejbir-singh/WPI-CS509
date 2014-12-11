@@ -2,6 +2,7 @@ package cps.controller;
 
 import java.awt.Point;
 import java.awt.event.*;
+import javax.swing.SwingUtilities;
 
 import cps.model.*;
 import cps.view.*;
@@ -11,6 +12,8 @@ public class MoveController extends MouseAdapter {
 	/** Needed for controller behavior. */
 	GameManager gm;
 	ApplicationPanel panel;
+	
+	boolean mouseRightClick = false;
 	
 	/** Original x,y where shape was before move. */
 	int originalx;
@@ -47,7 +50,11 @@ public class MoveController extends MouseAdapter {
 	@Override
 	public void mousePressed(MouseEvent me) {
 		buttonType = me.getButton();
-		select(me.getX(), me.getY());
+		if (SwingUtilities.isRightMouseButton(me))
+		{
+			mouseRightClick = true;
+		}
+		select(me.getX(), me.getY()); // select the object in the clicked (x,y) location
 	}
 	
 	/**
@@ -106,9 +113,72 @@ public class MoveController extends MouseAdapter {
 		return true;
 	}	
 	
+	protected boolean isMultilinePoem(Poem p) {
+		if (p.rows.size() > 1) { return true; }
+		return false;
+	}
+	
 	/** Separate out this function for testing purposes. */
 	protected boolean drag (int x, int y) {
-		if (buttonType == MouseEvent.BUTTON3) { return false; }
+		// right-mouse click
+		if (mouseRightClick) {
+			Poem selectedPoem = null;
+			if (gm.getSelected() instanceof Poem) {
+				selectedPoem = (Poem) gm.getSelected();
+				if (isMultilinePoem(selectedPoem)) {
+					ReturnIndex idx = gm.getPa().getPoemRowIdx(anchor.x, anchor.y,selectedPoem);
+					if (idx == null) { 
+						System.out.println("idx is null");
+						return false;
+					}
+					else {
+						int rowIdx = idx.idxRow;
+						System.out.println("idxRow:" + rowIdx);
+						Row tmpRow = selectedPoem.getRows().get(rowIdx);
+
+						if (rowIdx == 0) {
+							//ensure integrity with the row below
+							System.out.println("Clicked first row");
+							Row tmpRowBelow = selectedPoem.getRows().get(rowIdx + 1);
+							do {
+								gm.getPa().moveEntity((Row)tmpRow, x, tmpRow.getY());
+	
+							} while(gm.getPa().rowIntersect(tmpRow, tmpRowBelow)); // tmpRow.intersect(tmpRowBelow));
+							panel.paintPoem(selectedPoem);
+							panel.repaint();
+							return true;
+						}
+						else if(rowIdx == selectedPoem.rows.size() - 1) {
+							// ensure integrity with row above
+							System.out.println("Clicked last row");
+							Row tmpRowAbove = selectedPoem.getRows().get(rowIdx - 1);
+						
+							do {
+								gm.getPa().moveEntity((Row)tmpRow, x, tmpRow.getY());
+							} while(tmpRow.intersect(tmpRowAbove));
+							panel.paintPoem(selectedPoem);
+							panel.repaint();
+							return true;
+						}
+						else {
+							// ensure integrity is maintained with both the row above and below
+							System.out.println("Clicked middle row");
+							Row tmpRowAbove = selectedPoem.getRows().get(rowIdx - 1);
+							Row tmpRowBelow = selectedPoem.getRows().get(rowIdx + 1);
+							
+							do {
+								gm.getPa().moveEntity((Row)tmpRow, x, tmpRow.getY());
+								panel.paintPoem(selectedPoem);
+								panel.repaint();
+							} while(tmpRow.intersect(tmpRowAbove) && tmpRow.intersect(tmpRowBelow));
+							
+							return true;
+						}
+					}	
+				}
+			}
+		}
+		// left-mouse click
 		Word selected = null;
 		Poem selectedpoem = null;
 		if (gm.getSelected() instanceof Word) {

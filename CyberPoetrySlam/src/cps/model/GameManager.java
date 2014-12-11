@@ -41,7 +41,7 @@ public class GameManager {
 				// generate Words
 				ua.add(new Word((int) Math.round(Math.random() * 600),
 						(int) Math.round(Math.random() * 200) + AREA_DIVIDER + 20, 
-								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0]));
+								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0])); //changed it back to words[0]
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
