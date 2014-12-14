@@ -215,7 +215,6 @@ public class ProtectedArea implements Serializable {
 		//ArrayList<Row> rows = p.getRows(); // does this do what I'm intending for it to do
 		
 		for (Row r: p.getRows()) {
-			int currentRowX = r.x;
 			int currentRowY = r.y;
 			int rowHeightDiff = currentRowY + r.height;
 
@@ -401,7 +400,7 @@ public class ProtectedArea implements Serializable {
 			for (Row row : ((Poem) e).rows) {
 				if (row.x < GameManager.PROTECTED_AREA_X
 						|| row.y < GameManager.PROTECTED_AREA_Y
-						|| row.x + e.width > GameManager.PROTECTED_AREA_WIDTH
+						|| row.x + row.width > GameManager.PROTECTED_AREA_WIDTH
 						|| row.y + row.height > GameManager.AREA_DIVIDER - 10) {
 					return true;
 				} else {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-import cps.controller.DisconnectWordController;
+import cps.controller.DisconnectEntityController;
 import cps.model.GameManager;
 import cps.model.Poem;
 import cps.model.Type;
@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 public class DisconnectWordControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	DisconnectWordController dwc;
+	DisconnectEntityController dwc;
 	Word w1, w2;
 	
 	@Override
@@ -25,7 +25,7 @@ public class DisconnectWordControllerTest extends TestCase {
 		gm.getPa().setPoems(new ArrayList<Poem>());
 		gm.getUa().setWords(new ArrayList<Word>());
 		app = new ApplicationPanel(gm, new JButton(), new JButton(), new JButton());
-		dwc = new DisconnectWordController(gm, app);
+		dwc = new DisconnectEntityController(gm, app);
 		w1 = new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1");
 		w2 = new Word(100, 100, 1, 1, Type.NOUN, "test2");
 		gm.getPa().add(w1);

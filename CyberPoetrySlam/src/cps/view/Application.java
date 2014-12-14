@@ -3,8 +3,9 @@ package cps.view;
 import javax.swing.*;
 
 import cps.controller.ConnectEntityController;
-import cps.controller.DisconnectWordController;
+import cps.controller.DisconnectEntityController;
 import cps.controller.MoveController;
+import cps.controller.MoveEntityController;
 import cps.controller.PublishPoemController;
 import cps.controller.RequestSwapController;
 import cps.controller.UndoRedoController;
@@ -123,7 +124,8 @@ public class Application extends JFrame {
 		moveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new MoveController(gm, appPanel).register();
+				//new MoveController(gm, appPanel).register();
+				new MoveEntityController(gm, appPanel).register();
 			}
 		});
 
@@ -137,7 +139,7 @@ public class Application extends JFrame {
 		disconnectButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new DisconnectWordController(gm, appPanel).register();
+				new DisconnectEntityController(gm, appPanel).register();
 			}
 		});
 

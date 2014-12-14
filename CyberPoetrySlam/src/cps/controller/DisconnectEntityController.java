@@ -7,7 +7,11 @@ import javax.swing.SwingUtilities;
 import cps.model.*;
 import cps.view.*;
 
-public class DisconnectWordController extends MouseAdapter {
+/**
+ * @author Xinjie
+ */
+
+public class DisconnectEntityController extends MouseAdapter {
 	/** Needed for controller behavior. */
 	GameManager gm;
 	ApplicationPanel panel;
@@ -34,7 +38,7 @@ public class DisconnectWordController extends MouseAdapter {
 	Row selectedRow;
 	
 	/** Constructor holds onto key manager objects. */
-	public DisconnectWordController(GameManager gm, ApplicationPanel panel) {
+	public DisconnectEntityController(GameManager gm, ApplicationPanel panel) {
 		this.gm = gm;
 		this.panel = panel;
 	}

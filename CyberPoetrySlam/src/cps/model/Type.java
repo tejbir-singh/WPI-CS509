@@ -6,5 +6,6 @@ package cps.model;
 public enum Type {
 	NOUN, ADJECTIVE, VERB, ADVERB, PRONOUN, 
 	PREPOSITION, PREFIX, SUFFIX, CONJUNCTION, INTERJECTION, ARTICLE,
-	ANY
+	ANY,verb, determiner, suffix, pronouns, pronoun, preposition, number, noun, 
+	conjunction, adverb, adjective
 }

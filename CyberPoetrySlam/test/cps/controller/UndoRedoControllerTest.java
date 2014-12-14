@@ -86,7 +86,7 @@ public class UndoRedoControllerTest extends TestCase {
 		cwc.release(100, 100);
 		assertNotNull(gm.getPa().getPoems().get(0));
 		
-		DisconnectWordController dwc = new DisconnectWordController(gm, app);
+		DisconnectEntityController dwc = new DisconnectEntityController(gm, app);
 		dwc.select(100, 100);
 		dwc.drag(1, 1);
 		dwc.release(1, 1);

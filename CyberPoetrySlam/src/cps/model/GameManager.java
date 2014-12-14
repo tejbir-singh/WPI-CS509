@@ -2,7 +2,9 @@ package cps.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Random;
 
 public class GameManager {
 	private ProtectedArea pa;
@@ -11,7 +13,7 @@ public class GameManager {
 	private Stack<Manipulation> prevUndos;
 	private static GameManager instance;
 	private SwapManager swapManager;
-	private final String wordBank = "words.txt";
+	private final String wordBank = "WordsAndTypes.txt";
 	private Entity selected = null;
 	ReturnIndex selectedidx = null;
 	public static final int AREA_DIVIDER = 320;
@@ -20,6 +22,7 @@ public class GameManager {
 	public static final int PROTECTED_AREA_WIDTH = 650;
 	public static final int PROTECTED_AREA_HEIGHT = 550;
 	public static final int SWAP_AREA_DIVIDER = 660;
+	public static final int MAXWORDS = 300;
 	
 	
 	/**
@@ -33,19 +36,39 @@ public class GameManager {
 		// populate the UnprotectedArea with the Words specified in words.txt
 		// for now we assume that Words will be stored with a type and value
 		BufferedReader br;
+		int temp = 0;
+		ArrayList<Integer> random100 = randomOneHundred(MAXWORDS);
 		try {
 			br = new BufferedReader(new FileReader(wordBank));
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(",");
 				// generate Words
-				ua.add(new Word((int) Math.round(Math.random() * 600),
-						(int) Math.round(Math.random() * 200) + AREA_DIVIDER + 20, 
-								words[0].length() * 15, 15, Type.valueOf(words[1]), words[0])); //changed it back to words[0]
-			}
+				if(random100.contains(temp)){
+					ua.add(new Word((int) Math.round(Math.random() * 600),
+							(int) Math.round(Math.random() * 200) + AREA_DIVIDER + 20, 
+									words[0].length() * 15, 15, Type.valueOf(words[1]), words[0])); //changed it back to words[0]
+				}
+				temp ++;
+			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	} 
+	
+	public ArrayList<Integer> randomOneHundred(int max){
+		ArrayList<Integer> nums = new ArrayList<Integer>();
+		Random random = new Random();
+		int temp = 0;
+		for (int i = 0; i < 100; i++) {
+			temp = random.nextInt(max);
+			if(nums.contains(temp) == false){
+				nums.add(temp);
+			}else{
+				i --;
+			}
+		}
+		return nums;
 	}
 	
 	/**
