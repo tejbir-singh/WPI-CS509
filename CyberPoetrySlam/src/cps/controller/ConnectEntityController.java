@@ -179,6 +179,8 @@ public class ConnectEntityController extends MouseAdapter {
 							gm.getPa().getPoems().add(ptop);
 						}
 					}
+					gm.getManipulations().add(new Manipulation(originalx, originaly, selected, MoveType.CONNECT));
+					panel.validateUndo(true);
 				}
 			}																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																														
 		}																																																												

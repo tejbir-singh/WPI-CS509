@@ -2,6 +2,8 @@ package cps.controller;
 
 import java.awt.Point;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.SwingUtilities;
 
 import cps.model.*;
@@ -161,9 +163,9 @@ public class DisconnectEntityController extends MouseAdapter {
 			if (!gm.getPa().disconnectRow(selectedIdx.idxPoem, selectedIdx.idxRow, x-deltaRowX, y-deltaRowY)) {
 				selectedRow.setPosition(originalRowX, originalRowY);
 			}
-			//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			else { // Hi, Devin! Here's problems of Undo/Redo!!!!!!!!!
-				gm.getManipulations().add(new Manipulation(originalRowX, originalRowY, selectedRow, MoveType.DISCONNECT));
+			else {
+				ReturnIndex ri = gm.getPa().getWordIdx(x-deltaRowX, y-deltaRowY);
+				gm.getManipulations().add(new Manipulation(originalRowX, originalRowY, ri.p, MoveType.DISCONNECT));
 				panel.validateUndo(true);
 				panel.validateRedo(false);
 			}	

@@ -175,23 +175,51 @@ public class UndoRedoController extends MouseAdapter {
 	 * Move a connected Entity back to its previous location.
 	 * @return true if successful
 	 */
+	// TODO: Determine if we're undoing a Poem-Poem connect and handle it differently
 	private boolean undoConnect() {
 		Entity e = man.getEntity();
 		if (e == null) { return false; }
+		ReturnIndex ri = gm.getPa().getWordIdx(man.getEntity().getX(), man.getEntity().getY());
+		if (ri == null) {
+			System.out.println("URController: could not find word index");
+			return false;
+		}
 		
 		if (e instanceof Word) {
-			ReturnIndex ri = gm.getPa().getWordIdx(man.getEntity().getX(), man.getEntity().getY());
-			if (ri == null) {
-				System.out.println("could not find word index");
-				return false;
-			}
 			if (!gm.getPa().disconnectWord(ri.idxPoem, ri.idxRow, ri.idxWord, man.getX(), man.getY())) {
-				System.out.println("error at disconnect");
+				System.out.println("URController: error at disconnect");
 			}
+			
+			// reset to its previous location
+			e.setX(man.getX());
+			e.setY(man.getY());
 		}
-		// reset to its previous location
-		e.setX(man.getX());
-		e.setY(man.getY());
+		else {
+			// TODO: Fix for multiple disconnected rows
+			Row row = ri.p.getRows().get(0);
+			for (Row r : ri.p.getRows()) {
+				if (r.getY() < row.getY()) {
+					row = r;
+				}
+			}
+			if (row.getWords().equals(((Poem) man.getEntity()).getRows().get(0).getWords())) {	// the poem was added to the top
+				ArrayList<Row> rows = ((Poem) man.getEntity()).getRows();
+				
+				if (!gm.getPa().splitPoem(ri.p, 0, rows.size() - 1, man.getX(), man.getY())) {
+					System.out.println("URController: error at disconnect");
+					return false;
+				}
+			}
+			else {		// the poem was added to the bottom
+				if (!gm.getPa().splitPoem(ri.p, ri.p.getRows().size() - ((Poem) man.getEntity()).getRows().size(), 
+						ri.p.getRows().size() - 1, man.getX(), man.getY())) { 
+					System.out.println("URController: error at disconnect");
+					return false;
+				}
+			}	
+		}
+
+		
 		return true;
 	}
 	
@@ -242,6 +270,16 @@ public class UndoRedoController extends MouseAdapter {
 				}
 			}
 		}
+		else {			// e is a poem
+			if ((ri = findEntityOrigin(e)) != null) { 
+				if (man.getY() < ri.p.getY()) {		// check if it was on top 
+					gm.getPa().connectPoemTop(ri.p, (Poem) e, man.getX());
+				}
+				else {
+					gm.getPa().connectPoemBottom(ri.p, (Poem) e, man.getX());
+				}
+			}
+		}
 		return true;
 	}
 	
@@ -254,14 +292,28 @@ public class UndoRedoController extends MouseAdapter {
 	private ReturnIndex findEntityOrigin(Entity e) {
 		Word tmp1 = null, tmp2 = null;
 		if (e instanceof Word) {
-			tmp1 = new Word(man.getX()-1, man.getY()-1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
-			tmp2 = new Word(man.getX()+1, man.getY()+1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).getValue());
+			tmp1 = new Word(man.getX()-1, man.getY()-1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).toString());
+			tmp2 = new Word(man.getX()+1, man.getY()+1, e.getWidth()+2, e.getHeight()+2, null, "TEMP TEST " + ((Word) e).toString());
+		}
+		else {
+			int height = 0, width = 0;
+			for (Row r : ((Poem) man.getEntity()).getRows()) {
+				int rowWidth = 0;
+				for (Word w : r.getWords()) {
+					rowWidth += w.getWidth();
+				}
+				if (rowWidth > width) {
+					width = rowWidth;
+				}
+				height = r.getHeight();
+			}
+			tmp1 = new Word(man.getX()-1, man.getY()-1, width+2, height+2, null, "TEMP TEST");
+			tmp2 = new Word(man.getX()+1, man.getY()+1, width+2, height+2, null, "TEMP TEST");
 		}
 		
 		ReturnIndex ri = gm.getPa().entityIntersect(tmp1);
 		if (ri != null) {
 			// check if the word goes on the left or right using its row as a basis
-			
 			return ri;
 		}
 		ri = gm.getPa().entityIntersect(tmp2);

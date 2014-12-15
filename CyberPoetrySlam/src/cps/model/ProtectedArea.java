@@ -633,16 +633,18 @@ public class ProtectedArea implements Serializable {
 	public boolean connectPoemTop(Poem p, Poem ptop, int bottomrow_x){
 		int ptop_x = bottomrow_x - (ptop.getRows().get(ptop.getRows().size() - 1).getX() - ptop.getRows().get(0).getX());
 		int ptop_y = p.getRows().get(0).getY() - ptop.getHeight();
-		if (this.moveEntity(ptop, ptop_x, ptop_y)) {
-			for(int i = ptop.getRows().size() - 1; i >= 0; i --){
-				p.connectRowTop(ptop.getRows().get(i));
-			}
-			p.setX(ptop_x);
-			p.setY(ptop_y);
-			this.remove(ptop);
-			return true;
+		ptop.setPosition(ptop_x, ptop_y);
+		for(Row r: ptop.getRows()){
+			Row tmpRow = new Row(r.getWords());
+			tmpRow.setPosition(r.getX(), r.getY());
+			tmpRow.setWidth(r.getWidth());
+			tmpRow.setHeight(r.getHeight());
+			p.connectRowTop(tmpRow);
 		}
-		return false;
+		p.setX(ptop_x);
+		p.setY(ptop_y);
+		this.remove(ptop);
+		return true;
 	}
 	
 	/**
@@ -656,14 +658,16 @@ public class ProtectedArea implements Serializable {
 	public boolean connectPoemBottom(Poem p, Poem pbottom, int toprow_x){
 		int pbottom_x = toprow_x;
 		int pbottom_y = p.getRows().get(p.getRows().size() - 1).getY() + p.getRows().get(p.getRows().size() - 1).getHeight();
-		if (this.moveEntity(pbottom, pbottom_x, pbottom_y)) {
-			for(Row r: pbottom.getRows()){
-				p.connectRowBottom(r);
-			}
-			this.remove(pbottom);
-			return true;
+		pbottom.setPosition(pbottom_x, pbottom_y);
+		for(Row r: pbottom.getRows()){
+			Row tmpRow = new Row(r.getWords());
+			tmpRow.setPosition(r.getX(), r.getY());
+			tmpRow.setWidth(r.getWidth());
+			tmpRow.setHeight(r.getHeight());
+			p.connectRowBottom(tmpRow);
 		}
-		return false;
+		this.remove(pbottom);
+		return true;
 	}
 	
 	/**
@@ -815,7 +819,43 @@ public class ProtectedArea implements Serializable {
 		}			
 		return false;	
 	}
-	
+
+	/**
+	 * Split a Poem in two and place the newly formed Poem at the specified x- and y-coordinates.
+	 * @param p Poem to split
+	 * @param rowToSplitFrom index of the row at which to start the split
+	 * @param rowToSplitTo index of the row at which to end the split
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @return true if successful
+	 */
+	public boolean splitPoem(Poem p, int rowToSplitFrom, int rowToSplitTo, int x, int y) {
+		if (p.getRows().size() <= 1) { return false; }	// cannot split a one row poem
+		Row r = p.getRows().get(rowToSplitFrom);
+		ArrayList<Row> newRows = new ArrayList<Row>();
+		newRows.add(r);
+		Poem newPoem = new Poem(newRows);
+		p.removeRow(rowToSplitFrom);
+		// split poem
+		for (int i = rowToSplitFrom; i < rowToSplitTo; i++) {
+			Row current = p.getRows().get(rowToSplitFrom);
+			ArrayList<Row> tmpRow = new ArrayList<Row>();
+			tmpRow.add(current);
+			Poem tmpPoem = new Poem(tmpRow);
+			if (current.getY() < newPoem.getRows().get(0).getY()) {
+				connectPoemTop(newPoem, tmpPoem, tmpPoem.getX());
+			}
+			else {
+				connectPoemBottom(newPoem, tmpPoem, tmpPoem.getX());
+			}
+			
+			p.removeRow(rowToSplitFrom);
+		}
+		poems.add(newPoem);
+		newPoem.setPosition(x, y);
+		return true;
+	}
+
 
 	// Getters and setters
 	public ArrayList<Word> getWords() {
