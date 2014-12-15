@@ -17,13 +17,13 @@ public class UndoRedoController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;
 	Manipulation man;
-	
+
 	/** true for Undos, false for Redos */
 	boolean doPushPrev;					
-	
+
 	/** used to store information to create Redos */
 	int prevX, prevY;					
-	
+
 	/**
 	 * Constructor.
 	 * @param gm GameManager 
@@ -61,13 +61,13 @@ public class UndoRedoController extends MouseAdapter {
 				gm.getPrevUndos().push(new Manipulation(prevX, prevY, man.getEntity(), MoveType.CONNECT));
 			}
 		}
-		
+
 		panel.validateUndo(doPushPrev);
 		panel.validateRedo(true);
 		panel.redraw();
 		panel.repaint();
 	}
-	
+
 	/**
 	 * Separated out for portability.
 	 * Move an Entity back to its previous location.
@@ -76,100 +76,105 @@ public class UndoRedoController extends MouseAdapter {
 	private boolean undoMove() {
 		Entity e = man.getEntity();
 		if (e == null) { return false; }
-		
+
 		// make sure the Entity goes back where it belongs
-		if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to other
-			if (man.getY() >= GameManager.SWAP_AREA_DIVIDER) {		// move to Swap
-				if (e instanceof Word) {
-					gm.getSwapManager().add(e);
-					gm.getPa().remove((Word) e);
-				}
-				else {					// poem
-					for (Row row : ((Poem) e).getRows()){
-						for (Word word : row.getWords()){
-							gm.getSwapManager().add(word);
-							gm.getPa().remove(word);
-						}
+		if (e instanceof Row) {		// shift the row back to where it belongs
+			// taken care of below; no other action is required
+		}
+		else {
+			if (man.getY() >= GameManager.AREA_DIVIDER && e.getY() < GameManager.AREA_DIVIDER) { 	// move from PA to other
+				if (man.getY() >= GameManager.SWAP_AREA_DIVIDER) {		// move to Swap
+					if (e instanceof Word) {
+						gm.getSwapManager().add(e);
+						gm.getPa().remove((Word) e);
 					}
-					gm.getPa().remove(e);
+					else {					// poem
+						for (Row row : ((Poem) e).getRows()){
+							for (Word word : row.getWords()){
+								gm.getSwapManager().add(word);
+								gm.getPa().remove(word);
+							}
+						}
+						gm.getPa().remove(e);
+					}
+				}
+				else {													// move to UA
+					if (e instanceof Word) {
+						gm.getPa().remove((Word) e);
+						gm.getUa().add(e);
+					}
+					else {					// poem
+						for (Row row : ((Poem) e).getRows()){
+							for (Word word : row.getWords()){
+								gm.getUa().add(word);
+								gm.getPa().remove(word);
+							}
+						}
+						gm.getPa().remove(e);
+					}
 				}
 			}
-			else {													// move to UA
-				if (e instanceof Word) {
-					gm.getPa().remove((Word) e);
+			else if (man.getY() <= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.SWAP_AREA_DIVIDER) { // move from Swap to other
+				if (man.getY() < GameManager.AREA_DIVIDER) { 	// Move to PA
+					gm.getPa().add(e); 
+				}
+				else {											// Move to UA
 					gm.getUa().add(e);
 				}
-				else {					// poem
+				if(e instanceof Word){
+					gm.getSwapManager().remove((Word) e);
+				} 
+				else{ 	// Poem
 					for (Row row : ((Poem) e).getRows()){
 						for (Word word : row.getWords()){
-							gm.getUa().add(word);
-							gm.getPa().remove(word);
+							gm.getSwapManager().remove(word);
 						}
 					}
-					gm.getPa().remove(e);
 				}
 			}
-		}
-		else if (man.getY() <= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.SWAP_AREA_DIVIDER) { // move from Swap to other
-			if (man.getY() < GameManager.AREA_DIVIDER) { 	// Move to PA
-				gm.getPa().add(e); 
-			}
-			else {											// Move to UA
-				gm.getUa().add(e);
-			}
-			if(e instanceof Word){
-				gm.getSwapManager().remove((Word) e);
-			} 
-			else{ 	// Poem
-				for (Row row : ((Poem) e).getRows()){
-					for (Word word : row.getWords()){
-						gm.getSwapManager().remove(word);
+			else if (man.getY() <= GameManager.AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER) { // move from UA to PA
+				gm.getPa().add(e);
+				if(e instanceof Word) {
+					gm.getUa().remove((Word) e);
+				}
+				else{ // Poem
+					for (Row row : ((Poem) e).getRows()){
+						for (Word word : row.getWords()){
+							gm.getUa().remove(word);
+						}
 					}
 				}
 			}
-		}
-		else if (man.getY() <= GameManager.AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER) { // move from UA to PA
-			gm.getPa().add(e);
-			if(e instanceof Word) {
-				gm.getUa().remove((Word) e);
-			}
-			else{ // Poem
-				for (Row row : ((Poem) e).getRows()){
-					for (Word word : row.getWords()){
-						gm.getUa().remove(word);
+			else if (man.getY() >= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER && e.getY() <= GameManager.SWAP_AREA_DIVIDER) {	// move from UA to Swap
+				gm.getSwapManager().add(e); // modified by Xinjie
+				if (e instanceof Word) {
+					gm.getUa().remove((Word) e);
+				} else { // Poem
+					for (Row row : ((Poem) e).getRows()){
+						for (Word word : row.getWords()){
+							gm.getUa().remove(word);
+						}
 					}
 				}
 			}
-		}
-		else if (man.getY() >= GameManager.SWAP_AREA_DIVIDER && e.getY() > GameManager.AREA_DIVIDER && e.getY() <= GameManager.SWAP_AREA_DIVIDER) {	// move from UA to Swap
-			gm.getSwapManager().add(e); // modified by Xinjie
-			if (e instanceof Word) {
-				gm.getUa().remove((Word) e);
-			} else { // Poem
-				for (Row row : ((Poem) e).getRows()){
-					for (Word word : row.getWords()){
-						gm.getUa().remove(word);
-					}
+			if (e instanceof Poem) {
+				// In case it was previously undone, get the new Poem at this location
+				try {
+					ReturnIndex ri = gm.getPa().getWordIdx(((Poem) e).getRows().get(0).getWords().get(0).getX(), 
+							((Poem) e).getRows().get(0).getWords().get(0).getY());
+					e = ri.p;
+				} catch (NullPointerException npe) {
+					// If this occurs, we're redoing a release so this is handled elsewhere. This can be ignored.
 				}
+
 			}
-		}
-		if (e instanceof Poem) {
-			// In case it was previously undone, get the new Poem at this location
-			try {
-				ReturnIndex ri = gm.getPa().getWordIdx(((Poem) e).getRows().get(0).getWords().get(0).getX(), 
-						((Poem) e).getRows().get(0).getWords().get(0).getY());
-				e = ri.p;
-			} catch (NullPointerException npe) {
-				// If this occurs, we're redoing a release so this is handled elsewhere. This can be ignored.
-			}
-			
 		}
 		e.setPosition(man.getX(), man.getY()); // modified by Xinjie
 		panel.redraw();
 		panel.repaint();
 		return true;
 	}
-	
+
 	/**
 	 * Separated out for portability.
 	 * Move a connected Entity back to its previous location.
@@ -184,12 +189,12 @@ public class UndoRedoController extends MouseAdapter {
 			System.out.println("URController: could not find word index");
 			return false;
 		}
-		
+
 		if (e instanceof Word) {
 			if (!gm.getPa().disconnectWord(ri.idxPoem, ri.idxRow, ri.idxWord, man.getX(), man.getY())) {
 				System.out.println("URController: error at disconnect");
 			}
-			
+
 			// reset to its previous location
 			e.setX(man.getX());
 			e.setY(man.getY());
@@ -204,7 +209,7 @@ public class UndoRedoController extends MouseAdapter {
 			}
 			if (row.getWords().equals(((Poem) man.getEntity()).getRows().get(0).getWords())) {	// the poem was added to the top
 				ArrayList<Row> rows = ((Poem) man.getEntity()).getRows();
-				
+
 				if (!gm.getPa().splitPoem(ri.p, 0, rows.size() - 1, man.getX(), man.getY())) {
 					System.out.println("URController: error at disconnect");
 					return false;
@@ -219,10 +224,10 @@ public class UndoRedoController extends MouseAdapter {
 			}	
 		}
 
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Separated out for portability.
 	 * Connect a disconnected Entity to its previous location.
@@ -232,7 +237,7 @@ public class UndoRedoController extends MouseAdapter {
 		Entity e = man.getEntity();
 		ReturnIndex ri = null;
 		if (e == null) { return false; }
-		
+
 		if (e instanceof Word) {
 			if ((ri = findEntityOrigin(e)) != null) {
 				if (ri.p == null) {						// intersects a word which is not connected to a poem
@@ -260,7 +265,7 @@ public class UndoRedoController extends MouseAdapter {
 							break;
 						}
 					}
-					
+
 					if (man.getX() < ri.p.getRows().get(ri.idxRow).getX()) {
 						gm.getPa().connectWordLeftPoem(ri.p, (Word) e, ri.idxRow);
 					}
@@ -282,7 +287,7 @@ public class UndoRedoController extends MouseAdapter {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Helper function.
 	 * Find out whether an Entity came from the left or right of its original Poem.
@@ -310,17 +315,17 @@ public class UndoRedoController extends MouseAdapter {
 			tmp1 = new Word(man.getX()-1, man.getY()-1, width+2, height+2, null, "TEMP TEST");
 			tmp2 = new Word(man.getX()+1, man.getY()+1, width+2, height+2, null, "TEMP TEST");
 		}
-		
+
 		ReturnIndex ri = gm.getPa().entityIntersect(tmp1);
 		if (ri != null) {
 			// check if the word goes on the left or right using its row as a basis
 			return ri;
 		}
 		ri = gm.getPa().entityIntersect(tmp2);
-		
+
 		return ri;
 	}
-	
+
 	/**
 	 * Helper function.
 	 * Make two poems out of the words and connect them.
@@ -335,11 +340,11 @@ public class UndoRedoController extends MouseAdapter {
 		Row r = new Row(word1);
 		rows.add(r);
 		Poem p = new Poem(rows);
-		
+
 		ArrayList<Word> word2 = new ArrayList<Word>();
 		word2.add((Word) e);
 		Row r2 = new Row(word2);
-		
+
 		if (top) {
 			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() - p.getRows().get(rows.size()-1).getHeight());
 			p.connectRowTop(r2);
@@ -348,7 +353,7 @@ public class UndoRedoController extends MouseAdapter {
 			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() + p.getRows().get(rows.size()-1).getHeight());
 			p.connectRowBottom(r2);
 		}
-		
+
 		// remove the words from the protected area
 		gm.getPa().remove(e);
 		gm.getPa().remove(ri.w);

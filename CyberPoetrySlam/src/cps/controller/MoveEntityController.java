@@ -239,6 +239,7 @@ public class MoveEntityController extends MouseAdapter {
 			if (validshift == true){
 				// Only satisfied all the check above can the shiftRow movement be valid
 				selectedRow.setPosition(x - deltaRowX, originalRowY);
+				gm.getManipulations().push(new Manipulation(originalRowX, originalRowY, selectedRow, MoveType.MOVE));
 			}
 		}else{ // mouseLeftClick
 			Word selected = null;
