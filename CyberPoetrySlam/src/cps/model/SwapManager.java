@@ -213,14 +213,15 @@ public class SwapManager implements IHandleBrokerMessage {
 			Swap s = ConfirmSwapMessage.getSwap(msg);
 			
 			// carry out the swap. We were the one making the request...
-			String wordsToRemove[];
-			String wordsToAdd[];
+			String wordsToRemove[], wordsToAdd[], wordTypesToAdd[];
 			if (broker.getID().equals(s.requestor_id)) {
 				wordsToRemove = s.offerWords;
 				wordsToAdd = s.requestWords;
+				wordTypesToAdd = s.requestTypes;
 			} else {
 				wordsToRemove = s.requestWords;
 				wordsToAdd = s.offerWords;
+				wordTypesToAdd = s.offerTypes;
 			}
 
 			// notify client of swap
@@ -254,13 +255,18 @@ public class SwapManager implements IHandleBrokerMessage {
 				}
 			}
 				
-			// TODO: Update JTable, change number to constant
 			for (int i = 0; i < s.n; i++) {
 				int rx = (int) Math.round(Math.random() * 600);
 				int ry = (int) Math.round((Math.random() * 200) + GameManager.AREA_DIVIDER);
 				
-				// TODO: Get Word type
-				Word w = new Word (rx, ry, wordsToAdd[i].length() * 15, 15, Type.ADJECTIVE, wordsToAdd[i]);
+				Type type = Type.noun;					// default
+				for (Type t : Type.values()) {
+					if (t.toString().equals(wordTypesToAdd[i])) {
+						type = t;
+						break;
+					}
+				}
+				Word w = new Word (rx, ry, wordsToAdd[i].length() * 15, 15, type, wordsToAdd[i]);
 				gm.getUa().add(w);
 			}
 			
