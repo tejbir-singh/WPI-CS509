@@ -7,14 +7,15 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import cps.model.UnprotectedArea;
+import cps.model.Word;
 import cps.model.WordModel;
 import cps.controller.RefreshWordTableController;
+import cps.controller.SelectFromTableController;
+import cps.controller.SortController;
 
 /**
- * Sample tutorial for JTables.
- * 
- * To properly refresh JTable when model changes, be sure that controller
- * calls {@link #refreshTable()}.
+ * This class implements the table of words which displays the contents of the unprotected area.
+ * @author Devin
  */
 public class WordTable extends JPanel {
 	/* keep eclipse happy */
@@ -22,6 +23,8 @@ public class WordTable extends JPanel {
 	
 	/** The model that "backs" the JTable. Different from Board. */
 	WordModel wordModel;
+	UnprotectedArea ua;
+	ApplicationPanel appPanel;
 	
 	/** Actual GUI entity. */
 	JTable jtable = null;
@@ -29,10 +32,11 @@ public class WordTable extends JPanel {
 	/**
 	 * This constructor creates the display which manages the list of active players.
 	 */
-    public WordTable(UnprotectedArea ua) {
+    public WordTable(UnprotectedArea ua, ApplicationPanel appPanel) {
 
     	// create the model for the data which backs this table
     	this.wordModel = new WordModel();
+    	this.appPanel = appPanel;
     	
     	// add to listener chain
     	ua.setRefreshWordTableController(new RefreshWordTableController(this));
@@ -70,27 +74,33 @@ public class WordTable extends JPanel {
 		header.addMouseListener(new MouseAdapter()	{
 			public void mouseClicked (MouseEvent e)	{
 				JTableHeader h = (JTableHeader) e.getSource() ;
-				//new SortController(WordTable.this).process(h, e.getPoint());
+				new SortController(WordTable.this).process(h, e.getPoint());
 			}
 		});
 		
-		// Here's the trick. Make the JScrollPane take its view from the JTable.
+		jtable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked (MouseEvent e)	{
+				new SelectFromTableController(WordTable.this).process(WordTable.this.appPanel);
+			}
+		});
+		
 		jsp.setViewportView(jtable);
 
-		// add the scrolling Pane which encapsulates the JTable
-		// physical size limited
 		this.setPreferredSize(mySize);
 		this.add(jsp);
 	}
 
     /**
-     * Causes the display of the shapes to be updated to the latest data.
+     * Update the table display.
      */
     public void refreshTable() {
-		// THIS is the key method to ensure JTable view is synchronized
 		jtable.revalidate();
 		jtable.repaint();
 		this.revalidate();
 		this.repaint();
 	}
+    
+    public JTable getJTable() {
+    	return this.jtable;
+    }
 }

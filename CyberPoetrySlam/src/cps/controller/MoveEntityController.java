@@ -9,7 +9,8 @@ import cps.model.*;
 import cps.view.*;
 
 /**
- * @author Xinjie
+ * MoveEntityController is responsible for all move-type manipulations.
+ * @author Xinjie, Devin
  */
 
 public class MoveEntityController extends MouseAdapter {

@@ -13,6 +13,11 @@ import cps.model.Poem;
 import cps.model.Row;
 import cps.view.ApplicationPanel;
 
+/**
+ * This class is used to implement all Undo and Redo functionality.
+ * @author Devin
+ *
+ */
 public class UndoRedoController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;
@@ -180,7 +185,6 @@ public class UndoRedoController extends MouseAdapter {
 	 * Move a connected Entity back to its previous location.
 	 * @return true if successful
 	 */
-	// TODO: Determine if we're undoing a Poem-Poem connect and handle it differently
 	private boolean undoConnect() {
 		Entity e = man.getEntity();
 		if (e == null) { return false; }
@@ -200,7 +204,6 @@ public class UndoRedoController extends MouseAdapter {
 			e.setY(man.getY());
 		}
 		else {
-			// TODO: Fix for multiple disconnected rows
 			Row row = ri.p.getRows().get(0);
 			for (Row r : ri.p.getRows()) {
 				if (r.getY() < row.getY()) {

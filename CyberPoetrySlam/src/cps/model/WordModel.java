@@ -52,11 +52,8 @@ public class WordModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Sort the ArrayList of cars by given field, whose value is
-	 * either {@link UserModelGUI#uidStr}, {@link UserModelGUI#rNameStr},
-	 * {@link UserModelGUI#tableNumStr}, or {@link UserModelGUI#timeStr}.
-	 * 
-	 * @param columnIndex
+	 * Sort the ArrayList by the specified field.
+	 * @param fieldName name of the field to sort by
 	 */
 	public void sort(final String fieldName) {
 		ua.sort(new Comparator<Word>() {
@@ -64,7 +61,7 @@ public class WordModel extends AbstractTableModel {
 			@Override
 			public int compare(Word w1, Word w2) {
 				if (fieldName.equals(typeLabel)) {
-					return w1.getX() - w2.getX();
+					return w1.getType().compareTo(w2.getType());
 				}
 				
 				// default to word

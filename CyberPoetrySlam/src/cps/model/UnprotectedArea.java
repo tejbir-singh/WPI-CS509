@@ -8,6 +8,11 @@ import java.util.Comparator;
 import cps.controller.RefreshWordTableController;
 
 
+/**
+ * This class is used to keep the WordTable up-to-date based on the contents of the UnprotectedArea.
+ * @author Devin
+ *
+ */
 public class UnprotectedArea implements Serializable {
 	private static final long serialVersionUID = -9203701553091519628L;
 	private static UnprotectedArea instance;

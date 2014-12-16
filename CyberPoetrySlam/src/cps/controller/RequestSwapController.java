@@ -7,6 +7,10 @@ import cps.model.GameManager;
 import cps.model.SwapManager;
 import cps.view.ApplicationPanel;
 
+/**
+ * This class communicates with the SwapManager and submits a swap request to the broker.
+ * @author Devin
+ */
 public class RequestSwapController extends MouseAdapter {
 	GameManager gm;
 	ApplicationPanel panel;

@@ -122,7 +122,7 @@ public class Application extends JFrame {
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
 		
-		table = new WordTable(gm.getUa());
+		table = new WordTable(gm.getUa(), appPanel);
 		table.setSize(175, 750);
 		table.setLocation(700, 66);
 		this.table.setPreferredSize(table.getPreferredSize());

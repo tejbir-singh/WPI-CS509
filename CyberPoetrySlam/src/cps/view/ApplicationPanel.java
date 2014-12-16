@@ -142,6 +142,9 @@ public class ApplicationPanel extends JPanel {
 		}
 		else if (w.getY() >= GameManager.AREA_DIVIDER && w.getY() <= GameManager.SWAP_AREA_DIVIDER) { // UA
 			g.setColor(Color.gray);
+			if (w.equals(gm.getSelected())) {
+				g.setColor(Color.red);
+			}
 		}
 		else {							// PA
 			g.setColor(Color.cyan);

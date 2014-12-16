@@ -2,6 +2,10 @@ package cps.model;
 
 import java.io.Serializable;
 
+/**
+ * Word is the most basic type of Entity.
+ * @author Devin
+ */
 public class Word extends Entity implements Serializable {
 	private static final long serialVersionUID = -5436132699662013706L;
 	public String value;
