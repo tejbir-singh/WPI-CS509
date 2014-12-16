@@ -9,29 +9,29 @@ import cps.model.Word;
 import cps.view.ApplicationPanel;
 import junit.framework.TestCase;
 
-public class MoveControllerTest extends TestCase {
+public class MoveEntityControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
-	MoveController mc;
+	MoveEntityController mec;
 	
 	@Override
 	protected void setUp() {
 		gm = GameManager.getInstance();
 		app = new ApplicationPanel(gm, new JButton(), new JButton(), new JButton());
-		mc = new MoveController(gm, app);
+		mec = new MoveEntityController(gm, app);
 		gm.getPa().add(new Word(1, 1, 1, 1, Type.ADJECTIVE, "test1"));
 	}
 	
 	public void testSelect() {
-		mc.select(1, 1);
+		mec.select(1, 1);
 		assertTrue(((Word) gm.getSelected()).getValue().equals("test1"));
 	}
 	
 	public void testRelease() {
-		mc.register();
-		mc.select(1, 1);
-		mc.drag(2, 2);
-		mc.release(2, 2);
+		mec.register();
+		mec.select(1, 1);
+		mec.drag(2, 2);
+		mec.release(2, 2);
 		assertTrue(gm.getPa().getWords().get(0).getValue().equals("test1"));
 	}
 }
