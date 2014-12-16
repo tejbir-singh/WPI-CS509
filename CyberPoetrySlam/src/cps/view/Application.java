@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import cps.controller.ConnectEntityController;
 import cps.controller.DisconnectEntityController;
-import cps.controller.MoveController;
 import cps.controller.MoveEntityController;
 import cps.controller.PublishPoemController;
 import cps.controller.RequestSwapController;
@@ -26,6 +25,7 @@ public class Application extends JFrame {
 	ApplicationPanel appPanel;
 	GameManager gm;
 	private JTextField textField;
+	private WordTable table;
 
 	/**
 	 * Create the frame.
@@ -37,7 +37,7 @@ public class Application extends JFrame {
 	public Application(GameManager g) {
 		this.gm = g;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 900);
+		setBounds(100, 100, 900, 900);
 		getContentPane().setLayout(null);
 
 		JPanel p = new JPanel();
@@ -112,6 +112,7 @@ public class Application extends JFrame {
 		swapButton.setBounds(460, 31, 89, 23);
 		swapButton.setEnabled(false);
 		getContentPane().add(swapButton);
+		
 		// add the application panel
 		appPanel = new ApplicationPanel(gm, undoButton, redoButton, swapButton);
 		panel.add(appPanel);
@@ -120,11 +121,16 @@ public class Application extends JFrame {
 		appPanel.setAlignmentY(CENTER_ALIGNMENT);
 		appPanel.setOpaque(false);
 		appPanel.setVisible(true);
+		
+		table = new WordTable(gm.getUa());
+		table.setSize(175, 750);
+		table.setLocation(700, 66);
+		this.table.setPreferredSize(table.getPreferredSize());
+		getContentPane().add(table);
 
 		moveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//new MoveController(gm, appPanel).register();
 				new MoveEntityController(gm, appPanel).register();
 			}
 		});
@@ -190,39 +196,7 @@ public class Application extends JFrame {
 				new RequestSwapController(gm, appPanel, requestWords.getText(), requestTypes.getText()).process();
 			}
 		});
-
-		/*
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Swap Initiated");
-		chckbxNewCheckBox.setBounds(566, 566, 97, 23);
-		getContentPane().add(chckbxNewCheckBox);
-
-		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Processing Swap");
-		chckbxNewCheckBox_1.setBounds(566, 592, 112, 23);
-		getContentPane().add(chckbxNewCheckBox_1);
-
-		JCheckBox chckbxNewCheckBox_2 = new JCheckBox("Swap Completed");
-		chckbxNewCheckBox_2.setBounds(566, 618, 108, 23);
-		getContentPane().add(chckbxNewCheckBox_2);
-
-		JButton btnNewButton_5 = new JButton("Request");
-		btnNewButton_5.setBounds(570, 449, 89, 40);
-		getContentPane().add(btnNewButton_5);
-
-		JButton btnNewButton_6 = new JButton("Check");
-		btnNewButton_6.setBounds(570, 489, 89, 35);
-		getContentPane().add(btnNewButton_6);
-
-		txtSwapActions = new JTextField();
-		txtSwapActions.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSwapActions.setText("Swap Actions");
-		txtSwapActions.setBounds(570, 426, 86, 20);
-		getContentPane().add(txtSwapActions);
-		txtSwapActions.setColumns(10);
-
-		JButton btnNewButton_7 = new JButton("Revoke");
-		btnNewButton_7.setBounds(570, 524, 89, 35);
-		getContentPane().add(btnNewButton_7);
-		 */
+		
 	}
 
 	public ApplicationPanel getAppPanel() {

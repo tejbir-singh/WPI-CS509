@@ -2,12 +2,17 @@ package cps.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import cps.controller.RefreshWordTableController;
 
 
 public class UnprotectedArea implements Serializable {
 	private static final long serialVersionUID = -9203701553091519628L;
 	private static UnprotectedArea instance;
 	ArrayList<Word> words;
+	RefreshWordTableController refreshWordTableController = null;
 	
 	/**
 	 * Constructor.
@@ -43,6 +48,7 @@ public class UnprotectedArea implements Serializable {
 				}	
 			}
 		}
+		notifyRefreshWordTableController();
 		return true;
 	}
 	
@@ -59,6 +65,7 @@ public class UnprotectedArea implements Serializable {
 		else {
 			words.remove(index);
 		}
+		notifyRefreshWordTableController();
 		return true;
 	}
 	
@@ -90,6 +97,7 @@ public class UnprotectedArea implements Serializable {
 				}
 			}
 		}
+		notifyRefreshWordTableController();
 		return validWords;
 	}
 	
@@ -130,5 +138,21 @@ public class UnprotectedArea implements Serializable {
 
 	public void setWords(ArrayList<Word> words) {
 		this.words = words;
+		notifyRefreshWordTableController();
+	}
+
+	public void sort(Comparator<Word> comparator) {
+		Collections.sort(words, comparator);
+		notifyRefreshWordTableController();
+	}
+
+	public void setRefreshWordTableController(RefreshWordTableController refreshWordTableController) {
+		this.refreshWordTableController = refreshWordTableController;
+	}
+	
+	public void notifyRefreshWordTableController() {
+		if (refreshWordTableController != null) {
+			refreshWordTableController.update();
+		}
 	}
 }
