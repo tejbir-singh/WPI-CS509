@@ -49,7 +49,6 @@ public class WordTable extends JPanel {
 		// Just add the JTable to the set. First create the list of Players,
 		// then the SwingModel that supports the JTable which you now create.
 		jtable = new JTable(wordModel);
-		jtable.setPreferredSize(mySize);
 		
 		// let's tell the JTable about its columns.
 		TableColumnModel columnModel = new DefaultTableColumnModel();
