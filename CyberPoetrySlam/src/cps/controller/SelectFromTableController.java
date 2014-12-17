@@ -1,9 +1,5 @@
 package cps.controller;
 
-import java.awt.Point;
-
-import javax.swing.JTable;
-
 import cps.model.GameManager;
 import cps.model.UnprotectedArea;
 import cps.model.Word;

@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import cps.model.UnprotectedArea;
-import cps.model.Word;
 import cps.model.WordModel;
 import cps.controller.RefreshWordTableController;
 import cps.controller.SelectFromTableController;
@@ -86,7 +85,7 @@ public class WordTable extends JPanel {
 		
 		jsp.setViewportView(jtable);
 
-		this.setPreferredSize(mySize);
+		//this.setPreferredSize(mySize);
 		this.add(jsp);
 	}
 

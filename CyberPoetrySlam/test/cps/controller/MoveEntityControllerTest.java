@@ -2,7 +2,6 @@ package cps.controller;
 
 import javax.swing.JButton;
 
-import cps.controller.MoveController;
 import cps.model.GameManager;
 import cps.model.Type;
 import cps.model.Word;

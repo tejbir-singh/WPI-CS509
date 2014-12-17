@@ -17,7 +17,7 @@ public class UnprotectedArea implements Serializable {
 	private static final long serialVersionUID = -9203701553091519628L;
 	private static UnprotectedArea instance;
 	ArrayList<Word> words;
-	RefreshWordTableController refreshWordTableController = null;
+	private static RefreshWordTableController refreshWordTableController = null;
 	
 	/**
 	 * Constructor.
@@ -152,7 +152,7 @@ public class UnprotectedArea implements Serializable {
 	}
 
 	public void setRefreshWordTableController(RefreshWordTableController refreshWordTableController) {
-		this.refreshWordTableController = refreshWordTableController;
+		UnprotectedArea.refreshWordTableController = refreshWordTableController;
 	}
 	
 	public void notifyRefreshWordTableController() {

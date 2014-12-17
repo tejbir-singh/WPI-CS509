@@ -62,7 +62,7 @@ public class GameManager {
 		int temp = 0;
 		for (int i = 0; i < 100; i++) {
 			temp = random.nextInt(max);
-			if(nums.contains(temp) == false){
+			if(nums.contains(temp) == false) {
 				nums.add(temp);
 			}else{
 				i --;

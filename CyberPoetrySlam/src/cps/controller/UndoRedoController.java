@@ -244,19 +244,16 @@ public class UndoRedoController extends MouseAdapter {
 		if (e instanceof Word) {
 			if ((ri = findEntityOrigin(e)) != null) {
 				if (ri.p == null) {						// intersects a word which is not connected to a poem
-					if (man.getY() < ri.w.getY()) {		// place on top of the word
-						rebuildPoem(e, ri, true);
+					if (man.getY() != ri.w.getY()) {		// place on top of the word
+						return false;
 					}
-					else if (man.getY() == ri.w.getY()) { // place on the same row
+					else { // place on the same row
 						if (man.getX() < ri.w.getX()) {		// e belongs on the left
 							gm.getPa().connectWordLeftWord(ri.w, (Word) e);
 						}
 						else {
 							gm.getPa().connectWordRightWord(ri.w, (Word) e);
 						}
-					}
-					else {								// place it on the row below
-						rebuildPoem(e, ri, false);
 					}
 				}
 				else {
@@ -336,6 +333,7 @@ public class UndoRedoController extends MouseAdapter {
 	 * @param ri RowIndex containing the second Entity
 	 * @param top true if e is meant to become the top word in the poem
 	 */
+	/* Disallowed functionality.
 	private void rebuildPoem(Entity e, ReturnIndex ri, boolean top) {
 		ArrayList<Row> rows = new ArrayList<Row>();
 		ArrayList<Word> word1 = new ArrayList<Word>();
@@ -362,6 +360,7 @@ public class UndoRedoController extends MouseAdapter {
 		gm.getPa().remove(ri.w);
 		gm.getPa().add(p);
 	}
+	*/
 
 	public enum URType {
 		UNDO, REDO

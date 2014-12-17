@@ -156,6 +156,7 @@ public class ApplicationPanel extends JPanel {
 	
 	/** Paint the Poem into the given graphics context. */
 	void paintPoem(Graphics g, Poem p) {
+		if (g == null) { return; }
 		for (Row r : p.rows){
 			for(Word w : r.words){
 				g.setColor(Color.green);

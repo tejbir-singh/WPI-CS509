@@ -2,7 +2,6 @@ package cps.controller;
 
 import java.awt.Point;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
@@ -165,9 +164,15 @@ public class DisconnectEntityController extends MouseAdapter {
 			}
 			else {
 				ReturnIndex ri = gm.getPa().getWordIdx(x-deltaRowX, y-deltaRowY);
-				gm.getManipulations().add(new Manipulation(originalRowX, originalRowY, ri.p, MoveType.DISCONNECT));
-				panel.validateUndo(true);
-				panel.validateRedo(false);
+				if (ri == null) {			// a row of one word was disconnected; not allowed to undo
+					panel.validateUndo(false);
+					panel.validateRedo(false);
+				}
+				else {
+					gm.getManipulations().add(new Manipulation(originalRowX, originalRowY, ri.p, MoveType.DISCONNECT));
+					panel.validateUndo(true);
+					panel.validateRedo(false);
+				}
 			}	
 		}else{ // disconnectWord Controller
 			Word selected = (Word) gm.getSelected();
