@@ -16,6 +16,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * @author Devin
+ *
+ */
 public class Application extends JFrame {
 
 	private static final int BUTTON_OFFSET = 31;

@@ -12,14 +12,18 @@ import broker.util.IProtocol;
 import broker.util.MatchSwapMessage;
 import broker.util.Swap;
 
+/**
+ * @author Devin
+ *
+ */
 public class SwapManager implements IHandleBrokerMessage {
-	private static SwapManager instance;
-	private ArrayList<Word> words;
-	private GameManager gm;
-	private String[] requestWords;
-	private String[] requestTypes;
-	private BrokerClient broker;
-	private ApplicationPanel panel;
+	static SwapManager instance;
+	ArrayList<Word> words;
+	GameManager gm;
+	String[] requestWords;
+	String[] requestTypes;
+	BrokerClient broker;
+	ApplicationPanel panel;
 	
 	/** Thread managing connections. When you are done, call shutdown for clean exit. */
 	ReaderThread thread;

@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import cps.view.WordTable;
 
+/**
+ * @author Devin
+ */
 public class RefreshWordTableController implements Serializable {
 	private static final long serialVersionUID = -8933206067153212332L;
 	

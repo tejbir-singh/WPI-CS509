@@ -7,17 +7,15 @@ import javax.swing.table.AbstractTableModel;
  * Instead of making Board responsible for handling the JTable stuff, delegate
  * those responsibilities to this class.
  * 
- * @author heineman
+ * @author Devin
  */
 public class WordModel extends AbstractTableModel {
-
-	/** Keep Eclipse Happy. */
 	private static final long serialVersionUID = 1L;
 	
 	/** UnprotectedArea maintains the state. */
 	UnprotectedArea ua;
 	
-	/** Key values. */
+	/** Key values */
 	public static final String wordLabel = "Word";
 	public static final String typeLabel = "Type";
 	

@@ -6,6 +6,10 @@ import cps.model.Word;
 import cps.view.ApplicationPanel;
 import cps.view.WordTable;
 
+/**
+ * @author Devin
+ *
+ */
 public class SelectFromTableController {
 	UnprotectedArea ua;
 	WordTable table;

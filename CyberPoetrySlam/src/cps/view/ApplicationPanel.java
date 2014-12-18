@@ -15,6 +15,9 @@ import cps.model.Row;
 import cps.model.Word;
 import cps.model.Entity;
 
+/**
+ * @author Devin
+ */
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
 	GameManager gm;

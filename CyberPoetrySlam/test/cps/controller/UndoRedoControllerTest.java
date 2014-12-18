@@ -2,10 +2,12 @@ package cps.controller;
 
 import java.util.ArrayList;
 
+
 import javax.swing.JButton;
 
 import cps.controller.UndoRedoController.URType;
 import cps.model.GameManager;
+import cps.model.SwapManager;
 import cps.model.Poem;
 import cps.model.Type;
 import cps.model.Word;
@@ -66,7 +68,7 @@ public class UndoRedoControllerTest extends TestCase {
 		assertTrue(gm.getUa().getWords().isEmpty());
 	}
 	
-	public void testUndoRedoMoveFromUAAndPa() {
+	public void testUndoRedoMoveFromUAToPA() {
 		MoveEntityController mec = new MoveEntityController(gm, app);
 		mec.select(1, 1);
 		mec.drag(2 + GameManager.AREA_DIVIDER, 2 + GameManager.AREA_DIVIDER);
@@ -78,6 +80,41 @@ public class UndoRedoControllerTest extends TestCase {
 		
 		new UndoRedoController(gm, app, URType.REDO).process();
 		assertFalse(gm.getUa().getWords().isEmpty());
+	}
+	
+	public void testUndoRedoMoveFromPAToUA() {
+		MoveEntityController mec = new MoveEntityController(gm, app);
+		mec.select(1, 1);
+		mec.drag(2 + GameManager.AREA_DIVIDER, 2 + GameManager.AREA_DIVIDER);
+		mec.release(2 + GameManager.AREA_DIVIDER, 2 + GameManager.AREA_DIVIDER);
+		assertFalse(gm.getUa().getWords().isEmpty());
+		
+		mec.select(2 + GameManager.AREA_DIVIDER, 2 + GameManager.AREA_DIVIDER);
+		mec.drag(1, 1);
+		mec.release(1, 1);
+		assertTrue(gm.getUa().getWords().isEmpty());
+		
+		new UndoRedoController(gm, app, URType.UNDO).process();
+		assertFalse(gm.getUa().getWords().isEmpty());
+		
+		new UndoRedoController(gm, app, URType.REDO).process();
+		assertTrue(gm.getUa().getWords().isEmpty());
+	}
+	
+	public void testUndoRedoMoveFromPAToSwap() {
+		SwapManager.getInstance().setAppPanel(new ApplicationPanel(gm, new JButton(), new JButton(), new JButton()));
+		gm.setSwapManager(SwapManager.getInstance());
+		MoveEntityController mec = new MoveEntityController(gm, app);
+		mec.select(1, 1);
+		mec.drag(2 + GameManager.AREA_DIVIDER, 2 + GameManager.SWAP_AREA_DIVIDER);
+		mec.release(2 + GameManager.AREA_DIVIDER, 2 + GameManager.SWAP_AREA_DIVIDER);
+		assertFalse(gm.getSwapManager().getWords().isEmpty());
+		
+		new UndoRedoController(gm, app, URType.UNDO).process();
+		assertTrue(gm.getSwapManager().getWords().isEmpty());
+		
+		new UndoRedoController(gm, app, URType.REDO).process();
+		assertFalse(gm.getSwapManager().getWords().isEmpty());
 	}
 	
 	public void testUndoRedoConnect() {
@@ -92,6 +129,30 @@ public class UndoRedoControllerTest extends TestCase {
 		
 		new UndoRedoController(gm, app, URType.REDO).process();
 		assertFalse(gm.getPa().getPoems().isEmpty());
+	}
+	
+	public void testUndoRedoConnectTwoPoems() {
+		ConnectEntityController cwc1 = new ConnectEntityController(gm, app);
+		cwc1.select(1, 1);
+		cwc1.drag(100, 100);
+		cwc1.release(100, 100);
+		
+		ConnectEntityController cwc2 = new ConnectEntityController(gm, app);
+		cwc2.select(102, 102);
+		cwc2.drag(104, 104);
+		cwc2.release(104, 104);
+		
+		assertNotNull(gm.getPa().getPoems().get(0));
+		assertNotNull(gm.getPa().getPoems().get(1));
+		
+		ConnectEntityController cwc3 = new ConnectEntityController(gm, app);
+		cwc3.select(100, 100);
+		cwc3.drag(104,104);
+		cwc3.release(104, 104);
+		assertEquals(gm.getPa().getPoems().size(), 1);
+		
+		new UndoRedoController(gm, app, URType.UNDO).process();
+		assertEquals(gm.getPa().getPoems().size(), 2);
 	}
 	
 	public void testUndoRedoDisconnect() {

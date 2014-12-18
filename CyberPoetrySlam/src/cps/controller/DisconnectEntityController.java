@@ -9,7 +9,7 @@ import cps.model.*;
 import cps.view.*;
 
 /**
- * @author Xinjie
+ * @author Xinjie, Devin
  */
 
 public class DisconnectEntityController extends MouseAdapter {

@@ -326,42 +326,6 @@ public class UndoRedoController extends MouseAdapter {
 		return ri;
 	}
 
-	/**
-	 * Helper function.
-	 * Make two poems out of the words and connect them.
-	 * @param e Entity to build from
-	 * @param ri RowIndex containing the second Entity
-	 * @param top true if e is meant to become the top word in the poem
-	 */
-	/* Disallowed functionality.
-	private void rebuildPoem(Entity e, ReturnIndex ri, boolean top) {
-		ArrayList<Row> rows = new ArrayList<Row>();
-		ArrayList<Word> word1 = new ArrayList<Word>();
-		word1.add(ri.w);
-		Row r = new Row(word1);
-		rows.add(r);
-		Poem p = new Poem(rows);
-
-		ArrayList<Word> word2 = new ArrayList<Word>();
-		word2.add((Word) e);
-		Row r2 = new Row(word2);
-
-		if (top) {
-			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() - p.getRows().get(rows.size()-1).getHeight());
-			p.connectRowTop(r2);
-		}
-		else {
-			r2.setPosition(man.getX(), p.getRows().get(rows.size()-1).getY() + p.getRows().get(rows.size()-1).getHeight());
-			p.connectRowBottom(r2);
-		}
-
-		// remove the words from the protected area
-		gm.getPa().remove(e);
-		gm.getPa().remove(ri.w);
-		gm.getPa().add(p);
-	}
-	*/
-
 	public enum URType {
 		UNDO, REDO
 	}

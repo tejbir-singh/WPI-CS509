@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Random;
 
+/**
+ * @author Devin
+ *
+ */
 public class GameManager {
 	private ProtectedArea pa;
 	private UnprotectedArea ua;

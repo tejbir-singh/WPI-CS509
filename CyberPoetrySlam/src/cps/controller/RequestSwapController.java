@@ -28,6 +28,7 @@ public class RequestSwapController extends MouseAdapter {
 		// let's make the request. We are requesting, and we want to have requested word for
 		// the offer word.
 		SwapManager sm = gm.getSwapManager();
+		if (sm == null) { sm = SwapManager.getInstance(); }
 		sm.setRequestWords(this.requestWords.split(","));
 		sm.setRequestTypes(this.requestTypes.split(","));
 		String req = sm.formatSwapRequest();
