@@ -2,6 +2,11 @@ package cps.model;
 
 import java.io.Serializable;
 
+/**
+ * Help class to construct a structure to record index information
+ * @author Xinjie
+ *
+ */
 public class ReturnIndex implements Serializable {
 	private static final long serialVersionUID = 123L;
 	public int idxPoem;

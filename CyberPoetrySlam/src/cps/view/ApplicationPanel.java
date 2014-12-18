@@ -16,7 +16,7 @@ import cps.model.Word;
 import cps.model.Entity;
 
 /**
- * @author Devin
+ * @author Devin, Xinjie
  */
 public class ApplicationPanel extends JPanel {
 	private static final long serialVersionUID = -8813450588616485914L;
@@ -132,7 +132,9 @@ public class ApplicationPanel extends JPanel {
 		paintWord(canvasGraphics, w);
 	}
 
-	/** Paint the Poem directly to the screen */
+	/** Paint the Poem directly to the screen 
+	 * @author Xinjie
+	 */
 	public void paintPoem(Poem p) {
 		paintPoem(canvasGraphics, p);
 	}
@@ -157,7 +159,9 @@ public class ApplicationPanel extends JPanel {
 		g.drawString(w.getValue(), w.getX() + w.getWidth()/4, w.getY() + w.getHeight());
 	}
 	
-	/** Paint the Poem into the given graphics context. */
+	/** Paint the Poem into the given graphics context.
+	 * @author Xinjie
+	 */
 	void paintPoem(Graphics g, Poem p) {
 		if (g == null) { return; }
 		for (Row r : p.rows){

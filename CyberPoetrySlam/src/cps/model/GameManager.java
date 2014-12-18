@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Random;
 
-/**
- * @author Devin
- *
- */
 public class GameManager {
 	private ProtectedArea pa;
 	private UnprotectedArea ua;
@@ -54,19 +50,25 @@ public class GameManager {
 									words[0].length() * 15, 15, Type.valueOf(words[1]), words[0])); //changed it back to words[0]
 				}
 				temp ++;
-			}	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	} 
 	
+	/**
+	 * Randomly select 100 intergers from [0, max-1] integer set
+	 * @param max upper bound of integer set 
+	 * @return 100 random integers
+	 * @author Xinjie
+	 */
 	public ArrayList<Integer> randomOneHundred(int max){
 		ArrayList<Integer> nums = new ArrayList<Integer>();
 		Random random = new Random();
 		int temp = 0;
 		for (int i = 0; i < 100; i++) {
 			temp = random.nextInt(max);
-			if(nums.contains(temp) == false) {
+			if(nums.contains(temp) == false){
 				nums.add(temp);
 			}else{
 				i --;
