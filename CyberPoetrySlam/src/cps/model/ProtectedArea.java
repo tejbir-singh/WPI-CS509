@@ -80,11 +80,9 @@ public class ProtectedArea implements Serializable {
 				poems.remove(index);
 				return true;
 			}
-		} else{ // e is neither a word nor a poem
+			}
 			return false;
 		}
-		
-	}
 
 	/**
 	 * Move an Entity to the specified x and y coordinates if it is valid.
@@ -149,32 +147,6 @@ public class ProtectedArea implements Serializable {
 		return null;
 	}
 	
-	public ReturnIndex getPoemRowIdx(int x, int y, Poem p) {
-		Word w = null;
-		ReturnIndex ri = new ReturnIndex(-1, -1, -1, w);
-		int poem_idx = 0;
-		int row_idx = 0;
-		int word_idx = 0;
-		
-		for (Row row : p.getRows()) {
-			for (Word word : row.getWords()) {
-				Word tmp = new Word(x, y, 0, 0, null, null);
-				if (word.intersect(tmp)) {
-					ri.idxPoem = poem_idx; // poem_idx will always be 0
-					ri.idxRow = row_idx;
-					ri.idxWord = word_idx;
-					ri.w = word;
-					ri.p = belongsToPoem(word);
-					return ri;
-				}
-				word_idx += 1;
-			}
-			row_idx += 1;
-			word_idx = 0;
-		}
-		return null;
-	}
-	
 	/**
 	 * Get a ReturnIndex based on its x and y position.
 	 * @param x x-coordinate
@@ -209,26 +181,6 @@ public class ProtectedArea implements Serializable {
 			row_idx = 0;
 		}
 		return null;
-	}
-
-	public Row getPoemRowFromIdx(int x, int y, Poem p) {
-		//ArrayList<Row> rows = p.getRows(); // does this do what I'm intending for it to do
-		
-		for (Row r: p.getRows()) {
-			int currentRowY = r.y;
-			int rowHeightDiff = currentRowY + r.height;
-
-			if (y > currentRowY && y < rowHeightDiff) {
-				return r;
-			}
-		}
-		return null;
-	}
-	
-	// check if another row is intersecting this row
-	public boolean rowIntersect(Row r1, Row r2) {
-		if (r1.intersect(r2)) { return true; }
-		else  { return false; }
 	}
 	
 	/**
