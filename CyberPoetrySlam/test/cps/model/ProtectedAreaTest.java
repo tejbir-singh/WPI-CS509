@@ -305,7 +305,6 @@ public class ProtectedAreaTest extends TestCase {
 			assertEquals(true, pa.moveEntity(word, 60, 60));
 			assertEquals(true, pa.add(poem2));
 			
-			//assertEquals(true,pa.moveEntity(word, 7, 33));
 			assertEquals(true, pa.connectPoemBottom(poem1, poem2, 7));
 			assertEquals(1, pa.getPoems().size());
 			assertEquals(31, pa.getPoems().get(0).y);
@@ -321,7 +320,7 @@ public class ProtectedAreaTest extends TestCase {
 			assertEquals(true, pa.moveEntity(word, 50, 50));
 			assertEquals(true, pa.add(poem2));
 			
-			//assertEquals(true, pa.disconnectWord(0, 0, 0, 60, 60));
+			
 			assertEquals(true, pa.disconnectRow(0, 1, 90, 90));
 			assertEquals(22, pa.getPoems().get(0).x);
 			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
@@ -329,7 +328,7 @@ public class ProtectedAreaTest extends TestCase {
 			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(2), 24));
 			
 			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(1), 30));
-			//assertEquals(true, pa.disconnectWord(0, 1, 0, 70, 70));
+			
 			assertEquals(false, pa.disconnectRow(0, 1, 50, 50));
 			assertEquals(4, pa.getPoems().get(0).getRows().size());
 			assertEquals(24, pa.getPoems().get(0).getRows().get(1).x);
@@ -339,10 +338,21 @@ public class ProtectedAreaTest extends TestCase {
 			assertEquals(22, pa.getPoems().get(0).x);
 			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
 			assertEquals(80, pa.getPoems().get(1).x);
-			assertEquals(80, pa.getPoems().get(1).getRows().get(0).x);
-			
-			
-			
+			assertEquals(80, pa.getPoems().get(1).getRows().get(0).x);	
+		}
+		
+		public void testDisconnectMiddleRow(){
+			assertEquals(true, pa.add(poem1));
+			assertEquals(true, pa.moveEntity(poem1, 22, 31));
+			assertEquals(true, pa.add(poem2));
+			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(1), 30));
+			assertEquals(true, pa.disconnectWord(0, 2, 0, 100, 100));
+			assertEquals(true, pa.disconnectRow(0, 2, 90, 90));
+		}
+		
+		public void testDisconnectFirstRow(){
+			assertEquals(true, pa.add(poem1));
+			assertEquals(false, pa.disconnectRow(0, 0, -90, 90));
 		}
 	
 }
