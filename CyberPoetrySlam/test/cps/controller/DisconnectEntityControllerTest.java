@@ -12,7 +12,7 @@ import cps.model.Word;
 import cps.view.ApplicationPanel;
 import junit.framework.TestCase;
 
-public class DisconnectWordControllerTest extends TestCase {
+public class DisconnectEntityControllerTest extends TestCase {
 	GameManager gm;
 	ApplicationPanel app;
 	DisconnectEntityController dwc;

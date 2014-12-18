@@ -340,41 +340,6 @@ public class ProtectedAreaTest extends TestCase {
 			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
 			assertEquals(80, pa.getPoems().get(1).x);
 			assertEquals(80, pa.getPoems().get(1).getRows().get(0).x);
-			/*assertEquals(true, pa.disconnectRow(0, 0, 60, 60));
-			assertEquals(3, pa.getPoems().size());
-			assertEquals(24, pa.getPoems().get(0).x);
-			assertEquals(24, pa.getPoems().get(0).getRows().get(0).x);
-			//assertEquals(true, pa.moveEntity(pa.getPoems().get(0), 23, 32));
-			assertEquals(true, pa.connectPoemTop(pa.getPoems().get(0), pa.getPoems().get(2), 22));
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(2, pa.getPoems().size());
-			assertEquals(false, pa.disconnectRow(0, 0, 50, 50));
-			assertEquals(true, pa.disconnectRow(0, 1, 60, 60));
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(3, pa.getPoems().size());
-			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(2), 22));
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(false, pa.disconnectRow(0, 0, 50, 50));
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(true, pa.moveEntity(w5, 80, 80));
-			assertEquals(true, pa.connectPoemBottom(pa.getPoems().get(0), pa.getPoems().get(1), 22));
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(4, pa.getPoems().get(0).getRows().size());
-			assertEquals(1, pa.getPoems().size());
-			assertEquals(22, pa.getPoems().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(0).x);
-			assertEquals(22, pa.getPoems().get(0).getRows().get(1).x);
-			
-			assertEquals(true, pa.disconnectWord(0, 0, 0, 60, 60));
-			assertEquals(1, pa.getPoems().get(0).getRows().get(0).getWords().size());
-			assertEquals(true, pa.disconnectRow(0, 0, 70, 70));
-			assertEquals(4, pa.getWords().size());
-			assertEquals(22, pa.getPoems().get(0).x);*/
 			
 			
 			
