@@ -21,6 +21,11 @@ public class UnprotectedAreaTest extends TestCase {
 		word.width = 5;
 	}
 	
+	public void testMove() {
+		ua.moveEntity(word, 10, 10);
+		assertEquals(word.x, 10);
+	}
+	
 	public void testSingletonPattern() {
 		UnprotectedArea ua2 = UnprotectedArea.getInstance();
 		assertEquals(ua, ua2);

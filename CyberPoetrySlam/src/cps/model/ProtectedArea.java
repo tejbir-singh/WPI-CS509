@@ -102,13 +102,6 @@ public class ProtectedArea implements Serializable {
 				return false;
 			}	
 		}
-		else if (e instanceof Row) {
-			((Row) e).setPosition(x, y);
-			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
-				((Row) e).setPosition(tempx, tempy); 					// go back to its previous location
-				return false;
-			}
-		}
 		else{
 			((Poem) e).setPosition(x, y);
 			if (doesIntersect(e) || boundaryIntersect(e)) {				// invalid move if so
@@ -355,23 +348,11 @@ public class ProtectedArea implements Serializable {
 						|| row.x + row.width > GameManager.PROTECTED_AREA_WIDTH
 						|| row.y + row.height > GameManager.AREA_DIVIDER - 10) {
 					return true;
-				} else {
-					return false;
-				}
+				} 
 			}
+			return false;
 		}
-		else if(e instanceof Row) { // invoked when shifting rows of a poem 
-			for (Word word: ((Row) e).words){
-				if ( word.x < GameManager.PROTECTED_AREA_X
-					|| word.y < GameManager.PROTECTED_AREA_Y
-					|| word.x + e.width > GameManager.PROTECTED_AREA_WIDTH
-					|| word.y + word.height > GameManager.AREA_DIVIDER - 10) {
-						return true;
-					} else {
-						return false;
-					}
-			}
-		}
+		
 		return false;
 	}
 	
@@ -518,7 +499,6 @@ public class ProtectedArea implements Serializable {
 						if (this.poems.get(poemidx).rows.size() == 1
 								&& this.poems.get(poemidx).rows.get(0).words.size() == 1) {	// no longer a Poem
 							this.words.add(this.poems.get(poemidx).rows.get(0).words.get(0));
-							System.out.print(this.poems.get(poemidx).rows.get(0).words.get(0));
 							this.poems.remove(poemidx);
 							
 						}
@@ -585,18 +565,16 @@ public class ProtectedArea implements Serializable {
 	public boolean connectPoemTop(Poem p, Poem ptop, int bottomrow_x){
 		int ptop_x = bottomrow_x - (ptop.getRows().get(ptop.getRows().size() - 1).getX() - ptop.getRows().get(0).getX());
 		int ptop_y = p.getRows().get(0).getY() - ptop.getHeight();
-		ptop.setPosition(ptop_x, ptop_y);
-		for(Row r: ptop.getRows()){
-			Row tmpRow = new Row(r.getWords());
-			tmpRow.setPosition(r.getX(), r.getY());
-			tmpRow.setWidth(r.getWidth());
-			tmpRow.setHeight(r.getHeight());
-			p.connectRowTop(tmpRow);
+		if (this.moveEntity(ptop, ptop_x, ptop_y)) {
+			for(int i = ptop.getRows().size() - 1; i >= 0; i --){
+				p.connectRowTop(ptop.getRows().get(i));
+			}
+			p.setX(ptop_x);
+			p.setY(ptop_y);
+			this.remove(ptop);
+			return true;
 		}
-		p.setX(ptop_x);
-		p.setY(ptop_y);
-		this.remove(ptop);
-		return true;
+		return false;
 	}
 	
 	/**
@@ -610,16 +588,14 @@ public class ProtectedArea implements Serializable {
 	public boolean connectPoemBottom(Poem p, Poem pbottom, int toprow_x){
 		int pbottom_x = toprow_x;
 		int pbottom_y = p.getRows().get(p.getRows().size() - 1).getY() + p.getRows().get(p.getRows().size() - 1).getHeight();
-		pbottom.setPosition(pbottom_x, pbottom_y);
-		for(Row r: pbottom.getRows()){
-			Row tmpRow = new Row(r.getWords());
-			tmpRow.setPosition(r.getX(), r.getY());
-			tmpRow.setWidth(r.getWidth());
-			tmpRow.setHeight(r.getHeight());
-			p.connectRowBottom(tmpRow);
+		if (this.moveEntity(pbottom, pbottom_x, pbottom_y)) {
+			for(Row r: pbottom.getRows()){
+				p.connectRowBottom(r);
+			}
+			this.remove(pbottom);
+			return true;
 		}
-		this.remove(pbottom);
-		return true;
+		return false;
 	}
 	
 	/**

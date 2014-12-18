@@ -46,7 +46,7 @@ public class ConnectEntityControllerTest extends TestCase {
 		assertEquals(true, ar1.add(row1));
 		assertEquals(true, ar1.add(row2));
 		Poem poem1 = new Poem(ar1);
-		gm.getPa().add(poem1);
+		gm.getPa().getPoems().add(poem1);
 		
 		Word w11 = new Word(1, 10, 3, 1, Type.ADJECTIVE, "word1");
 		Word w22 = new Word(4, 10, 5, 1, Type.ADVERB, "word2");
@@ -64,7 +64,7 @@ public class ConnectEntityControllerTest extends TestCase {
 		assertEquals(true, ar2.add(row3));
 		assertEquals(true, ar2.add(row4));
 		Poem poem2 = new Poem(ar2);
-		gm.getPa().add(poem2);
+		gm.getPa().getPoems().add(poem2);
 		
 	}
 	

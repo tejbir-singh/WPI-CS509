@@ -46,13 +46,7 @@ public class UnprotectedArea implements Serializable {
 	public boolean add(Entity e) {
 		if (e instanceof Word){
 			words.add((Word) e);
-		} else{
-			for(Row row : ((Poem) e).getRows()){
-				for(Word word : row.getWords()){
-					words.add(word);
-				}	
-			}
-		}
+		} 
 		notifyRefreshWordTableController();
 		return true;
 	}

@@ -232,7 +232,8 @@ public class MoveEntityController extends MouseAdapter {
 					validshift = false;
 				}
 			}
-			if(gm.getPa().doesIntersect(gm.getPa().getPoems().get(selectedIdx.idxPoem))){
+			if(gm.getPa().doesIntersect(gm.getPa().getPoems().get(selectedIdx.idxPoem)) 
+					|| gm.getPa().boundaryIntersect(gm.getPa().getPoems().get(selectedIdx.idxPoem))){
 				// check if the shiftRow movement intersect with other entities
 				selectedRow.setPosition(originalRowX, originalRowY);
 				validshift = false;

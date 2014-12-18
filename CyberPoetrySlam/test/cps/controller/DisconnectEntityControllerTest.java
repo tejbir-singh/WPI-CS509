@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import cps.controller.DisconnectEntityController;
 import cps.model.GameManager;
 import cps.model.Poem;
+import cps.model.Row;
 import cps.model.Type;
 import cps.model.Word;
 import cps.view.ApplicationPanel;
@@ -47,5 +48,57 @@ public class DisconnectEntityControllerTest extends TestCase {
 		dwc.drag(101, 101);
 		dwc.release(101, 101);
 		assertTrue(gm.getPa().getPoems().isEmpty());
+	}
+	
+	public void test1() {
+		dwc.register();
+		Word w111 = new Word(1, 1, 3, 1, Type.ADJECTIVE, "word1");
+		Word w222 = new Word(4, 1, 5, 1, Type.ADVERB, "word2");
+		Word w3 = new Word(5, 2, 4, 1, Type.CONJUNCTION, "word3");
+		Word w4 = new Word(9, 2, 9, 1, Type.NOUN, "word4");
+		ArrayList<Word> aw1 = new ArrayList<Word>();
+		assertEquals(true, aw1.add(w111));
+		assertEquals(true, aw1.add(w222));
+		ArrayList<Word> aw2 = new ArrayList<Word>();
+		assertEquals(true, aw2.add(w3));
+		assertEquals(true, aw2.add(w4));
+		Row row1 = new Row(aw1);
+		Row row2 = new Row(aw2);
+		ArrayList<Row> ar1 = new ArrayList<Row>();
+		assertEquals(true, ar1.add(row1));
+		assertEquals(true, ar1.add(row2));
+		Poem poem1 = new Poem(ar1);
+		gm.getPa().getPoems().add(poem1);
+		
+	}
+	
+	public void test2() {
+		dwc.mouseRightClick = true;
+		dwc.register();
+		Word w111 = new Word(1, 1, 3, 1, Type.ADJECTIVE, "word1");
+		//Word w222 = new Word(4, 1, 5, 1, Type.ADVERB, "word2");
+		Word w3 = new Word(5, 2, 4, 1, Type.CONJUNCTION, "word3");
+		Word w4 = new Word(9, 2, 9, 1, Type.NOUN, "word4");
+		ArrayList<Word> aw1 = new ArrayList<Word>();
+		assertEquals(true, aw1.add(w111));
+		//assertEquals(true, aw1.add(w222));
+		ArrayList<Word> aw2 = new ArrayList<Word>();
+		assertEquals(true, aw2.add(w3));
+		assertEquals(true, aw2.add(w4));
+		Row row1 = new Row(aw1);
+		Row row2 = new Row(aw2);
+		ArrayList<Row> ar1 = new ArrayList<Row>();
+		assertEquals(true, ar1.add(row1));
+		assertEquals(true, ar1.add(row2));
+		Poem poem1 = new Poem(ar1);
+		gm.getPa().getPoems().add(poem1);
+		
+		
+		dwc.select(2, 1);
+		dwc.drag(101, 101);
+		dwc.release(101, 101);
+		assertEquals(gm.getPa().getWords().get(0).value, "word1");
+		assertEquals(gm.getPa().getPoems().get(1).getRows().get(0).getWords().size(), 2);
+		
 	}
 }
